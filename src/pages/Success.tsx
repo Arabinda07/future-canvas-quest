@@ -53,7 +53,7 @@ const Success = () => {
         transition={{ delay: 0.3 }}
         className="text-muted-foreground mb-10 leading-relaxed"
       >
-        Your personalized NextStep Career Report is being generated with AI-powered insights.
+        Your personalized Future Canvas Career Report is being generated with AI-powered insights.
       </motion.p>
 
       <motion.div

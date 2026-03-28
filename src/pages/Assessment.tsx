@@ -66,7 +66,7 @@ const Assessment = () => {
       {/* Sticky header */}
       <div className="sticky top-0 z-20 glass border-b px-5 py-3 space-y-2">
         <div className="flex items-center justify-between text-sm max-w-xl mx-auto">
-          <span className="font-heading font-bold text-foreground">NextStep</span>
+          <span className="font-heading font-bold text-foreground">Future Canvas</span>
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground font-medium text-xs bg-muted rounded-full px-3 py-1">
               Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
