@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,14 +34,17 @@ const Register = () => {
       <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full bg-mint/6 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 flex flex-col flex-1 px-5 py-4 max-w-lg mx-auto w-full">
-        <motion.button
-          initial={{ x: -10, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          onClick={() => navigate("/")}
-          className="flex items-center gap-1.5 text-muted-foreground text-sm mb-8 min-h-[44px] hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={18} /> Back
-        </motion.button>
+        <div className="flex items-center justify-between mb-8">
+          <motion.button
+            initial={{ x: -10, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            onClick={() => navigate("/")}
+            className="flex items-center gap-1.5 text-muted-foreground text-sm min-h-[44px] hover:text-foreground transition-colors"
+          >
+            <ArrowLeft size={18} /> Back
+          </motion.button>
+          <ThemeToggle />
+        </div>
 
         <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
           <div className="flex items-center gap-2 mb-2">
