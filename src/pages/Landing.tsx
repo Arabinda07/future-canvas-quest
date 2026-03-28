@@ -3,6 +3,7 @@ import { Brain, Zap, ShieldCheck, ArrowRight, Sparkles, CheckCircle, Star, Quote
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import heroDashboard from "@/assets/hero-dashboard.png";
 
 const features = [
@@ -28,14 +29,17 @@ const Landing = () => {
           </div>
           <span className="font-heading text-lg font-bold text-foreground">NextStep</span>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-full border-primary/30 bg-primary/10 text-primary font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
-          onClick={() => navigate("/register")}
-        >
-          Get Started
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full border-primary/30 bg-primary/10 text-primary font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
+            onClick={() => navigate("/register")}
+          >
+            Get Started
+          </Button>
+        </div>
       </motion.header>
 
       {/* Hero Section - Two Column */}
