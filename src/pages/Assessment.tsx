@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAssessment } from "@/context/AssessmentContext";
 import { questions, QUESTIONS_PER_PAGE, TOTAL_PAGES, TOTAL_QUESTIONS } from "@/data/questions";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const LIKERT_OPTIONS = [
   { value: "1", label: "Strongly Disagree", emoji: "😟" },
@@ -66,9 +67,12 @@ const Assessment = () => {
       <div className="sticky top-0 z-20 glass border-b px-5 py-3 space-y-2">
         <div className="flex items-center justify-between text-sm max-w-xl mx-auto">
           <span className="font-heading font-bold text-foreground">NextStep</span>
-          <span className="text-muted-foreground font-medium text-xs bg-muted rounded-full px-3 py-1">
-            Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground font-medium text-xs bg-muted rounded-full px-3 py-1">
+              Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
+            </span>
+            <ThemeToggle />
+          </div>
         </div>
         <div className="max-w-xl mx-auto w-full">
           <div className="w-full h-2.5 bg-muted rounded-full overflow-hidden">
