@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Brain, Zap, ShieldCheck, ArrowRight, Sparkles, CheckCircle, Star, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import heroDashboard from "@/assets/hero-dashboard.png";
 
@@ -224,6 +225,50 @@ const Landing = () => {
               <p className="text-muted-foreground text-xs mt-1">{s.label}</p>
             </div>
           ))}
+        </motion.div>
+      </section>
+
+      {/* FAQ */}
+      <section className="px-6 pb-16 max-w-3xl mx-auto w-full">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.9 }}
+          className="text-center mb-8"
+        >
+          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-foreground">
+            Frequently Asked Questions
+          </h2>
+        </motion.div>
+
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.95 }}
+        >
+          <Accordion type="single" collapsible className="space-y-3">
+            {[
+              { q: "How long does the assessment take?", a: "The full assessment has 70 questions and typically takes 12–18 minutes to complete. You can pause and resume anytime — your progress is auto-saved." },
+              { q: "Is this assessment scientifically validated?", a: "Yes. The assessment combines three proven frameworks: cognitive aptitude testing, Holland's RIASEC interest model, and Big Five personality traits — all widely used in career counseling." },
+              { q: "Do I need to create an account?", a: "No signup or account is required. Just enter your first name and class to get started. An email is optional and only used to send a backup of your report." },
+              { q: "How is my data protected?", a: "Your responses are processed locally and never shared with third parties. We only use your data to generate your personalized career report." },
+              { q: "Can schools or counselors use this?", a: "Absolutely! Schools and counselors can get a unique code to distribute to students. This allows batch administration and aggregated (anonymous) insights." },
+              { q: "What does the career report include?", a: "Your report includes your aptitude strengths, RIASEC profile, personality insights, and AI-generated career path recommendations tailored to your unique combination of traits." },
+            ].map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`faq-${i}`}
+                className="rounded-2xl bg-card/80 backdrop-blur-sm border border-border px-5 shadow-sm data-[state=open]:shadow-card"
+              >
+                <AccordionTrigger className="text-sm font-semibold text-foreground hover:no-underline py-4 text-left">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-4">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </motion.div>
       </section>
 
