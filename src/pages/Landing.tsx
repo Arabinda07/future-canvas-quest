@@ -225,6 +225,7 @@ const Landing = () => {
             </div>
           ))}
         </motion.div>
+      </section>
 
       {/* Bottom CTA Bar */}
       <section className="px-6 pb-12 max-w-6xl mx-auto w-full">
