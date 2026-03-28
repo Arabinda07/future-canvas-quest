@@ -29,8 +29,8 @@ const Register = () => {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* Background accents */}
-      <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-teal/8 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full bg-primary/6 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-lavender/8 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full bg-mint/6 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 flex flex-col flex-1 px-5 py-4 max-w-lg mx-auto w-full">
         <motion.button
@@ -105,7 +105,7 @@ const Register = () => {
           className="pt-6 pb-4"
         >
           <Button
-            className="w-full min-h-[56px] text-base font-bold rounded-full gradient-accent glow-teal border-0 text-accent-foreground gap-2"
+            className="w-full min-h-[56px] text-base font-bold rounded-full gradient-cta border-0 text-foreground gap-2 shadow-lg"
             disabled={!isValid}
             onClick={handleSubmit}
           >

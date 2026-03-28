@@ -14,8 +14,8 @@ const Success = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-5 text-center max-w-md mx-auto relative overflow-hidden">
       {/* Background */}
-      <div className="absolute top-20 right-0 w-64 h-64 rounded-full bg-teal/10 blur-3xl animate-pulse-glow pointer-events-none" />
-      <div className="absolute bottom-20 left-0 w-56 h-56 rounded-full bg-success/10 blur-3xl animate-pulse-glow pointer-events-none" style={{ animationDelay: "1s" }} />
+      <div className="absolute top-20 right-0 w-64 h-64 rounded-full bg-lavender/10 blur-3xl animate-pulse-glow pointer-events-none" />
+      <div className="absolute bottom-20 left-0 w-56 h-56 rounded-full bg-mint/10 blur-3xl animate-pulse-glow pointer-events-none" style={{ animationDelay: "1s" }} />
 
       <motion.div
         initial={{ scale: 0 }}
@@ -23,7 +23,7 @@ const Success = () => {
         transition={{ type: "spring", stiffness: 200, damping: 15 }}
         className="relative mb-8"
       >
-        <div className="w-28 h-28 rounded-full bg-teal-light flex items-center justify-center glow-teal">
+        <div className="w-28 h-28 rounded-full bg-mint-light flex items-center justify-center glow-mint">
           <CheckCircle2 size={56} className="text-success" />
         </div>
         <motion.div
@@ -62,7 +62,7 @@ const Success = () => {
       >
         <Button
           size="lg"
-          className="w-full min-h-[56px] text-base font-bold rounded-full gradient-accent glow-teal border-0 text-accent-foreground gap-2"
+          className="w-full min-h-[56px] text-base font-bold rounded-full gradient-cta border-0 text-foreground gap-2 shadow-lg"
           onClick={handleDownload}
         >
           <Download size={18} /> Download Career Report (PDF)

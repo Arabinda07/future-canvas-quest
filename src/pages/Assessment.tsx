@@ -127,7 +127,7 @@ const Assessment = () => {
                         className={cn(
                           "w-full min-h-[48px] text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all duration-200",
                           selected
-                            ? "bg-teal-light border-accent text-foreground shadow-sm"
+                            ? "bg-lavender-light border-primary text-foreground shadow-sm"
                             : "bg-background border-transparent hover:border-border text-foreground"
                         )}
                       >
@@ -150,7 +150,7 @@ const Assessment = () => {
                         className={cn(
                           "w-full min-h-[48px] text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all duration-200 flex items-center gap-3",
                           selected
-                            ? "bg-teal-light border-accent text-foreground shadow-sm"
+                            ? "bg-lavender-light border-primary text-foreground shadow-sm"
                             : "bg-background border-transparent hover:border-border text-foreground"
                         )}
                       >
@@ -175,7 +175,7 @@ const Assessment = () => {
           <Button
             className={cn(
               "flex-1 min-h-[52px] rounded-full font-bold gap-2 border-0 text-accent-foreground",
-              isLastPage ? "gradient-hero" : "gradient-accent glow-teal"
+              isLastPage ? "gradient-hero" : "gradient-accent glow-lavender"
             )}
             onClick={goNext}
             disabled={!allAnswered || submitting}
