@@ -293,6 +293,44 @@ const Landing = () => {
           </Button>
         </motion.div>
       </section>
+
+      {/* Footer */}
+      <footer className="border-t border-border bg-card/40 backdrop-blur-sm mt-4">
+        <div className="max-w-6xl mx-auto px-6 py-10">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-8">
+            {/* Brand */}
+            <div className="text-center sm:text-left">
+              <div className="flex items-center gap-2 justify-center sm:justify-start mb-2">
+                <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center">
+                  <Sparkles size={14} className="text-accent-foreground" />
+                </div>
+                <span className="font-heading text-lg font-bold text-foreground">NextStep</span>
+              </div>
+              <p className="text-muted-foreground text-xs max-w-xs leading-relaxed">
+                AI-powered psychometric career assessment for high school students.
+              </p>
+            </div>
+
+            {/* Links */}
+            <div className="flex gap-10 text-sm">
+              <div className="space-y-2">
+                <h4 className="font-heading font-bold text-foreground text-xs uppercase tracking-wider">Legal</h4>
+                <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</a>
+                <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">Terms of Service</a>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-heading font-bold text-foreground text-xs uppercase tracking-wider">Contact</h4>
+                <a href="mailto:hello@nextstep.app" className="block text-muted-foreground hover:text-foreground transition-colors">hello@nextstep.app</a>
+                <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">Support</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-border mt-8 pt-6 text-center">
+            <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} NextStep Career Canvas. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
