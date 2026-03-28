@@ -30,7 +30,7 @@ const Landing = () => {
         <Button
           variant="outline"
           size="sm"
-          className="rounded-full border-border bg-card/80 backdrop-blur-sm hover:bg-card"
+          className="rounded-full border-primary/30 bg-primary/10 text-primary font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
           onClick={() => navigate("/register")}
         >
           Get Started
@@ -38,7 +38,7 @@ const Landing = () => {
       </motion.header>
 
       {/* Hero Section - Two Column */}
-      <main className="flex-1 flex flex-col lg:flex-row items-center justify-center px-6 gap-8 lg:gap-16 max-w-6xl mx-auto w-full py-12 lg:py-0">
+      <main className="flex-1 flex flex-col lg:flex-row items-center justify-center px-6 gap-8 lg:gap-12 max-w-6xl mx-auto w-full py-12 lg:py-0">
         {/* Left - Text */}
         <div className="flex-1 text-center lg:text-left max-w-xl">
           <motion.div
@@ -101,7 +101,7 @@ const Landing = () => {
           initial={{ x: 40, opacity: 0, rotateY: -5 }}
           animate={{ x: 0, opacity: 1, rotateY: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="flex-1 flex justify-center lg:justify-end max-w-lg lg:max-w-xl relative"
+          className="flex-1 flex items-center justify-center lg:justify-end max-w-lg lg:max-w-xl relative"
         >
           {/* Decorative blobs */}
           <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-lavender-light blur-3xl opacity-60 pointer-events-none" />
