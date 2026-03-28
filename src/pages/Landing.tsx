@@ -141,6 +141,91 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Testimonials */}
+      <section className="px-6 pb-16 max-w-6xl mx-auto w-full">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="text-center mb-8"
+        >
+          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-foreground">
+            What Students Say
+          </h2>
+          <p className="text-muted-foreground text-sm mt-2">
+            Trusted by thousands of students across India
+          </p>
+        </motion.div>
+
+        <div className="grid sm:grid-cols-3 gap-4">
+          {[
+            {
+              name: "Ananya R.",
+              class: "Class XII",
+              text: "This assessment helped me realize I'm suited for design, not engineering. My parents were surprised but supportive once they saw the detailed report!",
+              color: "bg-lavender-light",
+            },
+            {
+              name: "Karthik M.",
+              class: "Class X",
+              text: "I loved how quick it was. The RIASEC section really opened my eyes to career paths I'd never considered before. Highly recommend!",
+              color: "bg-mint-light",
+            },
+            {
+              name: "Priya S.",
+              class: "Class XI",
+              text: "Our school counselor used NextStep for our entire batch. The personalized reports were incredibly accurate and easy to understand.",
+              color: "bg-peach-light",
+            },
+          ].map((t, i) => (
+            <motion.div
+              key={t.name}
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.75 + i * 0.1 }}
+              className="rounded-2xl bg-card/80 backdrop-blur-sm p-6 shadow-card border border-border flex flex-col"
+            >
+              <Quote size={20} className="text-primary/30 mb-3" />
+              <p className="text-foreground text-sm leading-relaxed flex-1">
+                "{t.text}"
+              </p>
+              <div className="flex items-center gap-3 mt-5 pt-4 border-t border-border">
+                <div className={`w-10 h-10 rounded-full ${t.color} flex items-center justify-center font-heading font-bold text-sm text-foreground`}>
+                  {t.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-heading font-bold text-foreground text-sm">{t.name}</p>
+                  <p className="text-muted-foreground text-xs">{t.class}</p>
+                </div>
+                <div className="ml-auto flex gap-0.5">
+                  {[...Array(5)].map((_, si) => (
+                    <Star key={si} size={12} className="fill-sunshine text-sunshine" />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Stats row */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.9 }}
+          className="grid grid-cols-3 gap-4 mt-8"
+        >
+          {[
+            { stat: "12,000+", label: "Assessments Taken" },
+            { stat: "4.8/5", label: "Average Rating" },
+            { stat: "150+", label: "Schools Onboarded" },
+          ].map((s) => (
+            <div key={s.label} className="text-center rounded-2xl bg-card/60 backdrop-blur-sm border border-border p-5">
+              <p className="font-heading text-2xl sm:text-3xl font-extrabold text-primary">{s.stat}</p>
+              <p className="text-muted-foreground text-xs mt-1">{s.label}</p>
+            </div>
+          ))}
+        </motion.div>
+
       {/* Bottom CTA Bar */}
       <section className="px-6 pb-12 max-w-6xl mx-auto w-full">
         <motion.div
