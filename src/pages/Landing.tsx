@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Brain, Zap, ShieldCheck, ArrowRight, Sparkles, CheckCircle } from "lucide-react";
+import { Brain, Zap, ShieldCheck, ArrowRight, Sparkles, CheckCircle, Star, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import heroDashboard from "@/assets/hero-dashboard.png";
