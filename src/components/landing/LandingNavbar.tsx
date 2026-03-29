@@ -7,7 +7,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const navLinks = [
   { label: "What it tests", href: "#what" },
   { label: "How it works", href: "#how" },
-  { label: "From KV-2", href: "#proof" },
+  { label: "PM SHRI Deployment", href: "#proof" },
   { label: "About me", href: "#about" },
   { label: "For schools", href: "#schools" },
 ];

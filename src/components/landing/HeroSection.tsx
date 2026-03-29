@@ -76,7 +76,7 @@ const HeroSection = () => {
                   document.getElementById("proof")?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
-                See how it worked at KV-2
+                Deployed in PM SHRI Schools ↓
               </Button>
             </motion.div>
 
@@ -87,11 +87,12 @@ const HeroSection = () => {
               className="flex items-center gap-3 flex-wrap"
             >
               {[
+                { emoji: "🏛️", text: "PM SHRI Schools", bg: "bg-sunshine-light", special: true },
                 { emoji: "🎓", text: "480+ students tested", bg: "bg-lavender-light" },
                 { emoji: "📋", text: "Classes 9 · 10 · 11 · 12", bg: "bg-mint-light" },
                 { emoji: "⚡", text: "Instant report", bg: "bg-sunshine-light" },
               ].map((p) => (
-                <div key={p.text} className="flex items-center gap-2 bg-card border border-border rounded-full px-3.5 py-1.5 text-xs font-bold text-foreground shadow-card">
+                <div key={p.text} className={`flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-bold shadow-card ${(p as any).special ? 'bg-gradient-to-r from-sunshine-light to-[#fff3c0] border border-sunshine/40 text-sunshine-dark' : 'bg-card border border-border text-foreground'}`}>
                   <div className={`w-[22px] h-[22px] rounded-full ${p.bg} flex items-center justify-center text-xs`}>{p.emoji}</div>
                   {p.text}
                 </div>
@@ -130,11 +131,11 @@ const HeroSection = () => {
                 <div className="text-xs font-bold text-muted-foreground leading-tight">students<br />across 4 classes</div>
               </div>
             </div>
-            <div className="hidden lg:flex absolute -right-5 top-7 bg-card border border-border rounded-[14px] p-3 shadow-card-hover items-center gap-2.5 animate-float z-10">
-              <div className="w-9 h-9 rounded-[10px] bg-mint-light flex items-center justify-center text-lg">✅</div>
+            <div className="hidden lg:flex absolute -right-5 top-7 bg-gradient-to-br from-sunshine-light to-[#fff3c0] border border-sunshine/40 rounded-[14px] p-3 shadow-card-hover items-center gap-2.5 animate-float z-10">
+              <div className="w-9 h-9 rounded-[10px] bg-sunshine-light flex items-center justify-center text-lg">🏛️</div>
               <div>
-                <div className="font-heading text-2xl font-bold text-mint-dark leading-none">KV-2</div>
-                <div className="text-xs font-bold text-muted-foreground leading-tight">Kharagpur<br />real deployment</div>
+                <div className="font-heading text-base font-bold text-sunshine-dark leading-none tracking-wide">PM SHRI</div>
+                <div className="text-xs font-bold text-muted-foreground leading-tight">Kendriya Vidyalayas<br />career readiness</div>
               </div>
             </div>
           </motion.div>

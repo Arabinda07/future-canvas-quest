@@ -28,14 +28,18 @@ const LandingFooter = () => (
             <Phone size={14} /> +91 82409 59567
           </a>
           <div className="flex items-center gap-2 text-sm text-white/50">
-            <MapPin size={14} /> Siliguri, West Bengal
+            <MapPin size={14} /> Durgapur, West Bengal
           </div>
+          <a href="https://www.linkedin.com/in/robin0607saha/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-white/50 hover:text-sunshine transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            linkedin.com/in/robin0607saha
+          </a>
         </div>
       </div>
 
       <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs">
         <span>© {new Date().getFullYear()} Future Canvas · Arabinda Saha · Personal Initiative</span>
-        <span className="text-white/25">Built with care for Indian school students</span>
+        <span className="text-white/25">Originally deployed in PM SHRI Schools · Now independent</span>
       </div>
     </div>
   </footer>

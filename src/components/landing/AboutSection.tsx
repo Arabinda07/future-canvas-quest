@@ -24,7 +24,7 @@ const AboutSection = () => (
             <div className="flex items-center gap-2">
               <span className="text-xl">📍</span>
               <div>
-                <div className="text-xs font-extrabold text-primary-foreground">Siliguri</div>
+                <div className="text-xs font-extrabold text-primary-foreground">Durgapur</div>
                 <div className="text-xs text-primary-foreground/65">West Bengal</div>
               </div>
             </div>
@@ -41,12 +41,12 @@ const AboutSection = () => (
             Hi, I'm <span className="italic text-primary">Arabinda Saha</span>
           </h2>
           <div className="space-y-4 text-muted-foreground text-base leading-relaxed mb-6">
-            <p>Future Canvas is a personal initiative — built because I watched too many students choose streams based on parental pressure or peer influence, without any real understanding of their own strengths.</p>
-            <p>I've worked closely with schools, teachers, and students across India. After seeing how little access most Class 9–12 students have to structured career guidance, I built this assessment to fill that gap — combining established psychometric science with India-specific career context.</p>
-            <p>This is not a startup. It's one person, one question paper, and a genuine commitment to getting this right before scaling it. I personally follow up with every school and every counsellor who uses it.</p>
+            <p>Future Canvas started as a career readiness program I designed and delivered at Kendriya Vidyalayas under the Government of India's PM SHRI initiative — a NEP 2020 implementation program I ran across schools as Program Head at Edudigm.</p>
+            <p>After three years of building and scaling school programs — 600+ schools, 1,500+ students, 6 states — I left to continue this work independently. Future Canvas is that continuation: the same assessment, the same science, now available directly to any student or school, without institutional overhead.</p>
+            <p>This is not a startup. It's one person, one validated question paper, and a genuine commitment to getting career guidance right for Indian students — one school at a time.</p>
           </div>
           <div className="flex gap-3.5 flex-wrap">
-            <a href="https://www.linkedin.com/in/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold border border-border bg-card text-muted-foreground hover:border-primary hover:text-primary hover:bg-lavender-light transition-all">
+            <a href="https://www.linkedin.com/in/robin0607saha/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold border border-border bg-card text-muted-foreground hover:border-primary hover:text-primary hover:bg-lavender-light transition-all">
               <Linkedin size={16} className="opacity-60" /> LinkedIn
             </a>
             <a href="mailto:arabinda.saha06.07@gmail.com" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold border border-border bg-card text-muted-foreground hover:border-primary hover:text-primary hover:bg-lavender-light transition-all">
