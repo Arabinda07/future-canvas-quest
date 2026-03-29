@@ -22,7 +22,7 @@ const ForSchools = () => {
     "Generates instant personalised reports per student",
     "Aligned with NEP 2020's holistic development framework",
     "I personally support every school that uses it — no handoff",
-    "Already tested with 480+ students at KV-2 Kharagpur",
+    "Deployed in PM SHRI Kendriya Vidyalayas — 480+ students across Classes 9–12",
   ];
 
   return (
