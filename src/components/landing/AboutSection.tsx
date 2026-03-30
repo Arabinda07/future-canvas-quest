@@ -1,59 +1,76 @@
 import { motion } from "framer-motion";
-import { Linkedin, Mail } from "lucide-react";
+
+const credentials = [
+  "Program Head · Edudigm",
+  "PM SHRI · KV Programs",
+  "Stellar Space Quiz · 600+ Schools",
+  "Data Consultant · LKS",
+];
 
 const AboutSection = () => (
-  <section id="about" className="py-20 lg:py-24 border-t border-border">
-    <div className="max-w-[1080px] mx-auto px-6">
-      <div className="grid lg:grid-cols-[1fr_1.4fr] gap-16 items-center">
+  <section id="who" className="py-24 lg:py-28 bg-background border-t border-white/10 relative overflow-hidden">
+    <div className="glow-blob w-[500px] h-[500px] -top-[100px] -left-[100px]" style={{ background: "rgba(124,107,202,0.18)", animationDuration: "10s" }} />
+
+    <div className="max-w-[1100px] mx-auto px-7">
+      <div className="grid lg:grid-cols-[1fr_1.6fr] gap-20 items-center relative z-[1]">
         {/* Photo */}
         <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} className="relative">
-          <div className="w-full aspect-[3/4] rounded-3xl bg-gradient-to-br from-lavender-light to-mint-light shadow-card-hover overflow-hidden flex flex-col items-center justify-center gap-2.5">
-            <span className="text-5xl opacity-35">🧑‍💼</span>
-            <span className="text-muted-foreground text-sm font-bold">Your photo here</span>
+          <div className="glass w-full aspect-[3/4] rounded-[20px] flex flex-col items-center justify-center gap-2.5 overflow-hidden" style={{ background: "rgba(124,107,202,0.08)" }}>
+            <span className="text-5xl opacity-20">🧑‍💼</span>
+            <span className="text-white/40 text-[0.82rem] text-center leading-[1.5]">Your photo here<br /><span className="opacity-50 font-light">arabinda07.github.io/assets/photo.png</span></span>
           </div>
-          <div className="absolute -top-4 -right-5 bg-card border border-border rounded-xl p-3 shadow-card-hover animate-float" style={{ animationDuration: "5s" }}>
-            <div className="flex items-center gap-2">
-              <span className="text-xl">🎓</span>
-              <div>
-                <div className="text-xs font-extrabold text-foreground">IIT Kharagpur</div>
-                <div className="text-xs text-muted-foreground">Alumni Network</div>
-              </div>
+          {/* Badge 1 */}
+          <div className="absolute -top-4 -right-5 glass rounded-[14px] p-3 flex items-center gap-2.5 animate-float" style={{ animationDuration: "5s" }}>
+            <span className="text-xl">🎤</span>
+            <div>
+              <div className="text-[0.8rem] font-medium text-white/90 leading-tight">IIT Kgp Research Park</div>
+              <div className="text-[0.72rem] font-light text-white/50">Speaker · 2025</div>
             </div>
           </div>
-          <div className="absolute -bottom-4 -left-5 gradient-accent rounded-xl p-3 shadow-lg animate-float" style={{ animationDuration: "6s", animationDirection: "reverse" }}>
-            <div className="flex items-center gap-2">
-              <span className="text-xl">📍</span>
-              <div>
-                <div className="text-xs font-extrabold text-primary-foreground">Durgapur</div>
-                <div className="text-xs text-primary-foreground/65">West Bengal</div>
-              </div>
+          {/* Badge 2 */}
+          <div className="absolute -bottom-4 -left-5 glass rounded-[14px] p-3 flex items-center gap-2.5 animate-float" style={{ animationDuration: "6s", animationDirection: "reverse", background: "rgba(124,107,202,0.15)", border: "1px solid rgba(124,107,202,0.3)" }}>
+            <span className="text-xl">📍</span>
+            <div>
+              <div className="text-[0.8rem] font-medium leading-tight" style={{ color: "rgba(200,185,255,0.9)" }}>Durgapur, West Bengal</div>
+              <div className="text-[0.72rem] font-light text-white/50">M.Sc. Mathematics · Jadavpur University</div>
             </div>
           </div>
         </motion.div>
 
         {/* Text */}
-        <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-          <div className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-primary bg-lavender-light px-3.5 py-1.5 rounded-full mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+        <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.15 }}>
+          <div className="glass inline-flex items-center gap-2 text-[0.72rem] font-medium tracking-[0.12em] uppercase text-white/80 px-4 py-1.5 rounded-full mb-5">
+            <span className="w-[5px] h-[5px] rounded-full bg-white/60 shrink-0" />
             The person behind this
           </div>
-          <h2 className="font-heading text-[clamp(1.8rem,3vw,2.4rem)] font-bold text-foreground mb-4">
-            Hi, I'm <span className="italic text-primary">Arabinda Saha</span>
+          <h2 className="font-heading italic text-[clamp(2.4rem,4.5vw,3.8rem)] text-white mb-5">
+            Hi, I'm<br /><em>Arabinda Saha</em>
           </h2>
-          <div className="space-y-4 text-muted-foreground text-base leading-relaxed mb-6">
-            <p>Future Canvas started as a career readiness program I designed and delivered at Kendriya Vidyalayas under the Government of India's PM SHRI initiative — a NEP 2020 implementation program I ran across schools as Program Head at Edudigm.</p>
-            <p>After three years of building and scaling school programs — 600+ schools, 1,500+ students, 6 states — I left to continue this work independently. Future Canvas is that continuation: the same assessment, the same science, now available directly to any student or school, without institutional overhead.</p>
-            <p>This is not a startup. It's one person, one validated question paper, and a genuine commitment to getting career guidance right for Indian students — one school at a time.</p>
+          <div className="space-y-4 mb-5">
+            <p className="text-white/60 text-[0.97rem] font-light leading-[1.85]">I spent three years as Program Head at Edudigm — designing and scaling school programs across 600+ schools, 6 states, and 1,500+ students. A significant part of that work was delivering career readiness under the Government of India's PM SHRI initiative at Kendriya Vidyalayas.</p>
+            <p className="text-white/60 text-[0.97rem] font-light leading-[1.85]">Future Canvas is what came out of those three years. The frameworks — Aptitude, RIASEC, Big Five — were tested in real classrooms, with real Class 9–12 students, with real counsellors watching. I saw what worked and what didn't.</p>
+            <p className="text-white/60 text-[0.97rem] font-light leading-[1.85]">I left Edudigm to continue this as a personal initiative — not a startup, not an institution. One person, one validated question paper, and a commitment to getting career guidance right for Indian students before scaling it.</p>
           </div>
-          <div className="flex gap-3.5 flex-wrap">
-            <a href="https://www.linkedin.com/in/robin0607saha/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold border border-border bg-card text-muted-foreground hover:border-primary hover:text-primary hover:bg-lavender-light transition-all">
-              <Linkedin size={16} className="opacity-60" /> LinkedIn
+
+          <div className="flex flex-wrap gap-2 mb-7">
+            {credentials.map((c) => (
+              <span key={c} className="glass text-[0.72rem] font-medium tracking-[0.04em] px-3.5 py-1 rounded-full text-white/70">{c}</span>
+            ))}
+          </div>
+
+          <div className="flex gap-2.5 flex-wrap">
+            <a href="https://www.linkedin.com/in/robin0607saha/" target="_blank" rel="noopener noreferrer" className="glass inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-[0.82rem] font-medium text-white/80 hover:text-white transition-colors">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(124,107,202,0.8)"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+              LinkedIn
             </a>
-            <a href="mailto:arabinda.saha06.07@gmail.com" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold border border-border bg-card text-muted-foreground hover:border-primary hover:text-primary hover:bg-lavender-light transition-all">
-              <Mail size={16} className="opacity-60" /> arabinda.saha06.07@gmail.com
+            <a href="https://arabinda07.github.io/" target="_blank" rel="noopener noreferrer" className="glass inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-[0.82rem] font-medium text-white/80 hover:text-white transition-colors">
+              🌐 Full portfolio →
             </a>
-            <a href="https://wa.me/918240959567" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold border border-border bg-card text-muted-foreground hover:border-secondary hover:text-secondary hover:bg-mint-light transition-all">
-              <span className="text-base">💬</span> WhatsApp
+            <a href="mailto:arabinda.saha06.07@gmail.com" className="glass inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-[0.82rem] font-medium text-white/80 hover:text-white transition-colors">
+              ✉️ Email
+            </a>
+            <a href="https://wa.me/918240959567" target="_blank" rel="noopener noreferrer" className="glass inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-[0.82rem] font-medium text-white/80 hover:text-white transition-colors">
+              💬 WhatsApp
             </a>
           </div>
         </motion.div>

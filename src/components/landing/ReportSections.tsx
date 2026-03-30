@@ -1,55 +1,88 @@
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const sections = [
-  { letter: "A", title: "Profile at a Glance", desc: "Your core aptitudes, primary interest type, dominant personality trait, and stream recommendation — all in one page.", tag: "Summary" },
-  { letter: "B", title: "Aptitude Deep Dive", desc: "Numerical, Logical, and Verbal scores with visual bars and personalised, school-relevant interpretations for each.", tag: "Score-based" },
-  { letter: "C", title: "Interests & Personality", desc: "Your full RIASEC archetype with activities. Big Five traits explained in language a 15-year-old will actually understand.", tag: "Profile-based" },
-  { letter: "D", title: "Your Action Plan", desc: "Subject choices, CBSE project ideas, olympiad targets — all tailored to your class and recommended stream.", tag: "Actionable" },
-  { letter: "E", title: "Career Pathways", desc: "5–10 specific career options matched to your top interests, grounded in the reality of the Indian job market.", tag: "India-specific" },
-  { letter: "F", title: "Guidance Notes", desc: "Personalised flags — like low conscientiousness or high neuroticism — with targeted, kind, actionable advice for each.", tag: "Counsellor-ready" },
+const specs = [
+  { icon: "📋", label: "Section A", val: "20 MCQs — Quantitative, Logical & Verbal Reasoning · 60 minutes · No negative marking" },
+  { icon: "🧭", label: "Section B", val: "50 statements — RIASEC interests & Big Five personality · No time limit · No right or wrong answers" },
+  { icon: "⚡", label: "Report", val: "Generated instantly · Personalised to your class & answers · Printable PDF" },
+  { icon: "🆓", label: "Cost", val: "Completely free for students · Always" },
 ];
 
-const ReportSections = () => (
-  <section id="report" className="py-20 lg:py-24 relative overflow-hidden" style={{ background: "linear-gradient(160deg, hsl(250 30% 15%) 0%, hsl(250 20% 23%) 60%, hsl(220 30% 15%) 100%)" }}>
-    {/* Blobs */}
-    <div className="absolute -top-24 -right-20 w-[400px] h-[400px] rounded-full bg-primary/15 blur-[60px] pointer-events-none" />
-    <div className="absolute -bottom-20 -left-16 w-[300px] h-[300px] rounded-full bg-secondary/10 blur-[60px] pointer-events-none" />
+const reportItems = [
+  { letter: "A", title: "Profile at a Glance", desc: "Core aptitudes, dominant interest type, key personality trait, and stream recommendation — one summary page." },
+  { letter: "B", title: "Aptitude Deep Dive", desc: "Numerical, Logical, and Verbal scores with visual bars and school-relevant interpretation for each." },
+  { letter: "C", title: "Interests & Personality", desc: "Your RIASEC archetype with activities, and Big Five traits in plain language — not jargon." },
+  { letter: "D", title: "Action Plan", desc: "Subject choices, CBSE project ideas, and olympiad targets — tailored to your specific class and stream." },
+  { letter: "E", title: "Career Pathways", desc: "5–10 career options matched to your interests, grounded in the Indian job market — not generic lists." },
+  { letter: "F", title: "Guidance Notes", desc: "Personalised counsellor flags with kind, targeted advice — readable by student, parent, and counsellor alike." },
+];
 
-    <div className="max-w-[1080px] mx-auto px-6 relative z-10">
-      <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} className="text-center mb-14">
-        <div className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-sunshine bg-sunshine/15 px-3.5 py-1.5 rounded-full mb-5">
-          <span className="w-1.5 h-1.5 rounded-full bg-sunshine" />
-          What you get
-        </div>
-        <h2 className="font-heading text-[clamp(1.8rem,3.2vw,2.6rem)] font-bold text-white mb-3.5">
-          Your report has
-          <br />
-          <em className="italic text-sunshine">six sections</em>
-        </h2>
-        <p className="text-white/55 text-base max-w-[540px] mx-auto">
-          Not a generic output. A personalised document that a student, parent, and counsellor can all read and act on.
-        </p>
-      </motion.div>
+const ReportSections = () => {
+  const navigate = useNavigate();
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        {sections.map((s, i) => (
-          <motion.div
-            key={s.letter}
-            initial={{ y: 28, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: (i % 3) * 0.1 }}
-            className="bg-white/[0.07] border border-white/[0.12] rounded-2xl p-5 hover:bg-white/[0.12] hover:border-sunshine/40 transition-all duration-300"
-          >
-            <div className="font-heading text-[2rem] font-bold text-sunshine leading-none mb-2.5">{s.letter}</div>
-            <h3 className="font-extrabold text-white text-sm mb-1.5">{s.title}</h3>
-            <p className="text-white/50 text-xs leading-relaxed">{s.desc}</p>
-            <span className="inline-block mt-3 px-2.5 py-0.5 rounded-full bg-sunshine/[0.18] text-sunshine text-[0.68rem] font-extrabold uppercase tracking-wide">{s.tag}</span>
+  return (
+    <section id="what" className="py-24 lg:py-28 relative overflow-hidden" style={{ background: "#0a0a0a" }}>
+      <div className="glow-blob w-[500px] h-[500px] -bottom-[100px] -right-[100px]" style={{ background: "rgba(124,107,202,0.18)", animationDuration: "12s" }} />
+
+      <div className="max-w-[1100px] mx-auto px-7">
+        <div className="grid lg:grid-cols-2 gap-[72px] items-start relative z-[1]">
+          {/* Left: specs */}
+          <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
+            <div className="glass inline-flex items-center gap-2 text-[0.72rem] font-medium tracking-[0.12em] uppercase text-white/80 px-4 py-1.5 rounded-full mb-5">
+              <span className="w-[5px] h-[5px] rounded-full bg-white/60 shrink-0" />
+              The assessment
+            </div>
+            <h2 className="font-heading italic text-[clamp(2.4rem,4.5vw,3.8rem)] text-white mb-5">
+              Future Canvas:<br /><em>what the test looks like</em>
+            </h2>
+            <p className="text-white/60 text-[0.95rem] font-light leading-[1.8] mb-8">
+              70 carefully designed questions. Two sections. One personalised report. Works on any phone, tablet, or computer — no app needed.
+            </p>
+
+            <div className="grid gap-2.5 mb-8">
+              {specs.map((s) => (
+                <div key={s.label} className="glass flex items-center gap-3.5 p-4 rounded-[14px]">
+                  <div className="w-10 h-10 rounded-[10px] bg-white/5 flex items-center justify-center text-[1.1rem] shrink-0">{s.icon}</div>
+                  <div>
+                    <div className="text-[0.68rem] font-semibold tracking-[0.08em] uppercase text-white/40 mb-0.5">{s.label}</div>
+                    <div className="text-[0.92rem] text-white/80 leading-[1.5]">{s.val}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => navigate("/register")}
+              className="glass-strong inline-flex items-center gap-2 text-white font-medium text-[0.9rem] px-7 py-3.5 rounded-full hover:-translate-y-0.5 transition-transform"
+            >
+              Start the free assessment →
+            </button>
           </motion.div>
-        ))}
+
+          {/* Right: report sections */}
+          <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.15 }}>
+            <div className="mb-5">
+              <span className="inline-flex items-center gap-2 text-[0.72rem] font-medium tracking-[0.08em] uppercase px-4 py-1.5 rounded-full" style={{ background: "rgba(124,107,202,0.12)", border: "1px solid rgba(124,107,202,0.25)", color: "rgba(200,185,255,0.9)" }}>
+                <span className="w-[5px] h-[5px] rounded-full shrink-0" style={{ background: "rgba(200,185,255,0.8)" }} />
+                What your report contains
+              </span>
+            </div>
+            <div className="grid gap-2">
+              {reportItems.map((r) => (
+                <div key={r.letter} className="glass flex gap-3.5 p-4 rounded-[14px] hover:bg-white/5 transition-colors cursor-default">
+                  <div className="font-heading italic text-xl text-primary w-6 shrink-0 leading-[1.4]">{r.letter}</div>
+                  <div>
+                    <div className="text-[0.9rem] font-medium text-white/90 mb-0.5">{r.title}</div>
+                    <div className="text-[0.78rem] font-light text-white/40 leading-[1.5]">{r.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default ReportSections;
