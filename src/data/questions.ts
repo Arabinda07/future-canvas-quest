@@ -1,15 +1,15 @@
-import q11Direction from "@/assets/questions/q11-direction-figure.png";
-import q13Mirror from "@/assets/questions/q13-mirror-figure.png";
-import q14WaterImage from "@/assets/questions/q14-water-image-figure.png";
-
 export interface Question {
   id: string;
   text: string;
   type: "aptitude" | "psychometric";
   options?: string[];
-  image?: string;
-  imageAlt?: string;
+  visualSlot?: {
+    alt: string;
+    placement?: "side" | "below";
+  };
 }
+
+const aptitudeOptionLabels = ["A", "B", "C", "D"];
 
 const aptitudeQuestions: Question[] = [
   { id: "Q1", text: "A book costs ?200. A shopkeeper offers a 10% discount. What is the sale price?", type: "aptitude", options: ["?180", "?190", "?195", "?185"] },
@@ -17,22 +17,22 @@ const aptitudeQuestions: Question[] = [
   { id: "Q3", text: "Average of 24, 28, 32, 36 is:", type: "aptitude", options: ["28", "30", "32", "34"] },
   { id: "Q4", text: "Two students appeared at an examination. One of them secured 9 marks more than the other and his marks was 56% of the sum of their marks. The marks obtained by them are:", type: "aptitude", options: ["39, 30", "41, 32", "42, 33", "43, 34"] },
   { id: "Q5", text: "The price of 10 chairs is equal to that of 4 tables. The price of 15 chairs and 2 tables together is Rs. 4000. The total price of 12 chairs and 3 tables is:", type: "aptitude", options: ["Rs. 3500", "Rs. 3750", "Rs. 3840", "Rs. 3900"] },
-  { id: "Q6", text: "An accurate clock shows 8 o'clock in the morning. Through how many degrees will the hour hand rotate when the clock shows 2 o'clock in the afternoon?", type: "aptitude", options: ["144°", "150°", "168°", "180°"] },
+  { id: "Q6", text: "An accurate clock shows 8 o’clock in the morning. Through how many degrees will the hour hand rotate when the clock shows 2 o’clock in the afternoon?", type: "aptitude", options: ["144°", "150°", "168°", "180°"] },
   { id: "Q7", text: "If one-third of one-fourth of a number is 15, then three-tenth of that number is:", type: "aptitude", options: ["35", "36", "45", "54"] },
   { id: "Q8", text: "Parrot : Cage :: Man : ?", type: "aptitude", options: ["Home", "Life", "House", "Prison"] },
   { id: "Q9", text: "If RUN is written as SVO, how is FUN written?", type: "aptitude", options: ["FVN", "GVO", "GUN", "FVO"] },
   { id: "Q10", text: "In a certain code, STAR is written as TUBS. How is MOON written in that code?", type: "aptitude", options: ["NPPM", "NPPO", "NQOP", "NNOM"] },
-  { id: "Q11", text: "Find the direction which replaces [?] in the following.", type: "aptitude", options: ["N", "NE", "W", "SW"], image: q11Direction, imageAlt: "Direction diagram used in question 11" },
+  { id: "Q11", text: "Find the direction which replaces [?] in the following.", type: "aptitude", options: ["N", "NE", "W", "SW"], visualSlot: { alt: "Reserved direction diagram slot", placement: "side" } },
   { id: "Q12", text: "Which of the following letters is 6th to the right of the 12th letter from the left in the English alphabet?", type: "aptitude", options: ["Q", "R", "S", "T"] },
-  { id: "Q13", text: "Choose the alternative which closely resembles the mirror image of the given combination.", type: "aptitude", options: ["1", "2", "3", "4"], image: q13Mirror, imageAlt: "Mirror image options shown for question 13" },
-  { id: "Q14", text: "Choose the alternative which closely resembles the water-image of the given combination.", type: "aptitude", options: ["1", "2", "3", "4"], image: q14WaterImage, imageAlt: "Water image options shown for question 14" },
-  { id: "Q15", text: "Even if it rains I shall come means ......", type: "aptitude", options: ["if I come it will not rain", "if it rains I shall not come", "I will certainly come whether it rains or not", "whenever there is rain I shall come"] },
+  { id: "Q13", text: "Choose the alternative which closely resembles the mirror image of the given combination.", type: "aptitude", options: ["1", "2", "3", "4"], visualSlot: { alt: "Reserved mirror-image visual slot", placement: "below" } },
+  { id: "Q14", text: "Choose the alternative which closely resembles the water-image of the given combination.", type: "aptitude", options: ["1", "2", "3", "4"], visualSlot: { alt: "Reserved water-image visual slot", placement: "below" } },
+  { id: "Q15", text: "Even if it rains I shall come means ……", type: "aptitude", options: ["if I come it will not rain", "if it rains I shall not come", "I will certainly come whether it rains or not", "whenever there is rain I shall come"] },
   { id: "Q16", text: "The word most similar to “HARMONY”?", type: "aptitude", options: ["Peace", "Noise", "Anger", "Fight"] },
-  { id: "Q17", text: "The correct meaning of the proverb/idiom: “To put one's hand to plough”", type: "aptitude", options: ["To take up agricultural farming", "To take a difficult task", "To get entangled into unnecessary things", "Take interest in technical work"] },
+  { id: "Q17", text: "The correct meaning of the proverb/idiom: “To put one’s hand to plough”", type: "aptitude", options: ["To take up agricultural farming", "To take a difficult task", "To get entangled into unnecessary things", "Take interest in technical work"] },
   { id: "Q18", text: "Find the correctly spelt word:", type: "aptitude", options: ["Efficient", "Treatmeant", "Beterment", "Employd"] },
   { id: "Q19", text: "One Word Substitute: Extreme old age when a man behaves like a fool", type: "aptitude", options: ["Imbecility", "Senility", "Dotage", "Superannuation"] },
   { id: "Q20", text: "Fate smiles ____________ those who untiringly grapple with stark realities of life.", type: "aptitude", options: ["with", "over", "on", "round"] },
-];
+].map((question) => ({ ...question, options: question.options?.map((option, index) => `${aptitudeOptionLabels[index]}. ${option}`) }));
 
 const psychometricQuestions: Question[] = [
   { id: "Q21", text: "I enjoy fixing or repairing things at home.", type: "psychometric" },

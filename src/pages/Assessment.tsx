@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertCircle, ChevronLeft, ChevronRight, Loader2, Send } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAssessment } from "@/context/AssessmentContext";
-import { questions, QUESTIONS_PER_PAGE, TOTAL_PAGES, TOTAL_QUESTIONS } from "@/data/questions";
+import { questions, QUESTIONS_PER_PAGE, TOTAL_PAGES, TOTAL_QUESTIONS, type Question } from "@/data/questions";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -15,21 +15,29 @@ const PSYCHOMETRIC_OPTIONS = [
   { value: "D", label: "Strongly Disagree" },
 ];
 
-const QuestionImage = ({ src, alt }: { src: string; alt: string }) => {
-  const [failed, setFailed] = useState(false);
+const sectionMeta = {
+  aptitude: {
+    eyebrow: "Aptitude assessment",
+    title: "Reasoning and verbal ability",
+    description: "Choose one answer for each question. Use the A/B/C/D options exactly as shown.",
+  },
+  psychometric: {
+    eyebrow: "Interests and personality",
+    title: "Self-report reflection",
+    description: "Respond honestly based on what feels most true for you right now.",
+  },
+} as const;
 
-  if (failed) {
-    return (
-      <div className="mb-4 flex items-center gap-2 rounded-xl border border-dashed border-amber-400/50 bg-amber-50 px-3 py-2 text-xs text-amber-700 dark:bg-amber-950/20 dark:text-amber-300">
-        <AlertCircle size={14} className="shrink-0" />
-        Question image failed to load. Check the local asset reference.
-      </div>
-    );
-  }
+const ReservedVisualSlot = ({ question }: { question: Question }) => {
+  if (!question.visualSlot) return null;
 
   return (
-    <div className="mb-4 overflow-hidden rounded-xl border border-border bg-muted/30">
-      <img src={src} alt={alt} loading="lazy" className="max-h-[340px] w-full object-contain" onError={() => setFailed(true)} />
+    <div
+      aria-label={question.visualSlot.alt}
+      className="reserved-visual-slot min-h-44 rounded-[28px] border border-white/10 bg-white/[0.03]"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_35%_25%,rgba(164,145,255,0.18),transparent_42%),radial-gradient(circle_at_75%_80%,rgba(109,234,203,0.12),transparent_36%)]" />
+      <div className="pointer-events-none absolute inset-[10px] rounded-[22px] border border-dashed border-white/12" />
     </div>
   );
 };
@@ -52,6 +60,10 @@ const Assessment = () => {
   const allAnswered = pageQuestions.every((question) => state.answers[question.id]);
   const answeredCount = Object.keys(state.answers).length;
   const progress = Math.round((answeredCount / TOTAL_QUESTIONS) * 100);
+  const qStart = startIdx + 1;
+  const qEnd = Math.min(startIdx + QUESTIONS_PER_PAGE, TOTAL_QUESTIONS);
+  const currentSection = pageQuestions[0]?.type ?? "aptitude";
+  const meta = sectionMeta[currentSection];
 
   const goNext = () => {
     if (isLastPage) return handleSubmit();
@@ -76,87 +88,143 @@ const Assessment = () => {
     navigate("/success");
   };
 
-  const qStart = startIdx + 1;
-  const qEnd = Math.min(startIdx + QUESTIONS_PER_PAGE, TOTAL_QUESTIONS);
-
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <div className="sticky top-0 z-20 glass border-b px-5 py-3 space-y-2">
-        <div className="flex items-center justify-between text-sm max-w-xl mx-auto">
-          <span className="font-heading font-bold text-foreground">Future Canvas</span>
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground font-medium text-xs bg-muted rounded-full px-3 py-1">
-              Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
-            </span>
-            <ThemeToggle />
-          </div>
-        </div>
-        <div className="max-w-xl mx-auto w-full">
-          <div className="w-full h-2.5 bg-muted rounded-full overflow-hidden">
-            <motion.div className="h-full rounded-full gradient-accent" initial={false} animate={{ width: `${progress}%` }} transition={{ duration: 0.5, ease: "easeOut" }} />
-          </div>
-          <div className="flex justify-between mt-1.5">
-            <span className="text-[11px] text-muted-foreground font-medium">{answeredCount} answered</span>
-            <span className="text-[11px] font-semibold text-accent">{progress}%</span>
-          </div>
-        </div>
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="glow-blob w-[34rem] h-[34rem] bg-[hsl(var(--lavender-glow)/0.14)] -top-36 -left-28" />
+        <div className="glow-blob w-[30rem] h-[30rem] bg-[hsl(var(--mint-glow)/0.1)] top-[28%] -right-20" style={{ animationDuration: "17s" }} />
       </div>
 
-      <AnimatePresence mode="wait" custom={direction}>
-        <motion.div key={page} custom={direction} initial={{ x: direction * 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: direction * -40, opacity: 0 }} transition={{ duration: 0.25 }} className="flex-1 px-5 py-6 max-w-xl mx-auto w-full space-y-5">
-          {pageQuestions.map((question, index) => (
-            <motion.div key={question.id} initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: index * 0.05 }} className="bg-card rounded-2xl border border-border shadow-card p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-[11px] font-bold text-accent-foreground bg-accent/90 rounded-md px-2 py-0.5 uppercase tracking-wide">{question.id}</span>
-                <span className="text-[11px] text-muted-foreground font-medium">{question.type === "aptitude" ? "Aptitude" : "Interests & Personality"}</span>
+      <div className="relative px-4 py-4 md:px-6 md:py-6">
+        <div className="sticky top-0 z-20 mx-auto max-w-6xl rounded-[28px] border border-white/10 bg-black/35 px-5 py-4 shadow-card backdrop-blur-xl">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-2">
+              <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-white/70">
+                {meta.eyebrow}
               </div>
+              <div>
+                <h1 className="text-[clamp(1.9rem,3.6vw,3rem)] leading-[0.96]">{meta.title}</h1>
+                <p className="mt-2 max-w-2xl text-sm text-white/58">{meta.description}</p>
+              </div>
+            </div>
 
-              <p className="text-sm font-semibold text-foreground mb-4 leading-relaxed">{question.text}</p>
+            <div className="flex items-center gap-2">
+              <div className="hidden sm:flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/68">
+                Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
+              </div>
+              <ThemeToggle />
+            </div>
+          </div>
 
-              {question.image ? <QuestionImage src={question.image} alt={question.imageAlt ?? `Question visual for ${question.id}`} /> : null}
-
-              {question.type === "aptitude" && question.options ? (
-                <div className="space-y-2">
-                  {question.options.map((option, optionIndex) => {
-                    const value = String.fromCharCode(65 + optionIndex);
-                    const selected = state.answers[question.id] === value;
-
-                    return (
-                      <button key={value} onClick={() => setAnswer(question.id, value)} className={cn("w-full min-h-[48px] text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all duration-200", selected ? "bg-lavender-light border-primary text-foreground shadow-sm" : "bg-background border-transparent hover:border-border text-foreground")}>
-                        <span className={cn("inline-flex items-center justify-center w-6 h-6 rounded-lg text-xs font-bold mr-3", selected ? "gradient-accent text-accent-foreground" : "bg-muted text-muted-foreground")}>{value}</span>
-                        {option}
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {PSYCHOMETRIC_OPTIONS.map((option) => {
-                    const selected = state.answers[question.id] === option.value;
-
-                    return (
-                      <button key={option.value} onClick={() => setAnswer(question.id, option.value)} className={cn("w-full min-h-[48px] text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all duration-200 flex items-center gap-3", selected ? "bg-lavender-light border-primary text-foreground shadow-sm" : "bg-background border-transparent hover:border-border text-foreground")}>
-                        <span className={cn("inline-flex items-center justify-center w-6 h-6 rounded-lg text-xs font-bold", selected ? "gradient-accent text-accent-foreground" : "bg-muted text-muted-foreground")}>{option.value}</span>
-                        {option.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="sticky bottom-0 z-20 glass border-t px-5 py-4">
-        <div className="flex gap-3 max-w-xl mx-auto">
-          <Button variant="outline" className="flex-1 min-h-[52px] rounded-full font-semibold" onClick={goPrev} disabled={page === 0}>
-            <ChevronLeft size={18} /> Previous
-          </Button>
-          <Button className={cn("flex-1 min-h-[52px] rounded-full font-bold gap-2 border-0 text-accent-foreground", isLastPage ? "gradient-hero" : "gradient-accent glow-lavender")} onClick={goNext} disabled={!allAnswered || submitting}>
-            {submitting ? <Loader2 size={18} className="animate-spin" /> : isLastPage ? <>Submit & Generate <Send size={16} /></> : <>Next <ChevronRight size={18} /></>}
-          </Button>
+          <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
+            <div>
+              <div className="h-2.5 overflow-hidden rounded-full bg-white/[0.06]">
+                <motion.div className="h-full rounded-full gradient-accent" initial={false} animate={{ width: `${progress}%` }} transition={{ duration: 0.5, ease: "easeOut" }} />
+              </div>
+              <div className="mt-1.5 flex justify-between text-[11px] font-medium text-white/45">
+                <span>{answeredCount} answered</span>
+                <span className="text-white/72">{progress}% complete</span>
+              </div>
+            </div>
+            <div className="sm:hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/68 text-center">
+              Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
+            </div>
+          </div>
         </div>
+
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={page}
+            custom={direction}
+            initial={{ x: direction * 40, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: direction * -40, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="mx-auto mt-6 max-w-6xl space-y-5"
+          >
+            {pageQuestions.map((question, index) => {
+              const options = question.type === "aptitude" ? question.options ?? [] : PSYCHOMETRIC_OPTIONS.map(({ value, label }) => `${value} = ${label}`);
+              const visualFirst = question.visualSlot?.placement === "side";
+
+              return (
+                <motion.div
+                  key={question.id}
+                  initial={{ y: 18, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="glass-strong rounded-[30px] border border-white/10 px-5 py-5 sm:px-7 sm:py-6"
+                >
+                  <div className="mb-5 flex flex-wrap items-center gap-2.5">
+                    <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-white/60">
+                      {question.type === "aptitude" ? "Section A" : "Section B"}
+                    </span>
+                    <span className="inline-flex rounded-full bg-[hsl(var(--lavender)/0.14)] px-3 py-1 text-[0.72rem] font-semibold text-[hsl(var(--lavender-light))]">
+                      {question.id}
+                    </span>
+                  </div>
+
+                  <div className={cn("grid gap-6", visualFirst && "xl:grid-cols-[minmax(0,1.35fr)_17rem] xl:items-start")}>
+                    <div>
+                      <p className="max-w-3xl text-[1.08rem] leading-[1.75] text-white/90">{question.text}</p>
+                    </div>
+                    {visualFirst && <ReservedVisualSlot question={question} />}
+                  </div>
+
+                  {!visualFirst && question.visualSlot && <div className="mt-5"><ReservedVisualSlot question={question} /></div>}
+
+                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                    {options.map((option, optionIndex) => {
+                      const optionKey = question.type === "aptitude" ? ["A", "B", "C", "D"][optionIndex] : PSYCHOMETRIC_OPTIONS[optionIndex].value;
+                      const isSelected = state.answers[question.id] === optionKey;
+
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => setAnswer(question.id, optionKey)}
+                          className={cn(
+                            "group rounded-[22px] border px-4 py-4 text-left transition-all duration-200",
+                            "bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20",
+                            isSelected && "border-[hsl(var(--lavender)/0.5)] bg-[hsl(var(--lavender)/0.14)] shadow-[0_0_0_1px_rgba(160,140,255,0.2)]",
+                          )}
+                        >
+                          <div className="flex items-start gap-3">
+                            <span className={cn(
+                              "mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
+                              isSelected ? "border-[hsl(var(--lavender)/0.6)] bg-[hsl(var(--lavender)/0.18)] text-white" : "border-white/12 bg-white/[0.04] text-white/70",
+                            )}>
+                              {optionKey}
+                            </span>
+                            <span className="text-sm leading-6 text-white/82">{option}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              );
+            })}
+
+            <div className="glass rounded-[28px] border border-white/10 px-5 py-4 sm:px-6 sm:py-5">
+              <div className="flex items-center justify-between gap-3">
+                <Button type="button" variant="outline" onClick={goPrev} disabled={page === 0 || submitting} className="rounded-full border-white/10 bg-white/[0.03] text-white hover:bg-white/[0.08] hover:text-white">
+                  <ChevronLeft size={18} />
+                  Previous
+                </Button>
+
+                <Button
+                  type="button"
+                  onClick={goNext}
+                  disabled={!allAnswered || submitting}
+                  className="rounded-full px-6 gradient-accent text-primary-foreground hover:opacity-95 disabled:opacity-50"
+                >
+                  {submitting ? <Loader2 size={18} className="animate-spin" /> : isLastPage ? <Send size={18} /> : <ChevronRight size={18} />}
+                  {submitting ? "Submitting..." : isLastPage ? "Submit assessment" : "Next page"}
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
