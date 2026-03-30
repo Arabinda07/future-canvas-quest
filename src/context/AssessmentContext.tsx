@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+﻿import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 export interface StudentData {
   name: string;
@@ -13,6 +13,7 @@ export interface AssessmentState {
   answers: Record<string, string>;
   currentPage: number;
   completed: boolean;
+  introAccepted: boolean;
 }
 
 const DEFAULT_STATE: AssessmentState = {
@@ -20,6 +21,7 @@ const DEFAULT_STATE: AssessmentState = {
   answers: {},
   currentPage: 0,
   completed: false,
+  introAccepted: false,
 };
 
 const STORAGE_KEY = "nextstep-assessment";
@@ -27,7 +29,17 @@ const STORAGE_KEY = "nextstep-assessment";
 function loadState(): AssessmentState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw) as Partial<AssessmentState>;
+      return {
+        ...DEFAULT_STATE,
+        ...parsed,
+        studentData: {
+          ...DEFAULT_STATE.studentData,
+          ...parsed.studentData,
+        },
+      };
+    }
   } catch {}
   return DEFAULT_STATE;
 }
@@ -37,6 +49,7 @@ interface ContextValue {
   setStudentData: (data: StudentData) => void;
   setAnswer: (questionId: string, value: string) => void;
   setCurrentPage: (page: number) => void;
+  setIntroAccepted: (accepted: boolean) => void;
   clearState: () => void;
   setCompleted: () => void;
 }
@@ -62,6 +75,10 @@ export const AssessmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setState((s) => ({ ...s, currentPage: page }));
   }, []);
 
+  const setIntroAccepted = useCallback((accepted: boolean) => {
+    setState((s) => ({ ...s, introAccepted: accepted }));
+  }, []);
+
   const clearState = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
     setState(DEFAULT_STATE);
@@ -71,7 +88,7 @@ export const AssessmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setState((s) => ({ ...s, completed: true }));
   }, []);
 
-  return <Ctx.Provider value={{ state, setStudentData, setAnswer, setCurrentPage, clearState, setCompleted }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ state, setStudentData, setAnswer, setCurrentPage, setIntroAccepted, clearState, setCompleted }}>{children}</Ctx.Provider>;
 };
 
 export const useAssessment = () => {

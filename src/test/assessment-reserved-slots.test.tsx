@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+﻿import { beforeEach, describe, expect, it } from "vitest";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +8,41 @@ import { AssessmentProvider } from "@/context/AssessmentContext";
 import Assessment from "@/pages/Assessment";
 
 const STORAGE_KEY = "nextstep-assessment";
+
+const baseStudentData = {
+  name: "Test Student",
+  currentClass: "10",
+  email: "test@example.com",
+  counselorCode: "ABC123",
+  consent: true,
+};
+
+const answeredUpToTen = {
+  Q1: "A",
+  Q2: "B",
+  Q3: "C",
+  Q4: "D",
+  Q5: "A",
+  Q6: "B",
+  Q7: "C",
+  Q8: "D",
+  Q9: "A",
+  Q10: "B",
+};
+
+const seedAssessmentState = (overrides: Record<string, unknown>) => {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      studentData: baseStudentData,
+      answers: {},
+      currentPage: 0,
+      completed: false,
+      introAccepted: false,
+      ...overrides,
+    }),
+  );
+};
 
 const renderAssessment = () => {
   const queryClient = new QueryClient();
@@ -30,43 +65,36 @@ const renderAssessment = () => {
   );
 };
 
-describe("Assessment reserved visual slots", () => {
+describe("Assessment intro and reserved visual slots", () => {
   beforeEach(() => {
     localStorage.clear();
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        studentData: {
-          name: "Test Student",
-          currentClass: "10",
-          email: "test@example.com",
-          counselorCode: "ABC123",
-          consent: true,
-        },
-        answers: {
-          Q1: "A",
-          Q2: "B",
-          Q3: "C",
-          Q4: "D",
-          Q5: "A",
-          Q6: "B",
-          Q7: "C",
-          Q8: "D",
-          Q9: "A",
-          Q10: "B",
-        },
-        currentPage: 2,
-        completed: false,
-      }),
-    );
   });
 
-  it("renders reserved slots for Q11, Q13, and Q14 without error copy", async () => {
+  it("shows a dedicated start screen before any question content", () => {
+    seedAssessmentState({ introAccepted: false });
+    renderAssessment();
+
+    expect(screen.getByRole("button", { name: /^Start test$/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Read this once/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "General information" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Section A - Aptitude & Logical Reasoning" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Section B - Interests & Personality" })).toBeInTheDocument();
+    expect(screen.queryByText("Q1")).not.toBeInTheDocument();
+  });
+
+  it("renders reserved slots for an in-progress aptitude page", async () => {
+    seedAssessmentState({
+      answers: answeredUpToTen,
+      currentPage: 2,
+      introAccepted: true,
+    });
     renderAssessment();
 
     expect(await screen.findByText("Q11")).toBeInTheDocument();
     expect(screen.getByText("Q13")).toBeInTheDocument();
     expect(screen.getByText("Q14")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Reasoning and verbal ability" })).toBeInTheDocument();
+    expect(screen.getAllByText("Q 11-15 of 70").length).toBeGreaterThan(0);
 
     expect(screen.getByLabelText("Reserved direction diagram slot")).toBeInTheDocument();
     expect(screen.getByLabelText("Reserved mirror-image visual slot")).toBeInTheDocument();
@@ -76,5 +104,22 @@ describe("Assessment reserved visual slots", () => {
     expect(screen.queryByText(/coming soon/i)).not.toBeInTheDocument();
     expect(screen.getByText("A. N")).toBeInTheDocument();
     expect(screen.queryByText("Q21")).not.toBeInTheDocument();
+  });
+
+  it("keeps side and below slot intent explicit for responsive layouts", async () => {
+    seedAssessmentState({
+      answers: answeredUpToTen,
+      currentPage: 2,
+      introAccepted: true,
+    });
+    renderAssessment();
+
+    const q11Card = await screen.findByTestId("question-card-Q11");
+    const q13Card = screen.getByTestId("question-card-Q13");
+    const q14Card = screen.getByTestId("question-card-Q14");
+
+    expect(within(q11Card).getByLabelText("Reserved direction diagram slot")).toHaveAttribute("data-placement", "side");
+    expect(within(q13Card).getByLabelText("Reserved mirror-image visual slot")).toHaveAttribute("data-placement", "below");
+    expect(within(q14Card).getByLabelText("Reserved water-image visual slot")).toHaveAttribute("data-placement", "below");
   });
 });
