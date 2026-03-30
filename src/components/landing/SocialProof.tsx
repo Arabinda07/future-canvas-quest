@@ -1,94 +1,82 @@
 import { motion } from "framer-motion";
 
 const SocialProof = () => (
-  <section id="proof" className="py-20 lg:py-24 bg-card">
-    <div className="max-w-[1080px] mx-auto px-6">
-      <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} className="text-center mb-14">
-        {/* Provenance tag */}
-        <div className="inline-flex items-center gap-2 text-[0.72rem] font-extrabold uppercase tracking-[0.08em] text-sunshine bg-gradient-to-r from-navy to-navy-mid border border-sunshine/30 rounded-full px-4 py-1.5 mb-5" style={{ background: "linear-gradient(135deg, hsl(250 30% 15%), hsl(250 20% 23%))" }}>
-          <span className="w-1.5 h-1.5 rounded-full bg-sunshine shrink-0" />
-          Deployed in PM SHRI Schools · Government of India
-        </div>
+  <section id="proof" className="py-24 lg:py-28 relative overflow-hidden border-t border-white/10" style={{ background: "#0a0a0a" }}>
+    <div className="glow-blob w-[500px] h-[500px] -bottom-[80px] -left-[80px]" style={{ background: "rgba(76,175,142,0.15)", animationDuration: "15s" }} />
 
-        {/* Hierarchy chain */}
-        <div className="flex items-center justify-center gap-2 flex-wrap mb-4 text-sm font-semibold text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sunshine-light border-[1.5px] border-sunshine/50 text-sunshine-dark">🏛️ PM SHRI Program · NEP 2020</span>
-          <span className="text-border">↓</span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-card border-[1.5px] border-lavender-light text-lavender-dark">🏫 Kendriya Vidyalayas</span>
-          <span className="text-border">↓</span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-card border-[1.5px] border-border">📍 KV-2 Kharagpur</span>
-        </div>
-
-        <h2 className="font-heading text-[clamp(1.8rem,3.2vw,2.6rem)] font-bold text-foreground mb-3.5">
-          Tested in real classrooms.
-          <br />
-          <span className="italic text-primary">Not in a lab.</span>
+    <div className="max-w-[1100px] mx-auto px-7">
+      <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} className="mb-14 relative z-[1]">
+        <span className="inline-flex items-center gap-2 text-[0.72rem] font-medium tracking-[0.08em] uppercase px-4 py-1.5 rounded-full mb-5" style={{ background: "rgba(76,175,142,0.1)", border: "1px solid rgba(76,175,142,0.25)", color: "rgba(100,220,170,0.9)" }}>
+          <span className="w-[5px] h-[5px] rounded-full shrink-0" style={{ background: "rgba(100,220,170,0.8)" }} />
+          From the classroom
+        </span>
+        <h2 className="font-heading italic text-[clamp(2.4rem,4.5vw,3.8rem)] text-white mb-4">
+          Tested with real students.<br /><em>At a real school.</em>
         </h2>
-        <p className="text-muted-foreground text-base max-w-[600px] mx-auto">
-          Future Canvas was deployed as part of PM SHRI career readiness programs at Kendriya Vidyalayas — a Government of India initiative under NEP 2020. The first deployment was at KV-2 Kharagpur, across all four secondary classes.
+        <p className="text-white/60 text-[1.05rem] font-light leading-[1.8] max-w-[600px]">
+          Future Canvas was first deployed at Kendriya Vidyalaya No. 2, Kharagpur — across all four secondary classes, under real exam conditions, with real counsellors present.
         </p>
       </motion.div>
 
-      <div className="grid lg:grid-cols-[1.2fr_1fr] gap-14 items-start">
+      <div className="grid lg:grid-cols-2 gap-14 relative z-[1]">
         {/* Photo strip */}
-        <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} className="grid grid-cols-2 gap-3">
-          <div className="col-span-2 rounded-2xl overflow-hidden shadow-card-hover relative">
-            <div className="aspect-video bg-gradient-to-br from-lavender-light to-primary/10 flex flex-col items-center justify-center gap-2 text-muted-foreground text-sm font-bold">
-              <span className="text-4xl opacity-30">📸</span>
-              <span>Your wide classroom photo here</span>
-              <span className="text-xs opacity-50 font-normal">(e.g. students at desks, exam hall view)</span>
+        <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="col-span-2 glass rounded-[14px] overflow-hidden relative">
+              <div className="aspect-video flex flex-col items-center justify-center gap-2 text-white/40 text-[0.82rem]" style={{ background: "rgba(255,255,255,0.05)" }}>
+                <span className="text-3xl opacity-30">📸</span>
+                <span>Add your KV-2 classroom photo here</span>
+                <span className="text-[0.72rem] opacity-40">(students at desks, wide view)</span>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 to-transparent text-white/60 text-[0.72rem] font-medium px-3 py-2.5 pt-6 tracking-[0.04em]">
+                KV-2 Kharagpur · Classes 9, 10, 11 & 12
+              </div>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/75 to-transparent text-primary-foreground text-xs font-bold px-3 py-2.5 pt-6">
-              PM SHRI · KV-2 Kharagpur · Classes 9–12
+            <div className="glass rounded-[14px] overflow-hidden">
+              <div className="aspect-[4/5] flex flex-col items-center justify-center gap-2 text-white/40 text-[0.78rem]" style={{ background: "rgba(255,255,255,0.05)" }}>
+                <span className="text-2xl opacity-30">📷</span>
+                <span>Photo 2</span>
+              </div>
             </div>
-          </div>
-          <div className="rounded-2xl overflow-hidden shadow-card-hover">
-            <div className="aspect-[4/5] bg-gradient-to-br from-mint-light to-secondary/10 flex flex-col items-center justify-center gap-2 text-muted-foreground text-sm font-bold">
-              <span className="text-3xl opacity-30">🖼</span>
-              <span>Photo 2</span>
-              <span className="text-xs opacity-50 font-normal">students engaged</span>
-            </div>
-          </div>
-          <div className="rounded-2xl overflow-hidden shadow-card-hover">
-            <div className="aspect-[4/5] bg-gradient-to-br from-peach-light to-peach/10 flex flex-col items-center justify-center gap-2 text-muted-foreground text-sm font-bold">
-              <span className="text-3xl opacity-30">📷</span>
-              <span>Photo 3</span>
-              <span className="text-xs opacity-50 font-normal">counsellor session</span>
+            <div className="glass rounded-[14px] overflow-hidden">
+              <div className="aspect-[4/5] flex flex-col items-center justify-center gap-2 text-white/40 text-[0.78rem]" style={{ background: "rgba(255,255,255,0.05)" }}>
+                <span className="text-2xl opacity-30">🖼</span>
+                <span>Photo 3</span>
+              </div>
             </div>
           </div>
         </motion.div>
 
         {/* Stats + testimonial */}
-        <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-          <div className="grid grid-cols-2 gap-3.5 mb-7">
+        <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.15 }}>
+          <div className="grid grid-cols-2 gap-2.5 mb-3.5">
             {[
-              { num: "480+", label: "Total students assessed", bg: "bg-lavender-light", color: "text-lavender-dark" },
-              { num: "4", label: "Classes tested\n(9, 10, 11 & 12)", bg: "bg-mint-light", color: "text-mint-dark" },
-              { num: "120+", label: "Students per class", bg: "bg-sunshine-light", color: "text-sunshine-dark" },
+              { num: "480+", label: "Students assessed across all four classes", color: "rgba(200,185,255,0.9)" },
+              { num: "4", label: "Classes tested simultaneously (9–12)", color: "rgba(100,220,170,0.9)" },
+              { num: "120+", label: "Students per class", color: "rgba(255,210,120,0.9)" },
             ].map((s) => (
-              <div key={s.label} className={`${s.bg} rounded-2xl p-5 text-center`}>
-                <div className={`font-heading text-[2rem] font-bold leading-none mb-1 ${s.color}`}>{s.num}</div>
-                <div className="text-xs font-bold text-muted-foreground leading-tight whitespace-pre-line">{s.label}</div>
+              <div key={s.label} className="glass rounded-[14px] p-5 text-center">
+                <div className="font-heading italic text-[2.2rem] leading-none mb-1.5" style={{ color: s.color }}>{s.num}</div>
+                <div className="text-[0.72rem] text-white/40 leading-snug">{s.label}</div>
               </div>
             ))}
-            {/* PM SHRI stat box */}
-            <div className="rounded-2xl p-5 text-center border-[1.5px] border-sunshine/30" style={{ background: "linear-gradient(160deg, hsl(250 30% 15%), hsl(250 20% 23%))" }}>
-              <div className="font-heading text-lg font-bold leading-none mb-1 text-sunshine tracking-wide">PM SHRI</div>
-              <div className="text-xs font-bold text-white/55 leading-tight">Govt of India · NEP 2020<br />Kendriya Vidyalayas</div>
+            <div className="glass rounded-[14px] p-5 text-center" style={{ border: "1px solid rgba(245,200,66,0.2)" }}>
+              <div className="font-heading italic text-xl leading-none mb-1.5 text-gold">PM SHRI</div>
+              <div className="text-[0.72rem] text-white/40 leading-snug">Government of India<br />Kendriya Vidyalayas</div>
             </div>
           </div>
 
           {/* Testimonial */}
-          <div className="bg-gradient-to-br from-lavender-light to-primary/5 border-[1.5px] border-lavender-light rounded-3xl p-6">
-            <p className="font-heading text-base italic text-muted-foreground leading-relaxed mb-5 relative pl-2">
-              <span className="absolute -top-3 -left-2 font-heading text-[3.5rem] text-primary/25 leading-none not-italic">"</span>
-              The students found it genuinely relevant — many came back with follow-up questions about their results. It gave us a scientific basis for career conversations we were previously having only on intuition.
+          <div className="glass-strong rounded-[20px] p-6">
+            <p className="text-[0.9rem] italic font-light text-white/60 leading-[1.8] mb-5 relative pt-2">
+              <span className="absolute -top-1 -left-1 font-heading text-[3rem] text-primary/25 leading-none not-italic">"</span>
+              Replace this with the real quote from your KV-2 teacher coordinator once confirmed. A single honest sentence is worth more than any made-up one.
             </p>
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-full gradient-accent flex items-center justify-center font-heading text-lg text-primary-foreground font-bold shrink-0">T</div>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center font-heading italic text-base shrink-0" style={{ background: "rgba(124,107,202,0.2)", color: "rgba(200,185,255,0.9)" }}>T</div>
               <div>
-                <div className="font-extrabold text-foreground text-sm">Teacher Coordinator</div>
-                <div className="text-xs text-muted-foreground">Kendriya Vidyalaya No. 2, Kharagpur · <em className="text-primary">Testimonial pending confirmation</em></div>
+                <div className="text-[0.85rem] font-medium text-white/90">Teacher Coordinator — name to be confirmed</div>
+                <div className="text-[0.72rem] font-light text-white/40">Kendriya Vidyalaya No. 2, Kharagpur · <em style={{ color: "rgba(124,107,202,0.8)" }}>Quote pending</em></div>
               </div>
             </div>
           </div>

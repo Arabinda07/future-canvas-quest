@@ -12,8 +12,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["var(--font-heading)", "sans-serif"],
-        body: ["var(--font-body)", "sans-serif"],
+        heading: ["var(--font-heading)", "Georgia", "serif"],
+        body: ["var(--font-body)", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -50,21 +50,28 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         lavender: {
-          light: "hsl(var(--lavender-light))",
+          light: "hsl(var(--lavender-light) / 0.18)",
           DEFAULT: "hsl(var(--lavender))",
           dark: "hsl(var(--lavender-dark))",
+          glow: "hsl(var(--lavender-glow) / 0.18)",
         },
         mint: {
-          light: "hsl(var(--mint-light))",
+          light: "hsl(var(--mint-light) / 0.15)",
           DEFAULT: "hsl(var(--mint))",
           dark: "hsl(var(--mint-dark))",
+          glow: "hsl(var(--mint-glow) / 0.15)",
         },
         peach: {
-          light: "hsl(var(--peach-light))",
+          light: "hsl(var(--peach-light) / 0.14)",
           DEFAULT: "hsl(var(--peach))",
         },
+        gold: {
+          light: "hsl(var(--gold-light) / 0.16)",
+          DEFAULT: "hsl(var(--gold))",
+          glow: "hsl(var(--gold-glow) / 0.16)",
+        },
         sunshine: {
-          light: "hsl(var(--sunshine-light))",
+          light: "hsl(var(--sunshine-light) / 0.16)",
           DEFAULT: "hsl(var(--sunshine))",
         },
         navy: {
@@ -102,18 +109,24 @@ export default {
         },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-6px)" },
+          "50%": { transform: "translateY(-8px)" },
         },
-        "pulse-glow": {
-          "0%, 100%": { opacity: "0.4" },
-          "50%": { opacity: "0.8" },
+        "blob-drift": {
+          from: { transform: "translate(0,0) scale(1)" },
+          to: { transform: "translate(30px,20px) scale(1.08)" },
+        },
+        "word-in": {
+          "0%": { opacity: "0", filter: "blur(10px)", transform: "translateY(40px)" },
+          "60%": { opacity: "0.6", filter: "blur(3px)", transform: "translateY(-4px)" },
+          "100%": { opacity: "1", filter: "blur(0)", transform: "translateY(0)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         float: "float 4s ease-in-out infinite",
-        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
+        "blob-drift": "blob-drift ease-in-out infinite alternate",
+        "word-in": "word-in 0.65s ease both",
       },
     },
   },

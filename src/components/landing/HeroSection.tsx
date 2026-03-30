@@ -1,143 +1,75 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+
+const heroWords = ["Most", "students", "choose", "a", "stream.", "You", "can", "know", "yours."];
 
 const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="min-h-screen flex items-center relative overflow-hidden py-28 lg:py-0" style={{ background: "linear-gradient(160deg, hsl(260 50% 97%), hsl(20 80% 97%) 50%, hsl(160 40% 97%) 100%)" }}>
-      {/* Blobs */}
-      <div className="absolute -top-44 -right-24 w-[520px] h-[520px] rounded-full bg-primary/10 blur-[60px] opacity-55 animate-float pointer-events-none" />
-      <div className="absolute -bottom-24 -left-20 w-[380px] h-[380px] rounded-full bg-secondary/10 blur-[60px] opacity-55 animate-float pointer-events-none" style={{ animationDirection: "reverse", animationDuration: "11s" }} />
-      <div className="absolute top-[30%] right-[20%] w-60 h-60 rounded-full bg-sunshine/15 blur-[60px] opacity-40 animate-float pointer-events-none" style={{ animationDuration: "7s" }} />
+    <section className="min-h-screen flex items-center relative overflow-hidden py-28 lg:py-0 bg-background">
+      {/* Glow blobs */}
+      <div className="glow-blob w-[700px] h-[700px] -top-[200px] -right-[150px] z-0" style={{ background: "rgba(124,107,202,0.18)", animationDuration: "11s" }} />
+      <div className="glow-blob w-[400px] h-[400px] -bottom-[100px] -left-[100px] z-0" style={{ background: "rgba(76,175,142,0.15)", animationDuration: "14s" }} />
 
-      {/* Dots */}
-      <div className="absolute w-2.5 h-2.5 rounded-full bg-primary opacity-25 top-[22%] left-[8%] animate-float" style={{ animationDuration: "7s" }} />
-      <div className="absolute w-[7px] h-[7px] rounded-full bg-secondary opacity-35 top-[60%] left-[5%] animate-float" style={{ animationDuration: "9s" }} />
-      <div className="absolute w-3 h-3 bg-sunshine opacity-30 top-[15%] right-[30%] animate-float rounded-sm rotate-[20deg]" style={{ animationDuration: "8s" }} />
-      <div className="absolute w-2 h-2 rounded-full bg-peach opacity-40 bottom-[25%] right-[8%] animate-float" style={{ animationDuration: "6s" }} />
-
-      <div className="max-w-[1080px] mx-auto px-6 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="max-w-[1100px] mx-auto px-7 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-14 items-center">
           {/* Text */}
-          <div>
-            <motion.div
-              initial={{ y: 24, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-1.5 text-sm font-bold text-primary mb-6 shadow-card"
-            >
-              <div className="w-[26px] h-[26px] rounded-full gradient-accent flex items-center justify-center">
-                <Star size={12} className="text-primary-foreground" />
-              </div>
-              Free Career Assessment · Classes 9–12
+          <div className="relative z-[2]">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="mb-7 inline-flex items-center gap-2.5">
+              <span className="bg-white text-black font-semibold text-[0.72rem] tracking-[0.1em] uppercase px-3 py-0.5 rounded-full">Free</span>
+              <span className="text-white/60 text-[0.9rem]">Career Assessment · Classes 9 to 12</span>
             </motion.div>
 
-            <motion.h1
-              initial={{ y: 24, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="font-heading text-[clamp(2.4rem,5vw,3.8rem)] font-bold text-foreground leading-[1.2] mb-5 tracking-tight"
-            >
-              Find the career
-              <br />
-              <span className="italic text-primary">you were made for</span>
-            </motion.h1>
+            <h1 className="font-heading italic text-[clamp(3rem,7vw,5.5rem)] leading-[0.92] tracking-[-0.03em] text-white mb-6">
+              {heroWords.map((word, i) => (
+                <span
+                  key={i}
+                  className="inline-block opacity-0 animate-word-in"
+                  style={{
+                    animationDelay: `${0.15 + i * 0.12}s`,
+                    color: i >= 5 ? "rgba(200,185,255,1)" : undefined,
+                  }}
+                >
+                  {i > 0 ? "\u00a0" : ""}{word}
+                </span>
+              ))}
+            </h1>
 
-            <motion.p
-              initial={{ y: 24, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-muted-foreground text-base sm:text-lg max-w-[460px] mb-9 leading-relaxed"
-            >
-              A 60-minute science-backed assessment that maps your aptitude, interests, and personality to the stream and career paths where you'll genuinely thrive — not just what you're expected to do.
+            <motion.p initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.9 }} className="text-white/60 text-[1.05rem] font-light max-w-[520px] mb-10 leading-[1.8]">
+              A 60-minute psychometric assessment — grounded in three internationally validated frameworks — that maps your genuine strengths, interests, and personality to where you'll actually thrive.
             </motion.p>
 
-            <motion.div
-              initial={{ y: 24, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-col sm:flex-row items-start gap-3.5 mb-11"
-            >
-              <Button
-                size="lg"
-                className="min-h-[56px] text-base font-bold px-9 gradient-accent rounded-full gap-2 border-0 text-primary-foreground shadow-lg hover:shadow-xl transition-shadow"
+            <motion.div initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.1 }} className="flex items-center gap-4 flex-wrap">
+              <button
                 onClick={() => navigate("/register")}
+                className="glass-strong inline-flex items-center gap-2 text-white font-medium text-[0.9rem] px-7 py-3.5 rounded-full hover:-translate-y-0.5 transition-transform"
               >
-                Take the free assessment <ArrowRight size={16} />
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="min-h-[56px] rounded-full border-2 border-lavender-light text-primary font-bold hover:bg-lavender-light"
-                onClick={() => {
-                  document.getElementById("proof")?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                Deployed in PM SHRI Schools ↓
-              </Button>
-            </motion.div>
-
-            <motion.div
-              initial={{ y: 24, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="flex items-center gap-3 flex-wrap"
-            >
-              {[
-                { emoji: "🏛️", text: "PM SHRI Schools", bg: "bg-sunshine-light", special: true },
-                { emoji: "🎓", text: "480+ students tested", bg: "bg-lavender-light" },
-                { emoji: "📋", text: "Classes 9 · 10 · 11 · 12", bg: "bg-mint-light" },
-                { emoji: "⚡", text: "Instant report", bg: "bg-sunshine-light" },
-              ].map((p) => (
-                <div key={p.text} className={`flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-bold shadow-card ${(p as any).special ? 'bg-gradient-to-r from-sunshine-light to-[#fff3c0] border border-sunshine/40 text-sunshine-dark' : 'bg-card border border-border text-foreground'}`}>
-                  <div className={`w-[22px] h-[22px] rounded-full ${p.bg} flex items-center justify-center text-xs`}>{p.emoji}</div>
-                  {p.text}
-                </div>
-              ))}
+                Take the free assessment
+                <ArrowRight size={16} />
+              </button>
+              <a href="#why" className="text-white/60 hover:text-white text-[0.9rem] font-medium py-3 transition-colors">
+                Why this matters ↓
+              </a>
             </motion.div>
           </div>
 
-          {/* Photo Mosaic */}
-          <motion.div
-            initial={{ y: 24, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="relative order-first lg:order-last"
-          >
-            <div className="grid grid-cols-2 gap-3" style={{ gridTemplateRows: "200px 160px" }}>
-              <div className="row-span-2 rounded-[20px] overflow-hidden shadow-card-hover bg-gradient-to-br from-lavender-light to-primary/10 flex flex-col items-center justify-center gap-2 text-muted-foreground text-sm font-semibold">
-                <span className="text-5xl opacity-30">📸</span>
-                <span>Add your KV-2 photo</span>
-                <span className="text-xs opacity-60">(students at desks)</span>
+          {/* Stat pills */}
+          <motion.div initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6, duration: 0.8 }} className="flex flex-col gap-3 relative z-[2]">
+            {[
+              { icon: "🧠", num: "70", label: "carefully designed\nquestions", dur: "5s", delay: "0s" },
+              { icon: "⚡", num: "60 min", label: "total time,\ninstant report", dur: "6.5s", delay: "-2s" },
+              { icon: "🏛️", num: "PM SHRI", label: "deployed in\nKendriya Vidyalayas", dur: "8s", delay: "-4s", numStyle: "text-xl text-[rgba(245,200,66,0.9)]" },
+            ].map((s) => (
+              <div key={s.num} className="glass flex items-center gap-3.5 px-5 py-4 rounded-[20px] min-w-[230px] animate-float" style={{ animationDuration: s.dur, animationDelay: s.delay }}>
+                <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-xl shrink-0">{s.icon}</div>
+                <div>
+                  <div className={`font-heading italic leading-none ${s.numStyle || "text-[1.6rem] text-white"}`}>{s.num}</div>
+                  <div className="text-[0.72rem] text-white/40 leading-snug mt-1 whitespace-pre-line">{s.label}</div>
+                </div>
               </div>
-              <div className="rounded-[20px] overflow-hidden shadow-card-hover bg-gradient-to-br from-mint-light to-secondary/10 flex flex-col items-center justify-center gap-1 text-muted-foreground text-sm font-semibold">
-                <span className="text-3xl opacity-30">📷</span>
-                <span>Photo 2</span>
-              </div>
-              <div className="rounded-[20px] overflow-hidden shadow-card-hover bg-gradient-to-br from-peach-light to-peach/10 flex flex-col items-center justify-center gap-1 text-muted-foreground text-sm font-semibold">
-                <span className="text-3xl opacity-30">🖼</span>
-                <span>Photo 3</span>
-              </div>
-            </div>
-
-            {/* Floating badges */}
-            <div className="hidden lg:flex absolute -left-7 bottom-10 bg-card border border-border rounded-[14px] p-3 shadow-card-hover items-center gap-2.5 animate-float z-10" style={{ animationDelay: "-2s" }}>
-              <div className="w-9 h-9 rounded-[10px] bg-lavender-light flex items-center justify-center text-lg">🧠</div>
-              <div>
-                <div className="font-heading text-2xl font-bold text-primary leading-none">480+</div>
-                <div className="text-xs font-bold text-muted-foreground leading-tight">students<br />across 4 classes</div>
-              </div>
-            </div>
-            <div className="hidden lg:flex absolute -right-5 top-7 bg-gradient-to-br from-sunshine-light to-[#fff3c0] border border-sunshine/40 rounded-[14px] p-3 shadow-card-hover items-center gap-2.5 animate-float z-10">
-              <div className="w-9 h-9 rounded-[10px] bg-sunshine-light flex items-center justify-center text-lg">🏛️</div>
-              <div>
-                <div className="font-heading text-base font-bold text-sunshine-dark leading-none tracking-wide">PM SHRI</div>
-                <div className="text-xs font-bold text-muted-foreground leading-tight">Kendriya Vidyalayas<br />career readiness</div>
-              </div>
-            </div>
+            ))}
           </motion.div>
         </div>
       </div>
