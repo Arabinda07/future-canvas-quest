@@ -12,7 +12,6 @@ export interface AssessmentState {
   studentData: StudentData;
   answers: Record<string, string>;
   currentPage: number;
-  completed: boolean;
   introAccepted: boolean;
 }
 
@@ -20,15 +19,16 @@ const DEFAULT_STATE: AssessmentState = {
   studentData: { name: "", currentClass: "", email: "", counselorCode: "", consent: false },
   answers: {},
   currentPage: 0,
-  completed: false,
   introAccepted: false,
 };
 
 const STORAGE_KEY = "nextstep-assessment";
 
 function loadState(): AssessmentState {
+  if (typeof window === "undefined") return DEFAULT_STATE;
+
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<AssessmentState>;
       return {
@@ -40,7 +40,9 @@ function loadState(): AssessmentState {
         },
       };
     }
-  } catch {}
+  } catch (error) {
+    console.warn("Failed to load assessment state from localStorage.", error);
+  }
   return DEFAULT_STATE;
 }
 
@@ -51,7 +53,6 @@ interface ContextValue {
   setCurrentPage: (page: number) => void;
   setIntroAccepted: (accepted: boolean) => void;
   clearState: () => void;
-  setCompleted: () => void;
 }
 
 const Ctx = createContext<ContextValue | null>(null);
@@ -60,7 +61,7 @@ export const AssessmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [state, setState] = useState<AssessmentState>(loadState);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
   const setStudentData = useCallback((data: StudentData) => {
@@ -80,15 +81,11 @@ export const AssessmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   }, []);
 
   const clearState = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem(STORAGE_KEY);
     setState(DEFAULT_STATE);
   }, []);
 
-  const setCompleted = useCallback(() => {
-    setState((s) => ({ ...s, completed: true }));
-  }, []);
-
-  return <Ctx.Provider value={{ state, setStudentData, setAnswer, setCurrentPage, setIntroAccepted, clearState, setCompleted }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ state, setStudentData, setAnswer, setCurrentPage, setIntroAccepted, clearState }}>{children}</Ctx.Provider>;
 };
 
 export const useAssessment = () => {

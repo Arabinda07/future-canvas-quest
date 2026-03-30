@@ -48,7 +48,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <AssessmentProvider>
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <AnimatedRoutes />
         </BrowserRouter>
       </AssessmentProvider>

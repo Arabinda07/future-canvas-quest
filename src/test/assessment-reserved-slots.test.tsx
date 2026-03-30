@@ -37,7 +37,6 @@ const seedAssessmentState = (overrides: Record<string, unknown>) => {
       studentData: baseStudentData,
       answers: {},
       currentPage: 0,
-      completed: false,
       introAccepted: false,
       ...overrides,
     }),
@@ -52,7 +51,10 @@ const renderAssessment = () => {
       <TooltipProvider>
         <Toaster />
         <AssessmentProvider>
-          <MemoryRouter initialEntries={["/assessment"]}>
+          <MemoryRouter
+            initialEntries={["/assessment"]}
+            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+          >
             <Routes>
               <Route path="/assessment" element={<Assessment />} />
               <Route path="/register" element={<div>Register page</div>} />
