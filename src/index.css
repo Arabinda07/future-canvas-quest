@@ -244,3 +244,135 @@
   position: relative;
   overflow: hidden;
 }
+
+#who {
+  background: hsl(var(--background));
+}
+
+.who-glow {
+  width: 500px;
+  height: 500px;
+  background: hsl(var(--lavender-glow) / 0.18);
+  top: -100px;
+  left: -100px;
+  animation-duration: 10s;
+}
+
+.who-photo-wrap {
+  position: relative;
+}
+
+.who-photo {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: hsl(var(--lavender) / 0.08);
+}
+
+.who-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes badge-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.who-badge {
+  position: absolute;
+  border-radius: 1rem;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wb-1 {
+  top: -16px;
+  right: -18px;
+  background: rgb(255 255 255 / 0.06);
+  animation: badge-float 5s ease-in-out infinite;
+}
+
+.wb-2 {
+  bottom: -16px;
+  left: -18px;
+  animation: badge-float 6s ease-in-out infinite reverse;
+  background: rgb(124 107 202 / 0.15);
+  border: 1px solid rgb(124 107 202 / 0.3);
+}
+
+.wb-emoji {
+  font-size: 1.2rem;
+}
+
+.wb-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.9);
+  line-height: 1.3;
+}
+
+.wb-title-accent {
+  color: rgb(200 185 255 / 0.9);
+}
+
+.wb-sub {
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: rgb(255 255 255 / 0.5);
+}
+
+.who-body {
+  font-size: 0.97rem;
+  font-weight: 300;
+  color: hsl(var(--foreground) / 0.72);
+  line-height: 1.85;
+  margin-bottom: 18px;
+}
+
+.cred-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.cred-chip {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 4px 13px;
+  border-radius: 9999px;
+  color: rgb(255 255 255 / 0.7);
+}
+
+.who-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.who-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.8);
+  transition: color 0.18s ease;
+}
+
+.who-link:hover {
+  color: rgb(255 255 255 / 1);
+}

@@ -111,15 +111,14 @@ const InstructionsLeaflet = ({
 
 const Assessment = () => {
   const navigate = useNavigate();
-  const { state, setAnswer, setCurrentPage, setIntroAccepted, clearState, setCompleted } = useAssessment();
+  const { state, setAnswer, setCurrentPage, setIntroAccepted, clearState } = useAssessment();
   const [submitting, setSubmitting] = useState(false);
   const [direction, setDirection] = useState(1);
   const [introConfirmed, setIntroConfirmed] = useState(false);
 
   useEffect(() => {
-    if (!state.studentData.name && !state.completed) navigate("/register");
-    if (state.completed) navigate("/success");
-  }, [state.studentData.name, state.completed, navigate]);
+    if (!state.studentData.name) navigate("/register");
+  }, [state.studentData.name, navigate]);
 
   useEffect(() => {
     if (state.introAccepted) {
@@ -166,7 +165,6 @@ const Assessment = () => {
   const handleSubmit = async () => {
     setSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    setCompleted();
     clearState();
     navigate("/success");
   };
