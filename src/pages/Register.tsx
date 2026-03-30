@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +11,7 @@ import { useAssessment } from "@/context/AssessmentContext";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { setStudentData } = useAssessment();
+  const { setStudentData, clearState } = useAssessment();
   const [name, setName] = useState("");
   const [currentClass, setCurrentClass] = useState("");
   const [email, setEmail] = useState("");
@@ -23,6 +22,7 @@ const Register = () => {
 
   const handleSubmit = () => {
     if (!isValid) return;
+    clearState();
     setStudentData({ name: name.trim(), currentClass, email: email.trim(), counselorCode: counselorCode.trim(), consent });
     navigate("/assessment");
   };
@@ -43,7 +43,6 @@ const Register = () => {
           >
             <ArrowLeft size={18} /> Back
           </motion.button>
-          <ThemeToggle />
         </div>
 
         <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>

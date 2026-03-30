@@ -7,7 +7,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAssessment } from "@/context/AssessmentContext";
 import { questions, QUESTIONS_PER_PAGE, TOTAL_PAGES, TOTAL_QUESTIONS, type Question } from "@/data/questions";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const PSYCHOMETRIC_OPTIONS = [
   { value: "A", label: "Strongly Agree" },
@@ -194,7 +193,6 @@ const Assessment = () => {
                     You are about to begin the Future Canvas assessment. This intro screen brings together the complete instructions before Q1 so students can settle in before the timed session starts.
                   </p>
                 </div>
-                <ThemeToggle />
               </div>
 
               <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
@@ -263,7 +261,6 @@ const Assessment = () => {
                   <div className="hidden sm:flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/68">
                     Q {qStart}-{qEnd} of {TOTAL_QUESTIONS}
                   </div>
-                  <ThemeToggle />
                 </div>
               </div>
 
