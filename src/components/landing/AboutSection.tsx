@@ -16,6 +16,7 @@ const AboutSection = () => {
         <div className="who-photo-wrap order-2 lg:order-1">
           <div className="who-photo glass">
             <img src="https://arabinda07.github.io/assets/photo.png" alt="Arabinda Saha" loading="lazy" />
+            <div className="who-photo-blend" aria-hidden="true" />
           </div>
 
           <div className="who-badge wb-1 glass">

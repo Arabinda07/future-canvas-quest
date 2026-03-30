@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, Download, RotateCcw, PartyPopper } from "lucide-react";
 import { motion } from "framer-motion";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
@@ -14,7 +13,6 @@ const Success = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-5 text-center max-w-md mx-auto relative overflow-hidden">
-      <div className="absolute top-4 right-4 z-10"><ThemeToggle /></div>
       {/* Background */}
       <div className="absolute top-20 right-0 w-64 h-64 rounded-full bg-lavender/10 blur-3xl animate-pulse-glow pointer-events-none" />
       <div className="absolute bottom-20 left-0 w-56 h-56 rounded-full bg-mint/10 blur-3xl animate-pulse-glow pointer-events-none" style={{ animationDelay: "1s" }} />
