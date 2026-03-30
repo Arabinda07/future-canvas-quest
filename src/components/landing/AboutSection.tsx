@@ -1,98 +1,94 @@
-import aboutProfile from "@/assets/about-profile.webp";
-import { GraduationCap, Linkedin, Sparkles } from "lucide-react";
+import { Globe, Linkedin, Mail, MessageCircle } from "lucide-react";
 
 const credentials = [
-  "IIT Kharagpur",
-  "IIM Calcutta",
-  "Ex-Edudigm",
-  "Career Guidance Researcher",
+  "Program Head · Edudigm",
+  "PM SHRI · KV Programs",
+  "Stellar Space Quiz · 600+ Schools",
+  "Data Consultant · LKS",
 ];
 
 const AboutSection = () => {
   return (
-    <section id="about" className="relative px-5 py-24 md:py-32 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="glow-blob w-[26rem] h-[26rem] bg-[hsl(var(--lavender-glow)/0.16)] top-[-8rem] right-[-7rem]" />
-        <div className="glow-blob w-[24rem] h-[24rem] bg-[hsl(var(--mint-glow)/0.12)] bottom-[-8rem] left-[-5rem]" style={{ animationDuration: "16s" }} />
-      </div>
+    <section id="who" className="relative overflow-hidden border-t border-white/10 px-5 py-24 md:py-32">
+      <div className="glow-blob who-glow" />
 
-      <div className="relative max-w-6xl mx-auto grid lg:grid-cols-[1.02fr_0.98fr] gap-10 lg:gap-16 items-center">
-        <div className="relative order-2 lg:order-1">
-          <div className="absolute inset-x-[8%] top-[12%] h-[70%] rounded-[42px] bg-[radial-gradient(circle_at_50%_35%,rgba(150,132,255,0.32),rgba(150,132,255,0.06)_45%,transparent_74%)] blur-2xl" />
-          <div className="absolute inset-x-[14%] bottom-[2%] h-[48%] rounded-[999px] bg-[radial-gradient(circle_at_50%_50%,rgba(95,211,184,0.18),transparent_72%)] blur-3xl" />
+      <div className="relative z-[1] mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.6fr] lg:gap-20">
+        <div className="who-photo-wrap order-2 lg:order-1">
+          <div className="who-photo glass">
+            <img src="https://arabinda07.github.io/assets/photo.png" alt="Arabinda Saha" loading="lazy" />
+          </div>
 
-          <div className="relative mx-auto max-w-[30rem]">
-            <div className="about-photo-shell rounded-[38px] p-[1px]">
-              <div className="about-photo-panel rounded-[38px] px-5 pt-5 sm:px-7 sm:pt-7">
-                <div className="about-photo-mask aspect-[4/5] overflow-hidden rounded-[30px]">
-                  <img
-                    src={aboutProfile}
-                    alt="Robin Saha"
-                    className="h-full w-full object-cover object-center"
-                  />
-                </div>
-              </div>
+          <div className="who-badge wb-1 glass">
+            <span className="wb-emoji" aria-hidden="true">🎤</span>
+            <div>
+              <div className="wb-title">IIT Kgp Research Park</div>
+              <div className="wb-sub">Speaker · 2025</div>
             </div>
+          </div>
 
-            <div className="absolute -right-3 top-6 glass rounded-full px-4 py-2 text-[0.72rem] font-medium tracking-[0.12em] uppercase text-white/80 animate-float">
-              Founder-led
-            </div>
-            <div
-              className="absolute -left-4 bottom-10 glass rounded-[18px] px-4 py-3 flex items-center gap-3 animate-float"
-              style={{ animationDuration: "6s", animationDirection: "reverse", background: "rgba(124,107,202,0.14)", border: "1px solid rgba(124,107,202,0.22)" }}
-            >
-              <div className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center">
-                <GraduationCap size={18} className="text-white/85" />
-              </div>
-              <div>
-                <p className="text-[0.68rem] uppercase tracking-[0.14em] text-white/55">Built from research</p>
-                <p className="text-sm font-medium text-white/88">For Indian students and schools</p>
-              </div>
+          <div className="who-badge wb-2 glass">
+            <span className="wb-emoji" aria-hidden="true">📍</span>
+            <div>
+              <div className="wb-title wb-title-accent">Durgapur, West Bengal</div>
+              <div className="wb-sub">M.Sc. Mathematics · Jadavpur University</div>
             </div>
           </div>
         </div>
 
-        <div className="relative order-1 lg:order-2">
-          <div className="glass inline-flex items-center gap-2 text-[0.72rem] font-medium tracking-[0.12em] uppercase text-white/80 px-4 py-1.5 rounded-full mb-5">
-            <Sparkles size={14} className="text-[hsl(var(--lavender))]" />
-            About the maker
+        <div className="order-1 lg:order-2">
+          <div className="glass mb-5 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[0.72rem] font-medium uppercase tracking-[0.12em] text-white/80">
+            <span className="inline-flex h-2 w-2 rounded-full bg-[hsl(var(--lavender))]" />
+            The person behind this
           </div>
 
-          <h2 className="text-[clamp(2.8rem,6vw,5.1rem)] max-w-[11ch] mb-6">
-            Career guidance,
+          <h2 className="mb-6 text-[clamp(2.2rem,6vw,4.9rem)] leading-[1.05]">
+            Hi, I&apos;m
             <br />
-            rebuilt with care.
+            <em>Arabinda Saha</em>
           </h2>
 
-          <div className="space-y-4 text-white/68 text-[0.98rem] leading-[1.85] max-w-2xl">
-            <p>
-              I�m Robin Saha, the creator of Future Canvas. I studied at <span className="text-white/88 font-medium">IIT Kharagpur</span> and <span className="text-white/88 font-medium">IIM Calcutta</span>, and I previously worked with Edudigm on career guidance for schools.
-            </p>
-            <p>
-              This assessment is designed to feel calm, modern, and trustworthy while staying grounded in validated question design for Indian students.
-            </p>
-            <p>
-              I left Edudigm to continue this as a personal initiative � not a startup, not an institution. One person, one validated question paper, and a commitment to getting career guidance right for Indian students before scaling it.
-            </p>
-          </div>
+          <p className="who-body">
+            I spent three years as Program Head at Edudigm — designing and scaling school programs across 600+ schools,
+            6 states, and 1,500+ students. A significant part of that work was delivering career readiness under the
+            Government of India&apos;s PM SHRI initiative at Kendriya Vidyalayas.
+          </p>
+          <p className="who-body">
+            Future Canvas is what came out of those three years. The frameworks — Aptitude, RIASEC, Big Five — were
+            tested in real classrooms, with real Class 9–12 students and real counsellors watching. I saw what worked
+            and what didn&apos;t.
+          </p>
+          <p className="who-body">
+            I left Edudigm to continue this as a personal initiative — not a startup, not an institution. One person,
+            one validated question paper, and a commitment to getting career guidance right for Indian students before
+            scaling it.
+          </p>
 
-          <div className="flex flex-wrap gap-2.5 mt-7 mb-8">
+          <div className="cred-row">
             {credentials.map((credential) => (
-              <span key={credential} className="glass text-[0.72rem] font-medium tracking-[0.04em] px-3.5 py-1 rounded-full text-white/72">
+              <span key={credential} className="cred-chip glass">
                 {credential}
               </span>
             ))}
           </div>
 
-          <a
-            href="https://www.linkedin.com/in/robin0607saha/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-[0.82rem] font-medium text-white/80 hover:text-white transition-colors"
-          >
-            <Linkedin size={16} />
-            Connect on LinkedIn
-          </a>
+          <div className="who-links">
+            <a href="https://www.linkedin.com/in/robin0607saha/" target="_blank" rel="noopener noreferrer" className="who-link glass">
+              <Linkedin size={14} className="text-[hsl(var(--lavender))]" />
+              LinkedIn
+            </a>
+            <a href="https://arabinda07.github.io/" target="_blank" rel="noopener noreferrer" className="who-link glass">
+              <Globe size={14} className="text-[hsl(var(--lavender))]" />
+              Full portfolio →
+            </a>
+            <a href="mailto:arabinda.saha06.07@gmail.com" className="who-link glass">
+              <Mail size={14} className="text-[hsl(var(--lavender))]" />
+              Email
+            </a>
+            <a href="https://wa.me/918240959567" target="_blank" rel="noopener noreferrer" className="who-link glass">
+              <MessageCircle size={14} className="text-[hsl(var(--mint))]" />
+              WhatsApp
+            </a>
+          </div>
         </div>
       </div>
     </section>
