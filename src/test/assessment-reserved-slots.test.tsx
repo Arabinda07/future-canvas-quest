@@ -1,5 +1,5 @@
 ﻿import { beforeEach, describe, expect, it } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -70,12 +70,24 @@ describe("Assessment intro and reserved visual slots", () => {
     localStorage.clear();
   });
 
+  it("requires confirming the intro instructions before starting", () => {
+    seedAssessmentState({ introAccepted: false });
+    renderAssessment();
+
+    const startButton = screen.getByRole("button", { name: /^Start test$/i });
+    expect(startButton).toBeDisabled();
+
+    const confirmation = screen.getByLabelText("I have read the instructions.");
+    fireEvent.click(confirmation);
+
+    expect(startButton).toBeEnabled();
+    expect(screen.getByRole("heading", { name: /Read this once/i })).toBeInTheDocument();
+  });
+
   it("shows a dedicated start screen before any question content", () => {
     seedAssessmentState({ introAccepted: false });
     renderAssessment();
 
-    expect(screen.getByRole("button", { name: /^Start test$/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Read this once/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "General information" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Section A - Aptitude & Logical Reasoning" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Section B - Interests & Personality" })).toBeInTheDocument();

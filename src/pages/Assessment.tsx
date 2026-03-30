@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ClipboardList, Loader2, Play, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useAssessment } from "@/context/AssessmentContext";
 import { questions, QUESTIONS_PER_PAGE, TOTAL_PAGES, TOTAL_QUESTIONS, type Question } from "@/data/questions";
 import { cn } from "@/lib/utils";
@@ -113,11 +114,18 @@ const Assessment = () => {
   const { state, setAnswer, setCurrentPage, setIntroAccepted, clearState, setCompleted } = useAssessment();
   const [submitting, setSubmitting] = useState(false);
   const [direction, setDirection] = useState(1);
+  const [introConfirmed, setIntroConfirmed] = useState(false);
 
   useEffect(() => {
     if (!state.studentData.name && !state.completed) navigate("/register");
     if (state.completed) navigate("/success");
   }, [state.studentData.name, state.completed, navigate]);
+
+  useEffect(() => {
+    if (state.introAccepted) {
+      setIntroConfirmed(true);
+    }
+  }, [state.introAccepted]);
 
   const page = state.currentPage;
   const startIdx = page * QUESTIONS_PER_PAGE;
@@ -133,6 +141,7 @@ const Assessment = () => {
   const showIntroScreen = !state.introAccepted;
 
   const startAssessment = () => {
+    if (!introConfirmed) return;
     setDirection(1);
     setIntroAccepted(true);
     setCurrentPage(0);
@@ -210,18 +219,31 @@ const Assessment = () => {
                 </div>
               </div>
 
-              <div className="mt-6 sm:mt-8 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm leading-6 text-white/58 max-w-2xl">
-                  Sections: 2. Questions: 70. Scored questions: 20. Profile questions: 50. Time allowed: 60 minutes.
-                </p>
-                <Button
-                  type="button"
-                  onClick={startAssessment}
-                  className="rounded-full px-6 sm:px-7 gradient-accent text-primary-foreground hover:opacity-95"
-                >
-                  <Play size={18} />
-                  Start test
-                </Button>
+              <div className="mt-6 sm:mt-8 flex flex-col gap-4 border-t border-white/10 pt-5">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm leading-6 text-white/58 max-w-2xl">
+                    Sections: 2. Questions: 70. Scored questions: 20. Profile questions: 50. Time allowed: 60 minutes.
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={startAssessment}
+                    disabled={!introConfirmed}
+                    className="rounded-full px-6 sm:px-7 gradient-accent text-primary-foreground hover:opacity-95 disabled:opacity-50"
+                  >
+                    <Play size={18} />
+                    Start test
+                  </Button>
+                </div>
+
+                <label htmlFor="intro-confirmed" className="flex items-start gap-3 text-sm leading-6 text-white/72 cursor-pointer select-none">
+                  <Checkbox
+                    id="intro-confirmed"
+                    checked={introConfirmed}
+                    onCheckedChange={(checked) => setIntroConfirmed(checked === true)}
+                    className="mt-1 border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-black"
+                  />
+                  <span>I have read the instructions.</span>
+                </label>
               </div>
             </div>
           </div>
