@@ -11,7 +11,7 @@ export interface Question {
 
 const aptitudeOptionLabels = ["A", "B", "C", "D"];
 
-const aptitudeQuestions: Question[] = [
+const aptitudeQuestions = [
   { id: "Q1", text: "A book costs ?200. A shopkeeper offers a 10% discount. What is the sale price?", type: "aptitude", options: ["?180", "?190", "?195", "?185"] },
   { id: "Q2", text: "A train covers 300 km in 5 hours. Speed?", type: "aptitude", options: ["50 km/h", "55 km/h", "60 km/h", "65 km/h"] },
   { id: "Q3", text: "Average of 24, 28, 32, 36 is:", type: "aptitude", options: ["28", "30", "32", "34"] },
@@ -32,7 +32,7 @@ const aptitudeQuestions: Question[] = [
   { id: "Q18", text: "Find the correctly spelt word:", type: "aptitude", options: ["Efficient", "Treatmeant", "Beterment", "Employd"] },
   { id: "Q19", text: "One Word Substitute: Extreme old age when a man behaves like a fool", type: "aptitude", options: ["Imbecility", "Senility", "Dotage", "Superannuation"] },
   { id: "Q20", text: "Fate smiles ____________ those who untiringly grapple with stark realities of life.", type: "aptitude", options: ["with", "over", "on", "round"] },
-].map((question) => ({ ...question, options: question.options?.map((option, index) => `${aptitudeOptionLabels[index]}. ${option}`) }));
+].map((question) => ({ ...question, type: question.type as "aptitude" | "psychometric", options: question.options?.map((option, index) => `${aptitudeOptionLabels[index]}. ${option}`) }));
 
 const psychometricQuestions: Question[] = [
   { id: "Q21", text: "I enjoy fixing or repairing things at home.", type: "psychometric" },
