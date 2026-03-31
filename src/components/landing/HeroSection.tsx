@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-const heroWords = ["Most", "students", "choose", "a", "stream.", "You", "can", "know", "yours."];
+const heroWords = ["Most", "students", "choose", "their", "future.", "You", "can", "know", "yours."];
 
 const HeroSection = () => {
   const navigate = useNavigate();
