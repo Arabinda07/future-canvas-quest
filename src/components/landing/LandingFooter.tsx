@@ -14,9 +14,6 @@ const LandingFooter = () => (
           </div>
           <span className="font-heading italic text-[1.1rem] text-white/85">Future Canvas</span>
         </div>
-        <p className="max-w-[380px] text-sm leading-[1.65] text-white/50">
-          Career guidance for Class 9–12 students, built from real school deployments and founder-led research.
-        </p>
       </div>
 
       <nav aria-label="Footer links" className="flex flex-wrap items-center gap-2 text-sm">
@@ -45,7 +42,7 @@ const LandingFooter = () => (
       </nav>
     </div>
 
-    <div className="mx-auto mt-6 max-w-[1100px] border-t border-white/10 px-7 pt-5 text-xs text-white/35">
+    <div className="mx-auto mt-6 max-w-[1100px] border-t border-white/10 px-7 pt-5 text-center text-xs text-white/35">
       © {new Date().getFullYear()} Future Canvas · Arabinda Saha
     </div>
   </footer>

@@ -5,7 +5,7 @@ const specs = [
   { icon: "📋", label: "Section A", val: "20 MCQs — Quantitative, Logical & Verbal Reasoning · 60 minutes · No negative marking" },
   { icon: "🧭", label: "Section B", val: "50 statements — RIASEC interests & Big Five personality · No time limit · No right or wrong answers" },
   { icon: "⚡", label: "Report", val: "Generated instantly · Personalised to your class & answers · Printable PDF" },
-  { icon: "🆓", label: "Cost", val: "Completely free for students · Always" },
+  { icon: "💰", label: "Cost", val: "Rs 99/- per student · Instant report" },
 ];
 
 const reportItems = [
@@ -55,7 +55,7 @@ const ReportSections = () => {
               onClick={() => navigate("/register")}
               className="glass-strong inline-flex items-center gap-2 text-white font-medium text-[0.9rem] px-7 py-3.5 rounded-full hover:-translate-y-0.5 transition-transform"
             >
-              Start the free assessment →
+              Start the assessment →
             </button>
           </motion.div>
 
