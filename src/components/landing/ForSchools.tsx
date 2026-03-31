@@ -38,7 +38,7 @@ const ForSchools = () => {
                 "Works on any device — no installation needed",
                 "Instant personalised reports for every student",
                 "I personally support every school — no handoff to a team",
-                "Completely free for students, always",
+                "Just Rs 99/- per student",
               ].map((p) => (
                 <div key={p} className="flex items-start gap-3 text-white/60 text-[0.9rem] font-light">
                   <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-[0.6rem]" style={{ background: "rgba(124,107,202,0.15)", border: "1px solid rgba(124,107,202,0.3)", color: "rgba(180,165,255,0.9)" }}>✓</div>

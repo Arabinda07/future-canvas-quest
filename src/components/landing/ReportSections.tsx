@@ -55,7 +55,7 @@ const ReportSections = () => {
               onClick={() => navigate("/register")}
               className="glass-strong inline-flex items-center gap-2 text-white font-medium text-[0.9rem] px-7 py-3.5 rounded-full hover:-translate-y-0.5 transition-transform"
             >
-              Start the free assessment →
+              Start the assessment →
             </button>
           </motion.div>
 

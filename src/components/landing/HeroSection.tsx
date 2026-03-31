@@ -46,7 +46,7 @@ const HeroSection = () => {
                 onClick={() => navigate("/register")}
                 className="glass-strong inline-flex items-center gap-2 text-white font-medium text-[0.9rem] px-7 py-3.5 rounded-full hover:-translate-y-0.5 transition-transform"
               >
-                Take the free assessment
+                Take the assessment
                 <ArrowRight size={16} />
               </button>
               <a href="#why" className="text-white/60 hover:text-white text-[0.9rem] font-medium py-3 transition-colors">

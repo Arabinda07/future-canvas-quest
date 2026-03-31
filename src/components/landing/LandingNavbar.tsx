@@ -75,7 +75,7 @@ const LandingNavbar = () => {
             </button>
           ))}
           <button onClick={() => { setMobileOpen(false); navigate("/register"); }} className="mt-6 bg-white text-black font-medium py-3.5 rounded-full text-center">
-            Take the free test →
+            Take the test →
           </button>
         </div>
       )}
