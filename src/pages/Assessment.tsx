@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ClipboardList, Loader2, Play, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,38 +28,31 @@ const sectionMeta = {
   },
 } as const;
 
-const leafletContent = {
-  general: {
-    title: "General information",
-    tone: "Assessment overview",
-    items: [
-      "Full marks: 40. Time: 60 Minutes.",
-      "This test is divided into two sections: Section A - Aptitude & Logical Reasoning (40 Marks) and Section B - Interests & Personality (No Marks, Profile-Based).",
-      "Section A contributes to the score. Section B contributes to your career profile and guidance report. Attempt all questions in both sections.",
-    ],
-  },
-  aptitude: {
-    title: "Section A - Aptitude & Logical Reasoning",
-    tone: "Before Section A",
-    items: [
-      "This section has 20 multiple-choice questions (Q1-Q20) to check your aptitude skills in numbers, logic, and language.",
-      "Each question has 4 options (A, B, C, D). Choose the one correct answer.",
-      "Mark only one option per question clearly in the provided OMR sheet.",
-      "All questions carry equal marks. There is no negative marking.",
-    ],
-  },
-  psychometric: {
-    title: "Section B - Interests & Personality",
-    tone: "Before Section B",
-    items: [
-      "This section has 50 statements (Q21-Q70) about your interests and personality.",
-      "There are no right or wrong answers - just be honest about what is true for you.",
-      "For each statement, choose one option: A = Strongly Agree, B = Agree, C = Disagree, D = Strongly Disagree.",
-      "Mark only one option per statement clearly in the provided OMR sheet. Do not skip any question.",
-      "Some items have \"(R)\" written at the end. This is for scoring only - you should ignore it and answer as usual.",
-    ],
-  },
-} as const;
+const generalInfo = [
+  "Full marks: 40. Time: 60 Minutes.",
+  "This test is divided into two sections: Section A - Aptitude & Logical Reasoning (40 Marks) and Section B - Interests & Personality (No Marks, Profile-Based).",
+  "Section A contributes to the score. Section B contributes to your career profile and guidance report. Attempt all questions in both sections.",
+];
+
+const sectionAInfo = {
+  title: "Section A — Aptitude & Logical Reasoning",
+  items: [
+    ["Questions", "20 MCQs (Q1–Q20)"],
+    ["Format", "4 options (A, B, C, D) — choose one"],
+    ["Marking", "Equal marks, no negative marking"],
+    ["OMR", "Mark one option per question clearly"],
+  ],
+};
+
+const sectionBInfo = {
+  title: "Section B — Interests & Personality",
+  items: [
+    ["Statements", "50 items (Q21–Q70)"],
+    ["Format", "A = Strongly Agree, B = Agree, C = Disagree, D = Strongly Disagree"],
+    ["Scoring", "No right or wrong answers — be honest"],
+    ["Note", "Items with \"(R)\" are for scoring only — answer as usual"],
+  ],
+};
 
 const ReservedVisualSlot = ({ question }: { question: Question }) => {
   if (!question.visualSlot) return null;
@@ -76,36 +69,26 @@ const ReservedVisualSlot = ({ question }: { question: Question }) => {
   );
 };
 
-const InstructionsLeaflet = ({
+const SectionTable = ({
   title,
-  tone,
   items,
 }: {
   title: string;
-  tone: string;
-  items: string[];
+  items: string[][];
 }) => (
-  <section className="glass-strong rounded-[28px] border border-white/10 px-5 py-5 sm:px-7 sm:py-6" aria-label={title}>
-    <div className="flex flex-wrap items-center gap-3 mb-5">
-      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[hsl(var(--lavender)/0.16)] text-[hsl(var(--lavender-light))]">
-        <ClipboardList size={18} />
-      </span>
-      <div>
-        <p className="text-[0.68rem] uppercase tracking-[0.18em] text-white/55">{tone}</p>
-        <h2 className="mt-1 text-[clamp(1.35rem,3.4vw,2rem)] leading-[1.05] not-italic">{title}</h2>
-      </div>
+  <div className="glass rounded-[20px] sm:rounded-[24px] border border-white/10 overflow-hidden">
+    <div className="px-5 py-3 border-b border-white/8 bg-white/[0.02]">
+      <h3 className="text-[0.85rem] sm:text-[0.9rem] font-medium text-white/80 font-body not-italic" style={{ lineHeight: '1.4' }}>{title}</h3>
     </div>
-    <div className="space-y-3 text-sm sm:text-[0.97rem] leading-7 text-white/76">
-      {items.map((item, index) => (
-        <p key={item} className="flex gap-3">
-          <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[11px] font-semibold text-white/70">
-            {index + 1}
-          </span>
-          <span>{item}</span>
-        </p>
+    <div className="divide-y divide-white/6">
+      {items.map(([label, value]) => (
+        <div key={label} className="flex gap-4 px-5 py-3 text-sm">
+          <span className="shrink-0 w-24 sm:w-28 font-medium text-[hsl(var(--lavender-light))] text-[0.8rem]">{label}</span>
+          <span className="text-white/65 text-[0.82rem] leading-6 font-body">{value}</span>
+        </div>
       ))}
     </div>
-  </section>
+  </div>
 );
 
 const Assessment = () => {
@@ -179,46 +162,52 @@ const Assessment = () => {
         {showIntroScreen ? (
           <div className="mx-auto max-w-5xl py-4 sm:py-8">
             <div className="glass-strong rounded-[28px] sm:rounded-[36px] border border-white/10 p-5 sm:p-8 lg:p-10">
-              <div className="flex items-start justify-between gap-4 mb-8">
-                <div className="min-w-0">
-                  <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.64rem] sm:text-[0.68rem] font-medium uppercase tracking-[0.18em] text-white/70">
-                    Start test
-                  </div>
-                  <h1 className="mt-4 text-[clamp(2rem,6vw,4.75rem)] leading-[0.96] break-words">
-                    Read this once,
-                    <br />
-                    then begin with confidence.
-                  </h1>
-                  <p className="mt-4 max-w-2xl text-[0.95rem] sm:text-[1rem] leading-7 text-white/65">
-                    You are about to begin the Future Canvas assessment. This intro screen brings together the complete instructions before Q1 so students can settle in before the timed session starts.
-                  </p>
+              {/* Header */}
+              <div className="mb-8">
+                <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.64rem] sm:text-[0.68rem] font-medium uppercase tracking-[0.18em] text-white/70">
+                  Start test
+                </div>
+                <h1 className="mt-4 text-[clamp(2rem,6vw,4.75rem)] leading-[0.96] break-words">
+                  Read this once,
+                  <br />
+                  then begin with confidence.
+                </h1>
+                <p className="mt-4 max-w-2xl text-[0.95rem] sm:text-[1rem] leading-7 text-white/55">
+                  You are about to begin the Future Canvas assessment. Review the complete instructions below before starting.
+                </p>
+              </div>
+
+              {/* General Instructions — horizontal strip */}
+              <div className="glass rounded-[20px] sm:rounded-[24px] border border-white/10 px-5 py-5 sm:px-7 sm:py-6 mb-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[hsl(var(--lavender)/0.16)] text-[hsl(var(--lavender-light))]">
+                    <ClipboardList size={16} />
+                  </span>
+                  <h2 className="text-[clamp(1.1rem,2.5vw,1.4rem)] leading-[1.1] not-italic font-body font-medium" style={{ lineHeight: '1.3' }}>General Instructions</h2>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {generalInfo.map((item, i) => (
+                    <div key={i} className="flex gap-3 text-[0.85rem] sm:text-[0.88rem] leading-6 text-white/65 font-body">
+                      <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[11px] font-semibold text-white/60">
+                        {i + 1}
+                      </span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-                <InstructionsLeaflet
-                  title={leafletContent.general.title}
-                  tone={leafletContent.general.tone}
-                  items={leafletContent.general.items}
-                />
-                <div className="space-y-4">
-                  <InstructionsLeaflet
-                    title={leafletContent.aptitude.title}
-                    tone={leafletContent.aptitude.tone}
-                    items={leafletContent.aptitude.items}
-                  />
-                  <InstructionsLeaflet
-                    title={leafletContent.psychometric.title}
-                    tone={leafletContent.psychometric.tone}
-                    items={leafletContent.psychometric.items}
-                  />
-                </div>
+              {/* Section A & B — tabular side-by-side */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <SectionTable title={sectionAInfo.title} items={sectionAInfo.items} />
+                <SectionTable title={sectionBInfo.title} items={sectionBInfo.items} />
               </div>
 
+              {/* Footer with checkbox and start button */}
               <div className="mt-6 sm:mt-8 flex flex-col gap-4 border-t border-white/10 pt-5">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm leading-6 text-white/58 max-w-2xl">
-                    Sections: 2. Questions: 70. Scored questions: 20. Profile questions: 50. Time allowed: 60 minutes.
+                  <p className="text-sm leading-6 text-white/45 max-w-2xl font-body">
+                    Sections: 2 · Questions: 70 · Scored: 20 · Profile: 50 · Time: 60 min
                   </p>
                   <Button
                     type="button"
@@ -231,7 +220,7 @@ const Assessment = () => {
                   </Button>
                 </div>
 
-                <label htmlFor="intro-confirmed" className="flex items-start gap-3 text-sm leading-6 text-white/72 cursor-pointer select-none">
+                <label htmlFor="intro-confirmed" className="flex items-start gap-3 text-sm leading-6 text-white/60 cursor-pointer select-none font-body">
                   <Checkbox
                     id="intro-confirmed"
                     checked={introConfirmed}
@@ -245,6 +234,7 @@ const Assessment = () => {
           </div>
         ) : (
           <>
+            {/* Sticky progress header */}
             <div className="sticky top-0 z-20 mx-auto max-w-6xl rounded-[24px] sm:rounded-[28px] border border-white/10 bg-black/35 px-4 py-4 sm:px-5 shadow-card backdrop-blur-xl">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="space-y-2 min-w-0">
@@ -253,13 +243,12 @@ const Assessment = () => {
                   </div>
                   <div>
                     <h1 className="text-[clamp(1.5rem,5.6vw,3rem)] leading-[1.02] break-words">{meta.title}</h1>
-                    <p className="mt-2 max-w-2xl text-[0.9rem] sm:text-sm leading-6 text-white/58">{meta.description}</p>
+                    <p className="mt-2 max-w-2xl text-[0.9rem] sm:text-sm leading-6 text-white/50 font-body">{meta.description}</p>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-2 self-start sm:shrink-0">
-                  <div className="hidden sm:flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/68">
-                    Q {qStart}-{qEnd} of {TOTAL_QUESTIONS}
+                  <div className="hidden sm:flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/60 font-body">
+                    Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
                   </div>
                 </div>
               </div>
@@ -269,17 +258,18 @@ const Assessment = () => {
                   <div className="h-2.5 overflow-hidden rounded-full bg-white/[0.06]">
                     <motion.div className="h-full rounded-full gradient-accent" initial={false} animate={{ width: `${progress}%` }} transition={{ duration: 0.5, ease: "easeOut" }} />
                   </div>
-                  <div className="mt-1.5 flex justify-between gap-3 text-[11px] font-medium text-white/45">
+                  <div className="mt-1.5 flex justify-between gap-3 text-[11px] font-medium text-white/40 font-body">
                     <span>{answeredCount} answered</span>
-                    <span className="text-white/72">{progress}% complete</span>
+                    <span className="text-white/60">{progress}% complete</span>
                   </div>
                 </div>
-                <div className="sm:hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/68 text-center">
-                  Q {qStart}-{qEnd} of {TOTAL_QUESTIONS}
+                <div className="sm:hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/60 text-center font-body">
+                  Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
                 </div>
               </div>
             </div>
 
+            {/* Questions */}
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={page}
@@ -304,17 +294,17 @@ const Assessment = () => {
                       className="glass-strong rounded-[24px] sm:rounded-[30px] border border-white/10 px-4 py-4 sm:px-7 sm:py-6"
                     >
                       <div className="mb-4 sm:mb-5 flex flex-wrap items-center gap-2.5">
-                        <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.64rem] sm:text-[0.68rem] font-medium uppercase tracking-[0.18em] text-white/60">
+                        <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.64rem] sm:text-[0.68rem] font-medium uppercase tracking-[0.18em] text-white/50 font-body">
                           {question.type === "aptitude" ? "Section A" : "Section B"}
                         </span>
-                        <span className="inline-flex rounded-full bg-[hsl(var(--lavender)/0.14)] px-3 py-1 text-[0.7rem] sm:text-[0.72rem] font-semibold text-[hsl(var(--lavender-light))]">
+                        <span className="inline-flex rounded-full bg-[hsl(var(--lavender)/0.14)] px-3 py-1 text-[0.7rem] sm:text-[0.72rem] font-semibold text-[hsl(var(--lavender-light))] font-body">
                           {question.id}
                         </span>
                       </div>
 
                       <div className={cn("grid gap-4 sm:gap-6", visualFirst && "xl:grid-cols-[minmax(0,1.35fr)_17rem] xl:items-start")}>
                         <div>
-                          <p className="max-w-3xl text-[0.98rem] sm:text-[1.08rem] leading-7 sm:leading-[1.75] text-white/90 break-words">{question.text}</p>
+                          <p className="max-w-3xl text-[0.98rem] sm:text-[1.08rem] leading-7 sm:leading-[1.75] text-white/85 break-words font-body">{question.text}</p>
                         </div>
                         {visualFirst && <ReservedVisualSlot question={question} />}
                       </div>
@@ -340,13 +330,13 @@ const Assessment = () => {
                               <div className="flex items-start gap-3 min-w-0">
                                 <span
                                   className={cn(
-                                    "mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
-                                    isSelected ? "border-[hsl(var(--lavender)/0.6)] bg-[hsl(var(--lavender)/0.18)] text-white" : "border-white/12 bg-white/[0.04] text-white/70",
+                                    "mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold font-body",
+                                    isSelected ? "border-[hsl(var(--lavender)/0.6)] bg-[hsl(var(--lavender)/0.18)] text-white" : "border-white/12 bg-white/[0.04] text-white/60",
                                   )}
                                 >
                                   {optionKey}
                                 </span>
-                                <span className="min-w-0 text-sm leading-6 text-white/82 break-words">{option}</span>
+                                <span className="min-w-0 text-sm leading-6 text-white/75 break-words font-body">{option}</span>
                               </div>
                             </button>
                           );
@@ -356,9 +346,11 @@ const Assessment = () => {
                   );
                 })}
 
+                {/* Navigation */}
                 <div className="glass rounded-[24px] sm:rounded-[28px] border border-white/10 px-4 py-4 sm:px-6 sm:py-5">
                   <div className="flex items-center justify-between gap-3">
-                    <Button type="button" variant="outline" onClick={goPrev} disabled={page === 0 || submitting} className="rounded-full border-white/10 bg-white/[0.03] text-white hover:bg-white/[0.08] hover:text-white">
+                    <Button type="button" variant="outline" onClick={goPrev} disabled={page === 0 || submitting}
+                      className="rounded-full border-white/10 bg-white/[0.03] text-white hover:bg-white/[0.08] hover:text-white">
                       <ChevronLeft size={18} />
                       Previous
                     </Button>
