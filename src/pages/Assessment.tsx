@@ -83,7 +83,7 @@ const InstructionsLeaflet = ({
 }: {
   title: string;
   tone: string;
-  items: string[];
+  items: readonly string[] | string[];
 }) => (
   <section className="glass-strong rounded-[28px] border border-white/10 px-5 py-5 sm:px-7 sm:py-6" aria-label={title}>
     <div className="flex flex-wrap items-center gap-3 mb-5">
