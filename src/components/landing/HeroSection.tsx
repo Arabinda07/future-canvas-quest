@@ -18,7 +18,7 @@ const HeroSection = () => {
           {/* Text */}
           <div className="relative z-[2]">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="mb-7 inline-flex items-center gap-2.5">
-              <span className="bg-white text-black font-semibold text-[0.72rem] tracking-[0.1em] uppercase px-3 py-0.5 rounded-full">Free</span>
+              <span className="bg-white text-black font-semibold text-[0.72rem] tracking-[0.1em] uppercase px-3 py-0.5 rounded-full">₹99</span>
               <span className="text-white/60 text-[0.9rem]">Career Assessment · Classes 9 to 12</span>
             </motion.div>
 
