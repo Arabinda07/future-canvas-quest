@@ -11,28 +11,33 @@ export interface Question {
 
 const aptitudeOptionLabels = ["A", "B", "C", "D"];
 
-const aptitudeQuestions = [
-  { id: "Q1", text: "A book costs ?200. A shopkeeper offers a 10% discount. What is the sale price?", type: "aptitude", options: ["?180", "?190", "?195", "?185"] },
-  { id: "Q2", text: "A train covers 300 km in 5 hours. Speed?", type: "aptitude", options: ["50 km/h", "55 km/h", "60 km/h", "65 km/h"] },
-  { id: "Q3", text: "Average of 24, 28, 32, 36 is:", type: "aptitude", options: ["28", "30", "32", "34"] },
-  { id: "Q4", text: "Two students appeared at an examination. One of them secured 9 marks more than the other and his marks was 56% of the sum of their marks. The marks obtained by them are:", type: "aptitude", options: ["39, 30", "41, 32", "42, 33", "43, 34"] },
-  { id: "Q5", text: "The price of 10 chairs is equal to that of 4 tables. The price of 15 chairs and 2 tables together is Rs. 4000. The total price of 12 chairs and 3 tables is:", type: "aptitude", options: ["Rs. 3500", "Rs. 3750", "Rs. 3840", "Rs. 3900"] },
-  { id: "Q6", text: "An accurate clock shows 8 o’clock in the morning. Through how many degrees will the hour hand rotate when the clock shows 2 o’clock in the afternoon?", type: "aptitude", options: ["144°", "150°", "168°", "180°"] },
-  { id: "Q7", text: "If one-third of one-fourth of a number is 15, then three-tenth of that number is:", type: "aptitude", options: ["35", "36", "45", "54"] },
-  { id: "Q8", text: "Parrot : Cage :: Man : ?", type: "aptitude", options: ["Home", "Life", "House", "Prison"] },
-  { id: "Q9", text: "If RUN is written as SVO, how is FUN written?", type: "aptitude", options: ["FVN", "GVO", "GUN", "FVO"] },
-  { id: "Q10", text: "In a certain code, STAR is written as TUBS. How is MOON written in that code?", type: "aptitude", options: ["NPPM", "NPPO", "NQOP", "NNOM"] },
-  { id: "Q11", text: "Find the direction which replaces [?] in the following.", type: "aptitude", options: ["N", "NE", "W", "SW"], visualSlot: { alt: "Reserved direction diagram slot", placement: "side" } },
-  { id: "Q12", text: "Which of the following letters is 6th to the right of the 12th letter from the left in the English alphabet?", type: "aptitude", options: ["Q", "R", "S", "T"] },
-  { id: "Q13", text: "Choose the alternative which closely resembles the mirror image of the given combination.", type: "aptitude", options: ["1", "2", "3", "4"], visualSlot: { alt: "Reserved mirror-image visual slot", placement: "below" } },
-  { id: "Q14", text: "Choose the alternative which closely resembles the water-image of the given combination.", type: "aptitude", options: ["1", "2", "3", "4"], visualSlot: { alt: "Reserved water-image visual slot", placement: "below" } },
-  { id: "Q15", text: "Even if it rains I shall come means ……", type: "aptitude", options: ["if I come it will not rain", "if it rains I shall not come", "I will certainly come whether it rains or not", "whenever there is rain I shall come"] },
-  { id: "Q16", text: "The word most similar to “HARMONY”?", type: "aptitude", options: ["Peace", "Noise", "Anger", "Fight"] },
-  { id: "Q17", text: "The correct meaning of the proverb/idiom: “To put one’s hand to plough”", type: "aptitude", options: ["To take up agricultural farming", "To take a difficult task", "To get entangled into unnecessary things", "Take interest in technical work"] },
-  { id: "Q18", text: "Find the correctly spelt word:", type: "aptitude", options: ["Efficient", "Treatmeant", "Beterment", "Employd"] },
-  { id: "Q19", text: "One Word Substitute: Extreme old age when a man behaves like a fool", type: "aptitude", options: ["Imbecility", "Senility", "Dotage", "Superannuation"] },
-  { id: "Q20", text: "Fate smiles ____________ those who untiringly grapple with stark realities of life.", type: "aptitude", options: ["with", "over", "on", "round"] },
-].map((question) => ({ ...question, type: question.type as "aptitude" | "psychometric", options: question.options?.map((option, index) => `${aptitudeOptionLabels[index]}. ${option}`) }));
+const aptitudeQuestionsRaw = [
+  { id: "Q1", text: "A book costs \u20B9200. A shopkeeper offers a 10% discount. What is the sale price?", type: "aptitude" as const, options: ["\u20B9180", "\u20B9190", "\u20B9195", "\u20B9185"] },
+  { id: "Q2", text: "A train covers 300 km in 5 hours. Speed?", type: "aptitude" as const, options: ["50 km/h", "55 km/h", "60 km/h", "65 km/h"] },
+  { id: "Q3", text: "Average of 24, 28, 32, 36 is:", type: "aptitude" as const, options: ["28", "30", "32", "34"] },
+  { id: "Q4", text: "Two students appeared at an examination. One of them secured 9 marks more than the other and his marks was 56% of the sum of their marks. The marks obtained by them are:", type: "aptitude" as const, options: ["39, 30", "41, 32", "42, 33", "43, 34"] },
+  { id: "Q5", text: "The price of 10 chairs is equal to that of 4 tables. The price of 15 chairs and 2 tables together is Rs. 4000. The total price of 12 chairs and 3 tables is:", type: "aptitude" as const, options: ["Rs. 3500", "Rs. 3750", "Rs. 3840", "Rs. 3900"] },
+  { id: "Q6", text: "An accurate clock shows 8 o\u2019clock in the morning. Through how many degrees will the hour hand rotate when the clock shows 2 o\u2019clock in the afternoon?", type: "aptitude" as const, options: ["144\u00B0", "150\u00B0", "168\u00B0", "180\u00B0"] },
+  { id: "Q7", text: "If one-third of one-fourth of a number is 15, then three-tenth of that number is:", type: "aptitude" as const, options: ["35", "36", "45", "54"] },
+  { id: "Q8", text: "Parrot : Cage :: Man : ?", type: "aptitude" as const, options: ["Home", "Life", "House", "Prison"] },
+  { id: "Q9", text: "If RUN is written as SVO, how is FUN written?", type: "aptitude" as const, options: ["FVN", "GVO", "GUN", "FVO"] },
+  { id: "Q10", text: "In a certain code, STAR is written as TUBS. How is MOON written in that code?", type: "aptitude" as const, options: ["NPPM", "NPPO", "NQOP", "NNOM"] },
+  { id: "Q11", text: "Find the direction which replaces [?] in the following.", type: "aptitude" as const, options: ["N", "NE", "W", "SW"], visualSlot: { alt: "Reserved direction diagram slot", placement: "side" as const } },
+  { id: "Q12", text: "Which of the following letters is 6th to the right of the 12th letter from the left in the English alphabet?", type: "aptitude" as const, options: ["Q", "R", "S", "T"] },
+  { id: "Q13", text: "Choose the alternative which closely resembles the mirror image of the given combination.", type: "aptitude" as const, options: ["1", "2", "3", "4"], visualSlot: { alt: "Reserved mirror-image visual slot", placement: "below" as const } },
+  { id: "Q14", text: "Choose the alternative which closely resembles the water-image of the given combination.", type: "aptitude" as const, options: ["1", "2", "3", "4"], visualSlot: { alt: "Reserved water-image visual slot", placement: "below" as const } },
+  { id: "Q15", text: "Even if it rains I shall come means \u2014", type: "aptitude" as const, options: ["if I come it will not rain", "if it rains I shall not come", "I will certainly come whether it rains or not", "whenever there is rain I shall come"] },
+  { id: "Q16", text: "The word most similar to \u2018HARMONY\u2019?", type: "aptitude" as const, options: ["Peace", "Noise", "Anger", "Fight"] },
+  { id: "Q17", text: "The correct meaning of the proverb/idiom: \u2018To put one\u2019s hand to plough\u2019", type: "aptitude" as const, options: ["To take up agricultural farming", "To take a difficult task", "To get entangled into unnecessary things", "Take interest in technical work"] },
+  { id: "Q18", text: "Find the correctly spelt word:", type: "aptitude" as const, options: ["Efficient", "Treatmeant", "Beterment", "Employd"] },
+  { id: "Q19", text: "One Word Substitute: Extreme old age when a man behaves like a fool", type: "aptitude" as const, options: ["Imbecility", "Senility", "Dotage", "Superannuation"] },
+  { id: "Q20", text: "Fate smiles ____________ those who untiringly grapple with stark realities of life.", type: "aptitude" as const, options: ["with", "over", "on", "round"] },
+];
+
+const aptitudeQuestions: Question[] = aptitudeQuestionsRaw.map((q) => ({
+  ...q,
+  options: q.options.map((opt, i) => `${aptitudeOptionLabels[i]}. ${opt}`),
+}));
 
 const psychometricQuestions: Question[] = [
   { id: "Q21", text: "I enjoy fixing or repairing things at home.", type: "psychometric" },
@@ -43,7 +48,7 @@ const psychometricQuestions: Question[] = [
   { id: "Q26", text: "I enjoy solving puzzles or logical problems.", type: "psychometric" },
   { id: "Q27", text: "I like reading about science, technology or how things work.", type: "psychometric" },
   { id: "Q28", text: "I enjoy finding patterns in numbers or information.", type: "psychometric" },
-  { id: "Q29", text: "I often ask “why” and “how” to understand things better.", type: "psychometric" },
+  { id: "Q29", text: "I often ask \u2018why\u2019 and \u2018how\u2019 to understand things better.", type: "psychometric" },
   { id: "Q30", text: "I like experimenting to discover new solutions.", type: "psychometric" },
   { id: "Q31", text: "I enjoy drawing, painting, music, or creative writing.", type: "psychometric" },
   { id: "Q32", text: "I like designing posters, models or visual presentations.", type: "psychometric" },
