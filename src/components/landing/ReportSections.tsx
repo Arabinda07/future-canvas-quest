@@ -5,7 +5,7 @@ const specs = [
   { icon: "📋", label: "Section A", val: "20 MCQs — Quantitative, Logical & Verbal Reasoning · 60 minutes · No negative marking" },
   { icon: "🧭", label: "Section B", val: "50 statements — RIASEC interests & Big Five personality · No time limit · No right or wrong answers" },
   { icon: "⚡", label: "Report", val: "Generated instantly · Personalised to your class & answers · Printable PDF" },
-  { icon: "🆓", label: "Cost", val: "Completely free for students · Always" },
+  { icon: "💰", label: "Cost", val: "Rs 99/- per student · Instant report" },
 ];
 
 const reportItems = [
