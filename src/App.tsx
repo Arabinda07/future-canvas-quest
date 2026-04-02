@@ -8,6 +8,7 @@ import Landing from "./pages/Landing";
 import Register from "./pages/Register";
 import Assessment from "./pages/Assessment";
 import Success from "./pages/Success";
+import Report from "./pages/Report";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const AnimatedRoutes = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/assessment" element={<Assessment />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/report" element={<Report />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
