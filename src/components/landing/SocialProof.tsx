@@ -1,4 +1,7 @@
 import { motion } from "framer-motion";
+import kv2Photo1 from "@/assets/kv2-classroom-1.jpg";
+import kv2Photo2 from "@/assets/kv2-classroom-2.jpg";
+import kv2Photo3 from "@/assets/kv2-classroom-3.jpg";
 
 const SocialProof = () => (
   <section id="proof" className="py-24 lg:py-28 relative overflow-hidden border-t border-white/10" style={{ background: "#0a0a0a" }}>
@@ -23,25 +26,21 @@ const SocialProof = () => (
         <motion.div initial={{ y: 28, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
           <div className="grid grid-cols-2 gap-2.5">
             <div className="col-span-2 glass rounded-[14px] overflow-hidden relative">
-              <div className="aspect-video flex flex-col items-center justify-center gap-2 text-white/40 text-[0.82rem]" style={{ background: "rgba(255,255,255,0.05)" }}>
-                <span className="text-3xl opacity-30">📸</span>
-                <span>Add your KV-2 classroom photo here</span>
-                <span className="text-[0.72rem] opacity-40">(students at desks, wide view)</span>
+              <div className="aspect-video overflow-hidden">
+                <img src={kv2Photo1} alt="Students at KV-2 Kharagpur classroom" className="w-full h-full object-cover" loading="lazy" />
               </div>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 to-transparent text-white/60 text-[0.72rem] font-medium px-3 py-2.5 pt-6 tracking-[0.04em]">
                 KV-2 Kharagpur · Classes 9, 10, 11 & 12
               </div>
             </div>
             <div className="glass rounded-[14px] overflow-hidden">
-              <div className="aspect-[4/5] flex flex-col items-center justify-center gap-2 text-white/40 text-[0.78rem]" style={{ background: "rgba(255,255,255,0.05)" }}>
-                <span className="text-2xl opacity-30">📷</span>
-                <span>Photo 2</span>
+              <div className="aspect-[4/5] overflow-hidden">
+                <img src={kv2Photo2} alt="Students writing the assessment at KV-2" className="w-full h-full object-cover" loading="lazy" />
               </div>
             </div>
             <div className="glass rounded-[14px] overflow-hidden">
-              <div className="aspect-[4/5] flex flex-col items-center justify-center gap-2 text-white/40 text-[0.78rem]" style={{ background: "rgba(255,255,255,0.05)" }}>
-                <span className="text-2xl opacity-30">🖼</span>
-                <span>Photo 3</span>
+              <div className="aspect-[4/5] overflow-hidden">
+                <img src={kv2Photo3} alt="Arabinda conducting session at KV-2" className="w-full h-full object-cover" loading="lazy" />
               </div>
             </div>
           </div>

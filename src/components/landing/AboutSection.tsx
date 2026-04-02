@@ -1,4 +1,5 @@
 import { Globe, Linkedin, Mail, MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 const credentials = [
   "Program Head · Edudigm",
@@ -13,30 +14,65 @@ const AboutSection = () => {
       <div className="glow-blob who-glow" />
 
       <div className="relative z-[1] mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.6fr] lg:gap-20">
-        <div className="who-photo-wrap order-2 lg:order-1">
-          <div className="who-photo glass">
-            <img src="https://arabinda07.github.io/assets/photo.png" alt="Arabinda Saha" loading="lazy" />
-            <div className="who-photo-blend" aria-hidden="true" />
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="who-photo-wrap order-2 lg:order-1"
+        >
+          {/* Profile photo with liquid glass frame */}
+          <div className="who-photo-frame">
+            <div className="who-photo-inner glass-strong">
+              <img
+                src="https://arabinda07.github.io/assets/photo.png"
+                alt="Arabinda Saha"
+                loading="lazy"
+                className="who-photo-img"
+              />
+              {/* Multi-layer fade for seamless blending */}
+              <div className="who-photo-fade-bottom" aria-hidden="true" />
+              <div className="who-photo-fade-edges" aria-hidden="true" />
+              <div className="who-photo-glow-overlay" aria-hidden="true" />
+            </div>
           </div>
 
-          <div className="who-badge wb-1 glass">
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="who-badge wb-1 glass"
+          >
             <span className="wb-emoji" aria-hidden="true">🎤</span>
             <div>
               <div className="wb-title">IIT Kgp Research Park</div>
               <div className="wb-sub">Speaker · 2025</div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="who-badge wb-2 glass">
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.45, duration: 0.5 }}
+            className="who-badge wb-2 glass"
+          >
             <span className="wb-emoji" aria-hidden="true">📍</span>
             <div>
               <div className="wb-title wb-title-accent">Durgapur, West Bengal</div>
               <div className="wb-sub">M.Sc. Mathematics · Jadavpur University</div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="order-1 lg:order-2">
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="order-1 lg:order-2"
+        >
           <div className="glass mb-5 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[0.72rem] font-medium uppercase tracking-[0.12em] text-white/80">
             <span className="inline-flex h-2 w-2 rounded-full bg-[hsl(var(--lavender))]" />
             The person behind this
@@ -90,7 +126,7 @@ const AboutSection = () => {
               WhatsApp
             </a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
