@@ -1,19 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { CheckCircle2, Download, RotateCcw, PartyPopper } from "lucide-react";
+import { CheckCircle2, ArrowRight, PartyPopper } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
 
 const Success = () => {
   const navigate = useNavigate();
 
-  const handleDownload = () => {
-    toast({ title: "Report generating…", description: "Your career report PDF will be ready shortly. This is a demo." });
-  };
-
   return (
     <div className="min-h-screen bg-background relative overflow-x-clip flex flex-col items-center justify-center px-5">
-      {/* Background blobs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="glow-blob w-[28rem] h-[28rem] bg-[hsl(var(--mint-glow)/0.12)] top-20 -right-16" />
         <div className="glow-blob w-[24rem] h-[24rem] bg-[hsl(var(--lavender-glow)/0.1)] bottom-20 -left-16" style={{ animationDuration: "14s" }} />
@@ -54,7 +48,7 @@ const Success = () => {
           transition={{ delay: 0.3 }}
           className="text-white/55 text-[0.95rem] leading-7 mb-10"
         >
-          Your personalized Future Canvas Career Report is being generated with AI-powered insights.
+          Great job finishing all 70 questions! Your personalized Future Canvas Career Report is ready to view.
         </motion.p>
 
         <motion.div
@@ -66,16 +60,16 @@ const Success = () => {
           <Button
             size="lg"
             className="w-full min-h-[56px] text-base font-semibold rounded-full gradient-accent text-primary-foreground border-0 gap-2 shadow-lg hover:opacity-95"
-            onClick={handleDownload}
+            onClick={() => navigate("/report")}
           >
-            <Download size={18} /> Download Career Report (PDF)
+            View Your Report <ArrowRight size={18} />
           </Button>
           <Button
             variant="ghost"
             className="min-h-[48px] text-white/50 rounded-full gap-2 hover:text-white/80 hover:bg-white/[0.05]"
             onClick={() => navigate("/")}
           >
-            <RotateCcw size={16} /> Start Over
+            ← Back to Home
           </Button>
         </motion.div>
       </div>
