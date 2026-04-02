@@ -37,6 +37,7 @@ const AnimatedRoutes = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/assessment" element={<Assessment />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/report" element={<Report />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
