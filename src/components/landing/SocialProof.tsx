@@ -27,7 +27,7 @@ const SocialProof = () => (
           <div className="grid grid-cols-2 gap-2.5">
             <div className="col-span-2 glass rounded-[14px] overflow-hidden relative">
               <div className="aspect-video overflow-hidden">
-                <img src={kv2Photo1} alt="Students at KV-2 Kharagpur classroom" className="w-full h-full object-cover" loading="lazy" />
+                <img src={kv2Photo1} alt="Students at KV-2 Kharagpur classroom" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy" />
               </div>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 to-transparent text-white/60 text-[0.72rem] font-medium px-3 py-2.5 pt-6 tracking-[0.04em]">
                 KV-2 Kharagpur · Classes 9, 10, 11 & 12
@@ -35,12 +35,12 @@ const SocialProof = () => (
             </div>
             <div className="glass rounded-[14px] overflow-hidden">
               <div className="aspect-[4/5] overflow-hidden">
-                <img src={kv2Photo2} alt="Students writing the assessment at KV-2" className="w-full h-full object-cover" loading="lazy" />
+                <img src={kv2Photo2} alt="Students writing the assessment at KV-2" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy" />
               </div>
             </div>
             <div className="glass rounded-[14px] overflow-hidden">
               <div className="aspect-[4/5] overflow-hidden">
-                <img src={kv2Photo3} alt="Arabinda conducting session at KV-2" className="w-full h-full object-cover" loading="lazy" />
+                <img src={kv2Photo3} alt="Arabinda conducting session at KV-2" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy" />
               </div>
             </div>
           </div>
