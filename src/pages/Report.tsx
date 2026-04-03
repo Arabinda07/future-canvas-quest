@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock, FileText, ArrowRight, Star, Compass, Brain, BarChart3, Target, BookOpen } from "lucide-react";
+import { Lock, FileText, ArrowRight, Star, Compass, Brain, BarChart3, Target, BookOpen, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const reportSections = [
   { icon: Star, letter: "A", title: "Aptitude Profile", desc: "Your cognitive strengths across numerical, verbal, abstract, and spatial reasoning." },
@@ -15,12 +17,38 @@ const reportSections = [
 
 const Report = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handlePay = () => {
-    toast({
-      title: "Razorpay integration coming soon",
-      description: "Payment of ₹99 will be enabled shortly. Your report is saved.",
-    });
+  const handlePay = async () => {
+    setLoading(true);
+    try {
+      // Get student info from localStorage (set during registration)
+      const studentName = localStorage.getItem("fc_student_name") || "Student";
+      const studentEmail = localStorage.getItem("fc_student_email") || "";
+      const studentPhone = localStorage.getItem("fc_student_phone") || "";
+
+      const { data, error } = await supabase.functions.invoke("create-payment-link", {
+        body: { studentName, studentEmail, studentPhone },
+      });
+
+      if (error) throw error;
+
+      if (data?.short_url) {
+        // Redirect to Razorpay payment page
+        window.location.href = data.short_url;
+      } else {
+        throw new Error("No payment link received");
+      }
+    } catch (err: any) {
+      console.error("Payment error:", err);
+      toast({
+        title: "Payment failed",
+        description: "Could not create payment link. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -105,8 +133,18 @@ const Report = () => {
                 size="lg"
                 className="w-full min-h-[52px] text-base font-semibold rounded-full gradient-accent text-primary-foreground border-0 gap-2 shadow-lg hover:opacity-95"
                 onClick={handlePay}
+                disabled={loading}
               >
-                Pay & Unlock Report <ArrowRight size={16} />
+                {loading ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Creating payment link…
+                  </>
+                ) : (
+                  <>
+                    Pay & Unlock Report <ArrowRight size={16} />
+                  </>
+                )}
               </Button>
               <p className="text-white/30 text-xs mt-3">Secure payment via Razorpay · Instant access</p>
             </div>
