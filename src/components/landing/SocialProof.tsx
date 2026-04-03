@@ -35,7 +35,7 @@ const SocialProof = () => (
             </div>
             <div className="glass rounded-[14px] overflow-hidden">
               <div className="aspect-[4/5] overflow-hidden">
-                <img src={kv2Photo2} alt="Students writing the assessment at KV-2" className="w-full h-full object-cover" loading="lazy" />
+                <img src={kv2Photo2} alt="Students writing the assessment at KV-2" className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy" />
               </div>
             </div>
             <div className="glass rounded-[14px] overflow-hidden">
