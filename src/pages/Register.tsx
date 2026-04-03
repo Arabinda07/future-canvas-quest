@@ -23,7 +23,12 @@ const Register = () => {
   const handleSubmit = () => {
     if (!isValid) return;
     clearState();
-    setStudentData({ name: name.trim(), currentClass, email: email.trim(), counselorCode: counselorCode.trim(), consent });
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    setStudentData({ name: trimmedName, currentClass, email: trimmedEmail, counselorCode: counselorCode.trim(), consent });
+    // Persist for payment link
+    localStorage.setItem("fc_student_name", trimmedName);
+    localStorage.setItem("fc_student_email", trimmedEmail);
     navigate("/assessment");
   };
 
