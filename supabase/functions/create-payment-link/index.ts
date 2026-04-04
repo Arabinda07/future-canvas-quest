@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { studentName, studentEmail, studentPhone } = await req.json()
+    const { studentName, studentEmail, studentPhone, callbackUrl } = await req.json()
 
     if (!studentName || typeof studentName !== 'string') {
       return new Response(
