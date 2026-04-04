@@ -146,9 +146,33 @@ const Assessment = () => {
 
   const handleSubmit = async () => {
     setSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    clearState();
-    navigate("/success");
+    try {
+      // Save answers to the database
+      const { data, error } = await supabase.from("assessments").insert({
+        student_name: state.studentData.name,
+        student_email: state.studentData.email || null,
+        student_class: state.studentData.currentClass || null,
+        counselor_code: state.studentData.counselorCode || null,
+        answers: state.answers,
+      }).select("id").single();
+
+      if (error) throw error;
+
+      // Store the assessment ID for later use (payment, report)
+      localStorage.setItem("fc_assessment_id", data.id);
+
+      // Don't clear state yet — navigate to success
+      navigate("/success");
+    } catch (err) {
+      console.error("Submit error:", err);
+      toast({
+        title: "Submission failed",
+        description: "Could not save your answers. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
