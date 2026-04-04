@@ -18,6 +18,7 @@ const reportSections = [
 const Report = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const isPaid = localStorage.getItem("fc_payment_status") === "paid";
 
   const handlePay = async () => {
     setLoading(true);
@@ -27,8 +28,10 @@ const Report = () => {
       const studentEmail = localStorage.getItem("fc_student_email") || "";
       const studentPhone = localStorage.getItem("fc_student_phone") || "";
 
+      const callbackUrl = `${window.location.origin}/payment-success`;
+
       const { data, error } = await supabase.functions.invoke("create-payment-link", {
-        body: { studentName, studentEmail, studentPhone },
+        body: { studentName, studentEmail, studentPhone, callbackUrl },
       });
 
       if (error) throw error;
@@ -87,7 +90,7 @@ const Report = () => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 + i * 0.08 }}
-                className={`glass rounded-2xl p-5 flex items-start gap-4 ${i >= 2 ? "blur-[6px] select-none pointer-events-none" : ""}`}
+                className={`glass rounded-2xl p-5 flex items-start gap-4 ${!isPaid && i >= 2 ? "blur-[6px] select-none pointer-events-none" : ""}`}
               >
                 <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                   <s.icon size={20} className="text-white/70" />
@@ -110,45 +113,47 @@ const Report = () => {
             ))}
           </div>
 
-          {/* Paywall overlay */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="absolute inset-x-0 bottom-0 top-[45%] flex flex-col items-center justify-end pb-6 bg-gradient-to-t from-background via-background/95 to-transparent"
-          >
-            <div className="glass-strong rounded-2xl p-8 text-center max-w-sm w-full mx-auto">
-              <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
-                <Lock size={24} className="text-white/60" />
+          {/* Paywall overlay — only show if not paid */}
+          {!isPaid && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="absolute inset-x-0 bottom-0 top-[45%] flex flex-col items-center justify-end pb-6 bg-gradient-to-t from-background via-background/95 to-transparent"
+            >
+              <div className="glass-strong rounded-2xl p-8 text-center max-w-sm w-full mx-auto">
+                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
+                  <Lock size={24} className="text-white/60" />
+                </div>
+                <h3 className="font-heading italic text-xl text-white/90 mb-2">Unlock Full Report</h3>
+                <p className="text-white/45 text-sm leading-relaxed mb-6">
+                  Get your complete 6-section career report with personalized insights, stream recommendations, and an actionable plan.
+                </p>
+                <div className="mb-4">
+                  <span className="text-3xl font-heading italic text-white">{"\u20B9"}99</span>
+                  <span className="text-white/40 text-sm ml-1">one-time</span>
+                </div>
+                <Button
+                  size="lg"
+                  className="w-full min-h-[52px] text-base font-semibold rounded-full gradient-accent text-primary-foreground border-0 gap-2 shadow-lg hover:opacity-95"
+                  onClick={handlePay}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      Creating payment link…
+                    </>
+                  ) : (
+                    <>
+                      Pay & Unlock Report <ArrowRight size={16} />
+                    </>
+                  )}
+                </Button>
+                <p className="text-white/30 text-xs mt-3">Secure payment via Razorpay · Instant access</p>
               </div>
-              <h3 className="font-heading italic text-xl text-white/90 mb-2">Unlock Full Report</h3>
-              <p className="text-white/45 text-sm leading-relaxed mb-6">
-                Get your complete 6-section career report with personalized insights, stream recommendations, and an actionable plan.
-              </p>
-              <div className="mb-4">
-                <span className="text-3xl font-heading italic text-white">₹99</span>
-                <span className="text-white/40 text-sm ml-1">one-time</span>
-              </div>
-              <Button
-                size="lg"
-                className="w-full min-h-[52px] text-base font-semibold rounded-full gradient-accent text-primary-foreground border-0 gap-2 shadow-lg hover:opacity-95"
-                onClick={handlePay}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    Creating payment link…
-                  </>
-                ) : (
-                  <>
-                    Pay & Unlock Report <ArrowRight size={16} />
-                  </>
-                )}
-              </Button>
-              <p className="text-white/30 text-xs mt-3">Secure payment via Razorpay · Instant access</p>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
         </div>
 
         {/* Back to home */}

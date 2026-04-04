@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { studentName, studentEmail, studentPhone } = await req.json()
+    const { studentName, studentEmail, studentPhone, callbackUrl } = await req.json()
 
     if (!studentName || typeof studentName !== 'string') {
       return new Response(
@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
           sms: !!studentPhone,
           email: !!studentEmail,
         },
-        callback_url: '', // Will be set by the client
+        callback_url: callbackUrl || '',
         callback_method: 'get',
         expire_by: Math.floor(Date.now() / 1000) + 30 * 60, // 30 min expiry
         notes: {
