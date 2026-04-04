@@ -7,6 +7,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAssessment } from "@/context/AssessmentContext";
 import { questions, QUESTIONS_PER_PAGE, TOTAL_PAGES, TOTAL_QUESTIONS, type Question } from "@/data/questions";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 const PSYCHOMETRIC_OPTIONS = [
   { value: "A", label: "Strongly Agree" },
