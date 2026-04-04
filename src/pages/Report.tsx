@@ -90,7 +90,7 @@ const Report = () => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 + i * 0.08 }}
-                className={`glass rounded-2xl p-5 flex items-start gap-4 ${i >= 2 ? "blur-[6px] select-none pointer-events-none" : ""}`}
+                className={`glass rounded-2xl p-5 flex items-start gap-4 ${!isPaid && i >= 2 ? "blur-[6px] select-none pointer-events-none" : ""}`}
               >
                 <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                   <s.icon size={20} className="text-white/70" />

@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
           sms: !!studentPhone,
           email: !!studentEmail,
         },
-        callback_url: '', // Will be set by the client
+        callback_url: callbackUrl || '',
         callback_method: 'get',
         expire_by: Math.floor(Date.now() / 1000) + 30 * 60, // 30 min expiry
         notes: {
