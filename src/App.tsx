@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import Assessment from "./pages/Assessment";
 import Success from "./pages/Success";
 import Report from "./pages/Report";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
