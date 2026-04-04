@@ -113,45 +113,47 @@ const Report = () => {
             ))}
           </div>
 
-          {/* Paywall overlay */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="absolute inset-x-0 bottom-0 top-[45%] flex flex-col items-center justify-end pb-6 bg-gradient-to-t from-background via-background/95 to-transparent"
-          >
-            <div className="glass-strong rounded-2xl p-8 text-center max-w-sm w-full mx-auto">
-              <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
-                <Lock size={24} className="text-white/60" />
+          {/* Paywall overlay — only show if not paid */}
+          {!isPaid && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="absolute inset-x-0 bottom-0 top-[45%] flex flex-col items-center justify-end pb-6 bg-gradient-to-t from-background via-background/95 to-transparent"
+            >
+              <div className="glass-strong rounded-2xl p-8 text-center max-w-sm w-full mx-auto">
+                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
+                  <Lock size={24} className="text-white/60" />
+                </div>
+                <h3 className="font-heading italic text-xl text-white/90 mb-2">Unlock Full Report</h3>
+                <p className="text-white/45 text-sm leading-relaxed mb-6">
+                  Get your complete 6-section career report with personalized insights, stream recommendations, and an actionable plan.
+                </p>
+                <div className="mb-4">
+                  <span className="text-3xl font-heading italic text-white">{"\u20B9"}99</span>
+                  <span className="text-white/40 text-sm ml-1">one-time</span>
+                </div>
+                <Button
+                  size="lg"
+                  className="w-full min-h-[52px] text-base font-semibold rounded-full gradient-accent text-primary-foreground border-0 gap-2 shadow-lg hover:opacity-95"
+                  onClick={handlePay}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      Creating payment link…
+                    </>
+                  ) : (
+                    <>
+                      Pay & Unlock Report <ArrowRight size={16} />
+                    </>
+                  )}
+                </Button>
+                <p className="text-white/30 text-xs mt-3">Secure payment via Razorpay · Instant access</p>
               </div>
-              <h3 className="font-heading italic text-xl text-white/90 mb-2">Unlock Full Report</h3>
-              <p className="text-white/45 text-sm leading-relaxed mb-6">
-                Get your complete 6-section career report with personalized insights, stream recommendations, and an actionable plan.
-              </p>
-              <div className="mb-4">
-                <span className="text-3xl font-heading italic text-white">₹99</span>
-                <span className="text-white/40 text-sm ml-1">one-time</span>
-              </div>
-              <Button
-                size="lg"
-                className="w-full min-h-[52px] text-base font-semibold rounded-full gradient-accent text-primary-foreground border-0 gap-2 shadow-lg hover:opacity-95"
-                onClick={handlePay}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    Creating payment link…
-                  </>
-                ) : (
-                  <>
-                    Pay & Unlock Report <ArrowRight size={16} />
-                  </>
-                )}
-              </Button>
-              <p className="text-white/30 text-xs mt-3">Secure payment via Razorpay · Instant access</p>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
         </div>
 
         {/* Back to home */}
