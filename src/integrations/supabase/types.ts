@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assessments: {
+        Row: {
+          answers: Json
+          counselor_code: string | null
+          created_at: string
+          id: string
+          payment_id: string | null
+          payment_status: string
+          razorpay_payment_link_id: string | null
+          student_class: string | null
+          student_email: string | null
+          student_name: string
+          updated_at: string
+        }
+        Insert: {
+          answers?: Json
+          counselor_code?: string | null
+          created_at?: string
+          id?: string
+          payment_id?: string | null
+          payment_status?: string
+          razorpay_payment_link_id?: string | null
+          student_class?: string | null
+          student_email?: string | null
+          student_name: string
+          updated_at?: string
+        }
+        Update: {
+          answers?: Json
+          counselor_code?: string | null
+          created_at?: string
+          id?: string
+          payment_id?: string | null
+          payment_status?: string
+          razorpay_payment_link_id?: string | null
+          student_class?: string | null
+          student_email?: string | null
+          student_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
