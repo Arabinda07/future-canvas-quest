@@ -18,6 +18,7 @@ const reportSections = [
 const Report = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const isPaid = localStorage.getItem("fc_payment_status") === "paid";
 
   const handlePay = async () => {
     setLoading(true);
