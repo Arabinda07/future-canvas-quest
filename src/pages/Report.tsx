@@ -28,8 +28,10 @@ const Report = () => {
       const studentEmail = localStorage.getItem("fc_student_email") || "";
       const studentPhone = localStorage.getItem("fc_student_phone") || "";
 
+      const callbackUrl = `${window.location.origin}/payment-success`;
+
       const { data, error } = await supabase.functions.invoke("create-payment-link", {
-        body: { studentName, studentEmail, studentPhone },
+        body: { studentName, studentEmail, studentPhone, callbackUrl },
       });
 
       if (error) throw error;
