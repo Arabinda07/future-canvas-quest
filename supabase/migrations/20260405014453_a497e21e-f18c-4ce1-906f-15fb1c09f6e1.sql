@@ -1,0 +1,1 @@
+ALTER TABLE public.assessments ADD COLUMN generated_report jsonb, ADD COLUMN scores jsonb;
