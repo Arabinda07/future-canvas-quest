@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { CheckCircle2, Loader2, XCircle } from "lucide-react";
+import { CheckCircle2, Loader2, XCircle, FileText } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
+type Status = "verifying" | "generating" | "success" | "error";
+
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [status, setStatus] = useState<"verifying" | "success" | "error">("verifying");
+  const [status, setStatus] = useState<Status>("verifying");
 
   useEffect(() => {
     const verify = async () => {
@@ -16,16 +18,11 @@ const PaymentSuccess = () => {
         const razorpayPaymentId = searchParams.get("razorpay_payment_id");
         const razorpayPaymentLinkId = searchParams.get("razorpay_payment_link_id");
         const razorpayPaymentLinkStatus = searchParams.get("razorpay_payment_link_status");
-
         const assessmentId = localStorage.getItem("fc_assessment_id");
 
-        if (!assessmentId) {
-          setStatus("error");
-          return;
-        }
+        if (!assessmentId) { setStatus("error"); return; }
 
         if (razorpayPaymentLinkStatus === "paid" && razorpayPaymentId) {
-          // Update assessment with payment info
           const { error } = await supabase
             .from("assessments")
             .update({
@@ -37,8 +34,15 @@ const PaymentSuccess = () => {
             .eq("id", assessmentId);
 
           if (error) throw error;
-
           localStorage.setItem("fc_payment_status", "paid");
+
+          // Generate report
+          setStatus("generating");
+          const { error: genErr } = await supabase.functions.invoke("generate-report", {
+            body: { assessmentId },
+          });
+          if (genErr) console.error("Report generation error:", genErr);
+
           setStatus("success");
         } else {
           setStatus("error");
@@ -48,7 +52,6 @@ const PaymentSuccess = () => {
         setStatus("error");
       }
     };
-
     verify();
   }, [searchParams]);
 
@@ -63,8 +66,19 @@ const PaymentSuccess = () => {
         {status === "verifying" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
             <Loader2 size={56} className="animate-spin text-white/40 mx-auto" />
-            <h1 className="text-[clamp(1.5rem,4vw,2.5rem)] leading-[1]">Verifying payment…</h1>
+            <h1 className="text-[clamp(1.5rem,4vw,2.5rem)] leading-[1]">Verifying payment\u2026</h1>
             <p className="text-white/50 text-sm">Please wait while we confirm your payment.</p>
+          </motion.div>
+        )}
+
+        {status === "generating" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+            <div className="w-28 h-28 rounded-full bg-[hsl(var(--mint)/0.12)] border border-[hsl(var(--mint)/0.2)] flex items-center justify-center mx-auto">
+              <FileText size={40} className="text-[hsl(var(--mint))] animate-pulse" />
+            </div>
+            <h1 className="text-[clamp(1.5rem,4vw,2.5rem)] leading-[1]">Generating your report\u2026</h1>
+            <p className="text-white/50 text-sm">Payment verified! We're building your personalized career report now.</p>
+            <Loader2 size={24} className="animate-spin text-white/30 mx-auto" />
           </motion.div>
         )}
 
@@ -97,19 +111,11 @@ const PaymentSuccess = () => {
               We couldn't verify your payment. If you were charged, please contact support.
             </p>
             <div className="space-y-3">
-              <Button
-                size="lg"
-                className="w-full min-h-[52px] rounded-full gradient-accent text-primary-foreground border-0 hover:opacity-95"
-                onClick={() => navigate("/report")}
-              >
+              <Button size="lg" className="w-full min-h-[52px] rounded-full gradient-accent text-primary-foreground border-0 hover:opacity-95" onClick={() => navigate("/report")}>
                 Try Again
               </Button>
-              <Button
-                variant="ghost"
-                className="text-white/40 rounded-full gap-2 hover:text-white/70 hover:bg-white/[0.05]"
-                onClick={() => navigate("/")}
-              >
-                ← Back to Home
+              <Button variant="ghost" className="text-white/40 rounded-full gap-2 hover:text-white/70 hover:bg-white/[0.05]" onClick={() => navigate("/")}>
+                \u2190 Back to Home
               </Button>
             </div>
           </motion.div>

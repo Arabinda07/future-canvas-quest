@@ -19,10 +19,12 @@ export type Database = {
           answers: Json
           counselor_code: string | null
           created_at: string
+          generated_report: Json | null
           id: string
           payment_id: string | null
           payment_status: string
           razorpay_payment_link_id: string | null
+          scores: Json | null
           student_class: string | null
           student_email: string | null
           student_name: string
@@ -32,10 +34,12 @@ export type Database = {
           answers?: Json
           counselor_code?: string | null
           created_at?: string
+          generated_report?: Json | null
           id?: string
           payment_id?: string | null
           payment_status?: string
           razorpay_payment_link_id?: string | null
+          scores?: Json | null
           student_class?: string | null
           student_email?: string | null
           student_name: string
@@ -45,10 +49,12 @@ export type Database = {
           answers?: Json
           counselor_code?: string | null
           created_at?: string
+          generated_report?: Json | null
           id?: string
           payment_id?: string | null
           payment_status?: string
           razorpay_payment_link_id?: string | null
+          scores?: Json | null
           student_class?: string | null
           student_email?: string | null
           student_name?: string
