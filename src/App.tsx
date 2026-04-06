@@ -11,6 +11,7 @@ import Success from "./pages/Success";
 import Report from "./pages/Report";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
+import Admin from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
