@@ -43,7 +43,8 @@ const AnimatedRoutes = () => {
           <Route path="/success" element={<Success />} />
           <Route path="/report" element={<Report />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/counselor-login" element={<CounselorLogin />} />
+          <Route path="/admin" element={<ProtectedAdminRoute><Admin /></ProtectedAdminRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
