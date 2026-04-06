@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Search, Users, CreditCard, FileText, ChevronDown, ChevronRight } from "lucide-react";
+import { Search, Users, CreditCard, FileText, ChevronDown, ChevronRight, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Assessment {
@@ -60,7 +62,19 @@ const Admin = () => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-7xl mx-auto space-y-6"
       >
-        <h1 className="text-3xl font-bold font-serif">Admin Dashboard</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold font-serif">Admin Dashboard</h1>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              window.location.href = "/counselor-login";
+            }}
+          >
+            <LogOut className="h-4 w-4 mr-2" /> Sign Out
+          </Button>
+        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
