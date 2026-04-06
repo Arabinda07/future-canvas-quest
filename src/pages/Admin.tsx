@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Search, Users, CreditCard, FileText, ChevronDown, ChevronRight } from "lucide-react";
+import { Search, Users, CreditCard, FileText, ChevronDown, ChevronRight, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Assessment {
