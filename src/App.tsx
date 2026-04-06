@@ -11,6 +11,7 @@ import Success from "./pages/Success";
 import Report from "./pages/Report";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
+import Admin from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const AnimatedRoutes = () => {
           <Route path="/success" element={<Success />} />
           <Route path="/report" element={<Report />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
