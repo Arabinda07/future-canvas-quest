@@ -12,6 +12,8 @@ import Report from "./pages/Report";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
+import CounselorLogin from "./pages/CounselorLogin";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 
 const queryClient = new QueryClient();
 
