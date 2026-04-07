@@ -50,9 +50,9 @@ const Register = () => {
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
     setStudentData({ name: trimmedName, currentClass, email: trimmedEmail, counselorCode: counselorCode.trim(), consent });
-    // Persist for payment link
     localStorage.setItem("fc_student_name", trimmedName);
     localStorage.setItem("fc_student_email", trimmedEmail);
+    if (campaignId) localStorage.setItem("fc_campaign_id", campaignId);
     navigate("/assessment");
   };
 
