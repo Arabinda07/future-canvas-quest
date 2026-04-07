@@ -85,6 +85,11 @@ const Register = () => {
           </div>
           <h1 className="text-[clamp(2rem,6vw,3rem)] leading-[0.96]">Let's get started</h1>
           <p className="mt-3 text-[0.95rem] leading-7 text-white/55 mb-8">Minimal info — just enough to personalize your career report.</p>
+          {campaignSchool && (
+            <div className="glass rounded-2xl border border-white/10 px-4 py-3 mb-4 text-sm text-white/70">
+              📍 Registering via <span className="text-white font-medium">{campaignSchool}</span> — Class {currentClass}
+            </div>
+          )}
         </motion.div>
 
         {/* Form */}
