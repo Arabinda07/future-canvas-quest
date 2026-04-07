@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock, FileText, ArrowRight, Star, Compass, Brain, BarChart3, Target, BookOpen, Loader2, AlertTriangle, Sparkles } from "lucide-react";
+import { Lock, FileText, ArrowRight, Star, Compass, Brain, BarChart3, Target, BookOpen, Loader2, AlertTriangle, Sparkles, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -293,9 +293,15 @@ const Report = () => {
             </motion.div>
           </div>
 
-          <div className="text-center mt-10">
-            <Button variant="ghost" className="text-white/40 rounded-full gap-2 hover:text-white/70 hover:bg-white/[0.05]" onClick={() => navigate("/")}>
-              \u2190 Back to Home
+          <div className="text-center mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Button
+              className="rounded-full gradient-accent text-primary-foreground border-0 gap-2 min-h-[44px] px-6 print:hidden"
+              onClick={() => window.print()}
+            >
+              <Download size={16} /> Download as PDF
+            </Button>
+            <Button variant="ghost" className="text-white/40 rounded-full gap-2 hover:text-white/70 hover:bg-white/[0.05] print:hidden" onClick={() => navigate("/")}>
+              ← Back to Home
             </Button>
           </div>
         </div>

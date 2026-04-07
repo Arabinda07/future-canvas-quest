@@ -442,3 +442,45 @@
 .who-link:hover {
   color: rgb(255 255 255 / 1);
 }
+
+/* Print styles for PDF download */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .glow-blob,
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  .glass,
+  .glass-strong {
+    background: #f8f9fa !important;
+    border: 1px solid #e0e0e0 !important;
+    backdrop-filter: none !important;
+  }
+
+  * {
+    color: #1a1a1a !important;
+  }
+
+  h1, h2, h3, h4, h5 {
+    color: #000 !important;
+  }
+
+  .text-\\[hsl\\(var\\(--mint\\)\\)\\] {
+    color: #2a9d6a !important;
+  }
+
+  [class*="bg-background"] {
+    background: white !important;
+  }
+
+  [class*="Progress"] {
+    background: #e0e0e0 !important;
+  }
+}
