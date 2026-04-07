@@ -472,7 +472,7 @@
     color: #000 !important;
   }
 
-  [class*="text-[hsl(var(--mint"])] {
+  [class*="mint"] {
     color: #2a9d6a !important;
   }
 
