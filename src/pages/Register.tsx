@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -8,15 +8,39 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAssessment } from "@/context/AssessmentContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { setStudentData, clearState } = useAssessment();
   const [name, setName] = useState("");
   const [currentClass, setCurrentClass] = useState("");
   const [email, setEmail] = useState("");
   const [counselorCode, setCounselorCode] = useState("");
   const [consent, setConsent] = useState(false);
+  const [campaignId, setCampaignId] = useState<string | null>(null);
+  const [campaignSchool, setCampaignSchool] = useState<string | null>(null);
+
+  // Detect campaign code from URL
+  useEffect(() => {
+    const code = searchParams.get("campaign");
+    if (!code) return;
+    supabase
+      .from("campaigns")
+      .select("id, school_name, class, section")
+      .eq("campaign_code", code.toUpperCase())
+      .eq("status", "active")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setCampaignId(data.id);
+          setCampaignSchool(data.school_name);
+          setCurrentClass(data.class);
+          setCounselorCode(code.toUpperCase());
+        }
+      });
+  }, [searchParams]);
 
   const isValid = name.trim() !== "" && currentClass !== "" && consent;
 
@@ -26,9 +50,9 @@ const Register = () => {
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
     setStudentData({ name: trimmedName, currentClass, email: trimmedEmail, counselorCode: counselorCode.trim(), consent });
-    // Persist for payment link
     localStorage.setItem("fc_student_name", trimmedName);
     localStorage.setItem("fc_student_email", trimmedEmail);
+    if (campaignId) localStorage.setItem("fc_campaign_id", campaignId);
     navigate("/assessment");
   };
 
@@ -61,6 +85,11 @@ const Register = () => {
           </div>
           <h1 className="text-[clamp(2rem,6vw,3rem)] leading-[0.96]">Let's get started</h1>
           <p className="mt-3 text-[0.95rem] leading-7 text-white/55 mb-8">Minimal info — just enough to personalize your career report.</p>
+          {campaignSchool && (
+            <div className="glass rounded-2xl border border-white/10 px-4 py-3 mb-4 text-sm text-white/70">
+              📍 Registering via <span className="text-white font-medium">{campaignSchool}</span> — Class {currentClass}
+            </div>
+          )}
         </motion.div>
 
         {/* Form */}

@@ -17,6 +17,7 @@ export type Database = {
       assessments: {
         Row: {
           answers: Json
+          campaign_id: string | null
           counselor_code: string | null
           created_at: string
           generated_report: Json | null
@@ -32,6 +33,7 @@ export type Database = {
         }
         Insert: {
           answers?: Json
+          campaign_id?: string | null
           counselor_code?: string | null
           created_at?: string
           generated_report?: Json | null
@@ -47,6 +49,7 @@ export type Database = {
         }
         Update: {
           answers?: Json
+          campaign_id?: string | null
           counselor_code?: string | null
           created_at?: string
           generated_report?: Json | null
@@ -59,6 +62,47 @@ export type Database = {
           student_email?: string | null
           student_name?: string
           updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          campaign_code: string
+          class: string
+          counselor_id: string
+          created_at: string
+          id: string
+          school_name: string
+          section: string | null
+          status: string
+        }
+        Insert: {
+          campaign_code: string
+          class: string
+          counselor_id: string
+          created_at?: string
+          id?: string
+          school_name: string
+          section?: string | null
+          status?: string
+        }
+        Update: {
+          campaign_code?: string
+          class?: string
+          counselor_id?: string
+          created_at?: string
+          id?: string
+          school_name?: string
+          section?: string | null
+          status?: string
         }
         Relationships: []
       }
