@@ -12,12 +12,35 @@ import { supabase } from "@/integrations/supabase/client";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { setStudentData, clearState } = useAssessment();
   const [name, setName] = useState("");
   const [currentClass, setCurrentClass] = useState("");
   const [email, setEmail] = useState("");
   const [counselorCode, setCounselorCode] = useState("");
   const [consent, setConsent] = useState(false);
+  const [campaignId, setCampaignId] = useState<string | null>(null);
+  const [campaignSchool, setCampaignSchool] = useState<string | null>(null);
+
+  // Detect campaign code from URL
+  useEffect(() => {
+    const code = searchParams.get("campaign");
+    if (!code) return;
+    supabase
+      .from("campaigns")
+      .select("id, school_name, class, section")
+      .eq("campaign_code", code.toUpperCase())
+      .eq("status", "active")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setCampaignId(data.id);
+          setCampaignSchool(data.school_name);
+          setCurrentClass(data.class);
+          setCounselorCode(code.toUpperCase());
+        }
+      });
+  }, [searchParams]);
 
   const isValid = name.trim() !== "" && currentClass !== "" && consent;
 
