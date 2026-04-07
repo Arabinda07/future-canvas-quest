@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock, FileText, ArrowRight, Star, Compass, Brain, BarChart3, Target, BookOpen, Loader2, AlertTriangle, Sparkles } from "lucide-react";
+import { Lock, FileText, ArrowRight, Star, Compass, Brain, BarChart3, Target, BookOpen, Loader2, AlertTriangle, Sparkles, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
