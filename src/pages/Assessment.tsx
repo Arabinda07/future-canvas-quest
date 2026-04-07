@@ -150,12 +150,14 @@ const Assessment = () => {
     setSubmitting(true);
     try {
       // Save answers to the database
+      const campaignId = localStorage.getItem("fc_campaign_id") || null;
       const { data, error } = await supabase.from("assessments").insert({
         student_name: state.studentData.name,
         student_email: state.studentData.email || null,
         student_class: state.studentData.currentClass || null,
         counselor_code: state.studentData.counselorCode || null,
         answers: state.answers,
+        campaign_id: campaignId,
       }).select("id").single();
 
       if (error) throw error;
