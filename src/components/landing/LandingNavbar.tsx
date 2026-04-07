@@ -82,7 +82,10 @@ const LandingNavbar = () => {
               {l.label}
             </button>
           ))}
-          <button onClick={() => { setMobileOpen(false); navigate("/register"); }} className="mt-6 bg-white text-black font-medium py-3.5 rounded-full text-center">
+          <button onClick={() => { setMobileOpen(false); navigate("/counselor-login"); }} className="block py-4 text-left text-base text-white/40 hover:text-white/70 transition-colors">
+            Counselor Login
+          </button>
+          <button onClick={() => { setMobileOpen(false); navigate("/register"); }} className="mt-6 bg-white text-black font-medium py-3.5 rounded-full text-center w-full">
             Take the test →
           </button>
         </div>
