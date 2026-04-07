@@ -472,7 +472,7 @@
     color: #000 !important;
   }
 
-  .text-\\[hsl\\(var\\(--mint\\)\\)\\] {
+  [class*="text-[hsl(var(--mint"])] {
     color: #2a9d6a !important;
   }
 
