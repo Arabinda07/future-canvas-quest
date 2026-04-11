@@ -69,17 +69,24 @@ const WhatItTests = () => (
 
       {/* Together bar */}
       <div className="glass rounded-[20px] p-6 relative z-[1]">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-4 md:gap-3.5 items-center">
           {together.map((t, i) => (
-            <div key={t.label} className="flex flex-col items-center text-center">
+            <div key={t.label} className="flex flex-col items-center md:items-center">
+              {i > 0 && <div className="hidden md:hidden text-white/20 text-xl">+</div>}
               <div className="text-[0.68rem] font-semibold tracking-[0.1em] uppercase mb-1.5" style={{ color: t.color }}>{t.label}</div>
-              <div className="text-[0.9rem] font-light text-white/60 leading-[1.5] whitespace-pre-line">
-                {t.text}<br /><strong className="text-white/80 font-medium">{t.strong}</strong>{t.sub ? ` ${t.sub}` : ""}
+              <div className="text-[0.9rem] font-light text-white/60 text-center leading-[1.5]">
+                {t.text}<br /><strong className="text-white/80 font-medium">{t.strong}</strong> {t.sub}
               </div>
             </div>
           ))}
         </div>
       </div>
+      {/* Plus signs between items - render separately for desktop */}
+      <style>{`
+        @media(min-width:768px) {
+          .together-plus { display: flex !important; }
+        }
+      `}</style>
     </div>
   </section>
 );

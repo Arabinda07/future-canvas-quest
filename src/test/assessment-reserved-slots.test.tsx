@@ -1,5 +1,5 @@
 ﻿import { beforeEach, describe, expect, it } from "vitest";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,7 +11,7 @@ const STORAGE_KEY = "nextstep-assessment";
 
 const baseStudentData = {
   name: "Test Student",
-  currentClass: "10",
+  currentClass: "IX",
   email: "test@example.com",
   counselorCode: "ABC123",
   consent: true,
@@ -90,14 +90,24 @@ describe("Assessment intro and reserved visual slots", () => {
     seedAssessmentState({ introAccepted: false });
     renderAssessment();
 
-    expect(screen.getByRole("heading", { name: "General information" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Section A - Aptitude & Logical Reasoning" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Section B - Interests & Personality" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "General Instructions" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Section A — Aptitude & Logical Reasoning" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Section B — Interests & Personality" })).toBeInTheDocument();
+    expect(
+      screen.getByText((_, element) => element?.textContent === "Sections: 2 · Questions: 70 · Scored: 20 · Profile: 50 · Time: 60 min"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText((_, element) => element?.textContent === "20 MCQs (Q1–Q20)"),
+    ).toBeInTheDocument();
     expect(screen.queryByText("Q1")).not.toBeInTheDocument();
   });
 
   it("renders reserved slots for an in-progress aptitude page", async () => {
     seedAssessmentState({
+      studentData: {
+        ...baseStudentData,
+        currentClass: "XI",
+      },
       answers: answeredUpToTen,
       currentPage: 2,
       introAccepted: true,
@@ -108,7 +118,9 @@ describe("Assessment intro and reserved visual slots", () => {
     expect(screen.getByText("Q13")).toBeInTheDocument();
     expect(screen.getByText("Q14")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Reasoning and verbal ability" })).toBeInTheDocument();
-    expect(screen.getAllByText("Q 11-15 of 70").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText((_, element) => element?.textContent === "Q 11–15 of 70").length,
+    ).toBeGreaterThan(0);
 
     expect(screen.getByLabelText("Reserved direction diagram slot")).toBeInTheDocument();
     expect(screen.getByLabelText("Reserved mirror-image visual slot")).toBeInTheDocument();
@@ -122,6 +134,10 @@ describe("Assessment intro and reserved visual slots", () => {
 
   it("keeps side and below slot intent explicit for responsive layouts", async () => {
     seedAssessmentState({
+      studentData: {
+        ...baseStudentData,
+        currentClass: "XI",
+      },
       answers: answeredUpToTen,
       currentPage: 2,
       introAccepted: true,
@@ -132,8 +148,50 @@ describe("Assessment intro and reserved visual slots", () => {
     const q13Card = screen.getByTestId("question-card-Q13");
     const q14Card = screen.getByTestId("question-card-Q14");
 
+    expect(within(q11Card).getByLabelText("Reserved direction diagram slot")).toHaveClass("relative");
     expect(within(q11Card).getByLabelText("Reserved direction diagram slot")).toHaveAttribute("data-placement", "side");
     expect(within(q13Card).getByLabelText("Reserved mirror-image visual slot")).toHaveAttribute("data-placement", "below");
     expect(within(q14Card).getByLabelText("Reserved water-image visual slot")).toHaveAttribute("data-placement", "below");
+  });
+
+  it("shows the same first visible assessment page for classes IX and XI with full-flow progress copy", async () => {
+    seedAssessmentState({
+      studentData: {
+        ...baseStudentData,
+        currentClass: "IX",
+      },
+      answers: answeredUpToTen,
+      currentPage: 0,
+      introAccepted: true,
+    });
+    renderAssessment();
+
+    expect(await screen.findByTestId("question-card-Q1")).toBeInTheDocument();
+    expect(screen.getByTestId("question-card-Q5")).toBeInTheDocument();
+    expect(
+      screen.getAllByText((_, element) => element?.textContent === "Q 1–5 of 70").length,
+    ).toBeGreaterThan(0);
+    expect(screen.getByText("10 answered")).toBeInTheDocument();
+
+    cleanup();
+
+    seedAssessmentState({
+      studentData: {
+        ...baseStudentData,
+        currentClass: "XI",
+      },
+      answers: answeredUpToTen,
+      currentPage: 0,
+      introAccepted: true,
+    });
+    renderAssessment();
+
+    expect(await screen.findByTestId("question-card-Q1")).toBeInTheDocument();
+    expect(screen.getByTestId("question-card-Q5")).toBeInTheDocument();
+    expect(screen.queryByTestId("question-card-Q11")).not.toBeInTheDocument();
+    expect(
+      screen.getAllByText((_, element) => element?.textContent === "Q 1–5 of 70").length,
+    ).toBeGreaterThan(0);
+    expect(screen.getByText("10 answered")).toBeInTheDocument();
   });
 });

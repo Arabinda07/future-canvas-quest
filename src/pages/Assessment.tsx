@@ -4,11 +4,17 @@ import { ChevronLeft, ChevronRight, ClipboardList, Loader2, Play, Send } from "l
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useAssessment } from "@/context/AssessmentContext";
-import { questions, QUESTIONS_PER_PAGE, TOTAL_PAGES, TOTAL_QUESTIONS, type Question } from "@/data/questions";
-import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useAssessment } from "@/context/AssessmentContext";
+import { buildAssessmentReport } from "@/domain/reportBuilder";
+import type { AssessmentSession, StudentClass } from "@/domain/types";
+import { questions, QUESTIONS_PER_PAGE, type Question } from "@/data/questions";
+import { getVisibleQuestions } from "@/features/student/assessmentFlow";
+import { buildStudentReportPath, submitAssessmentToBackend } from "@/lib/backend/assessmentGateway";
+import { isSupabaseConfigured } from "@/lib/backend/supabase";
+import { cn } from "@/lib/utils";
+import { createId } from "@/lib/id";
+import { repositories } from "@/repositories";
 
 const PSYCHOMETRIC_OPTIONS = [
   { value: "A", label: "Strongly Agree" },
@@ -33,7 +39,7 @@ const sectionMeta = {
 const generalInfo = [
   "Full marks: 40. Time: 60 Minutes.",
   "This test is divided into two sections: Section A - Aptitude & Logical Reasoning (40 Marks) and Section B - Interests & Personality (No Marks, Profile-Based).",
-  "Section A contributes to the score. Section B contributes to your career profile and guidance report. Attempt all questions in both sections.",
+  "Section A contributes to the score. Section B contributes to your career profile and guidance report. Attempt all visible questions in both sections.",
 ];
 
 const sectionAInfo = {
@@ -63,7 +69,7 @@ const ReservedVisualSlot = ({ question }: { question: Question }) => {
     <div
       aria-label={question.visualSlot.alt}
       data-placement={question.visualSlot.placement ?? "below"}
-      className="reserved-visual-slot min-h-40 sm:min-h-44 rounded-[24px] sm:rounded-[28px] border border-white/10 bg-white/[0.03]"
+      className="reserved-visual-slot relative min-h-40 sm:min-h-44 rounded-[24px] sm:rounded-[28px] border border-white/10 bg-white/[0.03]"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_35%_25%,rgba(164,145,255,0.18),transparent_42%),radial-gradient(circle_at_75%_80%,rgba(109,234,203,0.12),transparent_36%)]" />
       <div className="pointer-events-none absolute inset-[10px] rounded-[20px] sm:rounded-[22px] border border-dashed border-white/12" />
@@ -95,7 +101,7 @@ const SectionTable = ({
 
 const Assessment = () => {
   const navigate = useNavigate();
-  const { state, setAnswer, setCurrentPage, setIntroAccepted, clearState } = useAssessment();
+  const { state, setAnswer, setCurrentPage, setIntroAccepted, setSessionMetadata } = useAssessment();
   const [submitting, setSubmitting] = useState(false);
   const [direction, setDirection] = useState(1);
   const [introConfirmed, setIntroConfirmed] = useState(false);
@@ -110,15 +116,23 @@ const Assessment = () => {
     }
   }, [state.introAccepted]);
 
+  const visibleQuestions = getVisibleQuestions(questions);
+  const totalQuestions = visibleQuestions.length;
+  const visibleAptitudeQuestions = visibleQuestions.filter((question) => question.type === "aptitude").length;
+  const visiblePsychometricQuestions = totalQuestions - visibleAptitudeQuestions;
+  const introSummary = `Sections: 2 · Questions: ${totalQuestions} · Scored: ${visibleAptitudeQuestions} · Profile: ${visiblePsychometricQuestions} · Time: 60 min`;
+
   const page = state.currentPage;
-  const startIdx = page * QUESTIONS_PER_PAGE;
-  const pageQuestions = questions.slice(startIdx, startIdx + QUESTIONS_PER_PAGE);
-  const isLastPage = page === TOTAL_PAGES - 1;
-  const allAnswered = pageQuestions.every((question) => state.answers[question.id]);
-  const answeredCount = Object.keys(state.answers).length;
-  const progress = Math.round((answeredCount / TOTAL_QUESTIONS) * 100);
-  const qStart = startIdx + 1;
-  const qEnd = Math.min(startIdx + QUESTIONS_PER_PAGE, TOTAL_QUESTIONS);
+  const totalPages = Math.max(Math.ceil(totalQuestions / QUESTIONS_PER_PAGE), 1);
+  const safePage = Math.min(page, totalPages - 1);
+  const startIdx = safePage * QUESTIONS_PER_PAGE;
+  const pageQuestions = visibleQuestions.slice(startIdx, startIdx + QUESTIONS_PER_PAGE);
+  const isLastPage = safePage === totalPages - 1;
+  const allAnswered = pageQuestions.length > 0 && pageQuestions.every((question) => state.answers[question.id]);
+  const answeredCount = visibleQuestions.filter((question) => Boolean(state.answers[question.id])).length;
+  const progress = totalQuestions === 0 ? 0 : Math.round((answeredCount / totalQuestions) * 100);
+  const qStart = totalQuestions === 0 ? 0 : startIdx + 1;
+  const qEnd = Math.min(startIdx + QUESTIONS_PER_PAGE, totalQuestions);
   const currentSection = pageQuestions[0]?.type ?? "aptitude";
   const meta = sectionMeta[currentSection];
   const showIntroScreen = !state.introAccepted;
@@ -134,48 +148,107 @@ const Assessment = () => {
   const goNext = () => {
     if (isLastPage) return handleSubmit();
     setDirection(1);
-    setCurrentPage(page + 1);
+    setCurrentPage(safePage + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const goPrev = () => {
-    if (page > 0) {
+    if (safePage > 0) {
       setDirection(-1);
-      setCurrentPage(page - 1);
+      setCurrentPage(safePage - 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handleSubmit = async () => {
     setSubmitting(true);
-    try {
-      // Save answers to the database
-      const campaignId = localStorage.getItem("fc_campaign_id") || null;
-      const { data, error } = await supabase.from("assessments").insert({
-        student_name: state.studentData.name,
-        student_email: state.studentData.email || null,
-        student_class: state.studentData.currentClass || null,
-        counselor_code: state.studentData.counselorCode || null,
+
+    const sessionId = state.session.sessionId;
+    if (!sessionId) {
+      setSubmitting(false);
+      navigate("/register");
+      return;
+    }
+
+    const now = new Date().toISOString();
+    const reportId = createId("report");
+    const savedSession = repositories.assessment.getSession(sessionId);
+    const sessionToSave: AssessmentSession =
+      savedSession ?? {
+        id: sessionId,
+        studentId: "student",
+        counselorId: undefined,
+        studentClass: (state.studentData.currentClass || "IX") as StudentClass,
+        entryPath: state.session.entryPath ?? "self-serve",
+        answers: {},
+        completed: false,
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      try {
+      let finalReportId = reportId;
+      let finalReport;
+      let reportAccessToken: string | undefined;
+
+      if (isSupabaseConfigured()) {
+        const backendResult = await submitAssessmentToBackend({
+          sessionToken: sessionId,
+          answers: state.answers,
+          student: {
+            name: state.studentData.name || "Student",
+            className: (state.studentData.currentClass || "IX") as StudentClass,
+            section: undefined,
+            rollNumber: undefined,
+            schoolName: undefined,
+          },
+          entryPath: state.session.entryPath ?? "self-serve",
+          batchCode: state.studentData.counselorCode || undefined,
+          consentGiven: state.studentData.consent,
+          consentAt: now,
+        });
+
+        finalReportId = backendResult.reportId;
+        finalReport = backendResult.report;
+        reportAccessToken = backendResult.reportAccessToken;
+      } else {
+        finalReport = buildAssessmentReport({
+          id: reportId,
+          sessionId,
+          studentId: sessionToSave.studentId,
+          generatedAt: now.slice(0, 10),
+          answers: state.answers,
+          student: {
+            name: state.studentData.name || "Student",
+            rollNo: "N/A",
+            class: (state.studentData.currentClass || "IX") as "IX" | "X" | "XI" | "XII",
+            section: "N/A",
+            school: "Future Canvas Public School",
+          },
+        });
+      }
+
+      repositories.assessment.saveSession({
+        ...sessionToSave,
         answers: state.answers,
-        campaign_id: campaignId,
-      }).select("id").single();
+        completed: true,
+        updatedAt: now,
+      });
 
-      if (error) throw error;
-
-      // Store the assessment ID for later use (payment, report)
-      localStorage.setItem("fc_assessment_id", data.id);
-
-      // Don't clear state yet — navigate to success
-      navigate("/success");
-    } catch (err) {
-      console.error("Submit error:", err);
+      repositories.report.saveReport(finalReport);
+      setSessionMetadata({ submittedReportId: finalReportId, reportAccessToken: reportAccessToken ?? null });
+      setSubmitting(false);
+      navigate(buildStudentReportPath(finalReportId, reportAccessToken));
+    } catch (submissionError) {
+      setSubmitting(false);
       toast({
         title: "Submission failed",
-        description: "Could not save your answers. Please try again.",
-        variant: "destructive",
+        description:
+          submissionError instanceof Error
+            ? submissionError.message
+            : "We couldn't complete the assessment submission. Please try again.",
       });
-    } finally {
-      setSubmitting(false);
+      return;
     }
   };
 
@@ -235,7 +308,7 @@ const Assessment = () => {
               <div className="mt-6 sm:mt-8 flex flex-col gap-4 border-t border-white/10 pt-5">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm leading-6 text-white/45 max-w-2xl font-body">
-                    Sections: 2 · Questions: 70 · Scored: 20 · Profile: 50 · Time: 60 min
+                    {introSummary}
                   </p>
                   <Button
                     type="button"
@@ -276,7 +349,7 @@ const Assessment = () => {
                 </div>
                 <div className="flex items-center gap-2 self-start sm:shrink-0">
                   <div className="hidden sm:flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/60 font-body">
-                    Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
+                    Q {qStart}–{qEnd} of {totalQuestions}
                   </div>
                 </div>
               </div>
@@ -292,7 +365,7 @@ const Assessment = () => {
                   </div>
                 </div>
                 <div className="sm:hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/60 text-center font-body">
-                  Q {qStart}–{qEnd} of {TOTAL_QUESTIONS}
+                  Q {qStart}–{qEnd} of {totalQuestions}
                 </div>
               </div>
             </div>
@@ -377,7 +450,7 @@ const Assessment = () => {
                 {/* Navigation */}
                 <div className="glass rounded-[24px] sm:rounded-[28px] border border-white/10 px-4 py-4 sm:px-6 sm:py-5">
                   <div className="flex items-center justify-between gap-3">
-                    <Button type="button" variant="outline" onClick={goPrev} disabled={page === 0 || submitting}
+                    <Button type="button" variant="outline" onClick={goPrev} disabled={safePage === 0 || submitting}
                       className="rounded-full border-white/10 bg-white/[0.03] text-white hover:bg-white/[0.08] hover:text-white">
                       <ChevronLeft size={18} />
                       Previous
