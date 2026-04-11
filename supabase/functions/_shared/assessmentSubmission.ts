@@ -48,7 +48,7 @@ export interface PreparedAssessmentArtifacts {
     confidence: string;
     flags: string;
     report_json: Report;
-    report_unlocked: true;
+    report_unlocked: boolean;
   };
 }
 
@@ -161,7 +161,7 @@ export function buildAssessmentArtifacts(input: BuildAssessmentArtifactsInput): 
       confidence: report.snapshot.topRecommendedStream.confidence,
       flags: report.counselling.flags.map((flag) => flag.flag).join(","),
       report_json: report,
-      report_unlocked: true,
+      report_unlocked: input.submission.entry_path === "school-issued",
     },
   };
 }

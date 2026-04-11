@@ -110,8 +110,8 @@ serve(async (request) => {
       session_id: session.id,
       report_id: reportId,
       report_access_token: reportAccessToken,
-      report_locked: false,
-      report: prepared.report,
+      report_locked: !prepared.scoresInsert.report_unlocked,
+      report: prepared.scoresInsert.report_unlocked ? prepared.report : undefined,
     });
   } catch (error) {
     return errorResponse(error instanceof Error ? error.message : "Unable to process assessment.", 400);

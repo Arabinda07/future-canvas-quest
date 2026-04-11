@@ -80,4 +80,44 @@ describe("server assessment contract", () => {
     expect(encrypted).not.toContain("\"Q1\"");
     expect(encrypted).not.toContain("\"A\"");
   });
+
+  it("locks self-serve reports for payment and leaves school-issued reports unlocked", () => {
+    const baseSubmission = {
+      session_token: "session-token",
+      name: "Aarav",
+      class: "XI" as const,
+      section: "B",
+      roll_number: "12",
+      school_name: "",
+      answers: buildAnswers(),
+      consent_given: true,
+      consent_at: "2026-04-11T00:00:00.000Z",
+    };
+
+    const selfServeArtifacts = buildAssessmentArtifacts({
+      sessionId: "session-self-serve",
+      reportId: "report-self-serve",
+      generatedAt: "2026-04-11T09:30:00.000Z",
+      submission: {
+        ...baseSubmission,
+        entry_path: "self-serve" as const,
+        batch_code: null,
+      },
+    });
+
+    const schoolIssuedArtifacts = buildAssessmentArtifacts({
+      sessionId: "session-school",
+      reportId: "report-school",
+      generatedAt: "2026-04-11T09:30:00.000Z",
+      submission: {
+        ...baseSubmission,
+        entry_path: "school-issued" as const,
+        batch_code: "KVKGP2025",
+      },
+      resolvedSchoolName: "Future Canvas Public School",
+    });
+
+    expect(selfServeArtifacts.scoresInsert.report_unlocked).toBe(false);
+    expect(schoolIssuedArtifacts.scoresInsert.report_unlocked).toBe(true);
+  });
 });

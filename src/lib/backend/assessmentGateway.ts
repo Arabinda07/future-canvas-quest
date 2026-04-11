@@ -46,12 +46,45 @@ export interface NormalizedAssessmentBackendResult {
   sessionId: string;
   reportId: string;
   reportAccessToken?: string;
-  report: Report;
+  reportLocked: boolean;
+  report: Report | null;
+}
+
+export interface ReportPaymentSummary {
+  amountInPaise: number;
+  currency: "INR";
+  displayAmount: string;
 }
 
 export interface StudentReportBackendResult {
   reportId: string;
-  report: Report;
+  report_locked?: boolean;
+  report?: Report;
+  payment?: ReportPaymentSummary;
+}
+
+export type StudentReportAccessResult =
+  | {
+      reportId: string;
+      reportLocked: false;
+      report: Report;
+      payment?: never;
+    }
+  | {
+      reportId: string;
+      reportLocked: true;
+      report?: never;
+      payment: ReportPaymentSummary;
+    };
+
+export interface CreateReportPaymentLinkResult {
+  paymentUrl: string;
+  paymentLinkId: string;
+}
+
+export interface VerifyReportPaymentResult {
+  reportId: string;
+  reportUnlocked: boolean;
 }
 
 export function buildProcessAssessmentPayload(input: BuildProcessAssessmentPayloadInput): ProcessAssessmentPayload {
@@ -77,19 +110,30 @@ export function buildProcessAssessmentPayload(input: BuildProcessAssessmentPaylo
 }
 
 export function normalizeAssessmentBackendResult(result: RawAssessmentBackendResult): NormalizedAssessmentBackendResult {
-  if (result.report_locked || !result.report) {
-    throw new Error("The backend did not return a full report. Complete backend scoring and report delivery before enabling remote submission.");
-  }
-
-  const reportId = result.report_id?.trim() || result.report.id;
+  const reportId = result.report_id?.trim() || result.report?.id;
   if (!reportId) {
     throw new Error("The backend response did not include a report identifier.");
+  }
+
+  if (result.report_locked) {
+    return {
+      sessionId: result.session_id,
+      reportId,
+      reportAccessToken: result.report_access_token,
+      reportLocked: true,
+      report: null,
+    };
+  }
+
+  if (!result.report) {
+    throw new Error("The backend did not return a full report. Complete backend scoring and report delivery before enabling remote submission.");
   }
 
   return {
     sessionId: result.session_id,
     reportId,
     reportAccessToken: result.report_access_token,
+    reportLocked: false,
     report: result.report,
   };
 }
@@ -111,7 +155,31 @@ export async function submitAssessmentToBackend(input: BuildProcessAssessmentPay
   return normalizeAssessmentBackendResult(result);
 }
 
-export async function fetchStudentReportFromBackend(reportId: string, reportAccessToken: string): Promise<Report | null> {
+export function normalizeStudentReportBackendResult(result: StudentReportBackendResult): StudentReportAccessResult | null {
+  if (result.report_locked) {
+    return {
+      reportId: result.reportId,
+      reportLocked: true,
+      payment: result.payment ?? {
+        amountInPaise: 9900,
+        currency: "INR",
+        displayAmount: "Rs 99",
+      },
+    };
+  }
+
+  if (!result.report) {
+    return null;
+  }
+
+  return {
+    reportId: result.reportId,
+    reportLocked: false,
+    report: result.report,
+  };
+}
+
+export async function fetchStudentReportFromBackend(reportId: string, reportAccessToken: string): Promise<StudentReportAccessResult | null> {
   const trimmedReportId = reportId.trim();
   const trimmedToken = reportAccessToken.trim();
 
@@ -124,5 +192,43 @@ export async function fetchStudentReportFromBackend(reportId: string, reportAcce
     access_token: trimmedToken,
   });
 
-  return result.report;
+  return normalizeStudentReportBackendResult(result);
+}
+
+export async function createReportPaymentLink(reportId: string, reportAccessToken: string, origin: string): Promise<CreateReportPaymentLinkResult> {
+  const result = await invokeSupabaseFunction<{ payment_url: string; payment_link_id: string }>("create-payment-link", {
+    report_id: reportId.trim(),
+    access_token: reportAccessToken.trim(),
+    callback_origin: origin,
+  });
+
+  return {
+    paymentUrl: result.payment_url,
+    paymentLinkId: result.payment_link_id,
+  };
+}
+
+export async function verifyReportPaymentUnlock(input: {
+  reportId: string;
+  reportAccessToken: string;
+  razorpayPaymentId: string;
+  razorpayPaymentLinkId: string;
+  razorpayPaymentLinkStatus: string;
+}): Promise<VerifyReportPaymentResult> {
+  const result = await invokeSupabaseFunction<{ report_id: string; report_unlocked: boolean }>("verify-report-payment", {
+    report_id: input.reportId.trim(),
+    access_token: input.reportAccessToken.trim(),
+    razorpay_payment_id: input.razorpayPaymentId.trim(),
+    razorpay_payment_link_id: input.razorpayPaymentLinkId.trim(),
+    razorpay_payment_link_status: input.razorpayPaymentLinkStatus.trim(),
+  });
+
+  return {
+    reportId: result.report_id,
+    reportUnlocked: result.report_unlocked,
+  };
+}
+
+export function redirectToPaymentUrl(paymentUrl: string) {
+  window.location.assign(paymentUrl);
 }

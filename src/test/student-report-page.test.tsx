@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,12 +9,16 @@ import StudentReport from "@/pages/StudentReport";
 
 const STORAGE_KEY = "fcq.reports";
 const fetchStudentReportFromBackend = vi.fn();
+const createReportPaymentLink = vi.fn();
+const redirectToPaymentUrl = vi.fn();
 
 vi.mock("@/lib/backend/assessmentGateway", async () => {
   const actual = await vi.importActual<typeof import("@/lib/backend/assessmentGateway")>("@/lib/backend/assessmentGateway");
   return {
     ...actual,
     fetchStudentReportFromBackend: (...args: unknown[]) => fetchStudentReportFromBackend(...args),
+    createReportPaymentLink: (...args: unknown[]) => createReportPaymentLink(...args),
+    redirectToPaymentUrl: (...args: unknown[]) => redirectToPaymentUrl(...args),
   };
 });
 
@@ -64,6 +68,8 @@ describe("StudentReport", () => {
   beforeEach(() => {
     localStorage.clear();
     fetchStudentReportFromBackend.mockReset();
+    createReportPaymentLink.mockReset();
+    redirectToPaymentUrl.mockReset();
   });
 
   it("renders a saved report from localStorage for the requested report id", async () => {
@@ -99,13 +105,38 @@ describe("StudentReport", () => {
         school: "Future Canvas Public School",
       },
     });
-    fetchStudentReportFromBackend.mockResolvedValue(report);
+    fetchStudentReportFromBackend.mockResolvedValue({ reportLocked: false, report });
 
     renderStudentReport("/report/report-remote?token=student-report-token");
 
     expect(await screen.findByRole("heading", { name: report.cover.title })).toBeInTheDocument();
     expect(fetchStudentReportFromBackend).toHaveBeenCalledWith("report-remote", "student-report-token");
     expect(screen.getByText("Zoya Khan")).toBeInTheDocument();
+  });
+
+  it("shows the Rs 99 paywall for locked self-serve reports and starts Razorpay checkout", async () => {
+    fetchStudentReportFromBackend.mockResolvedValue({
+      reportId: "report-locked",
+      reportLocked: true,
+      payment: {
+        amountInPaise: 9900,
+        currency: "INR",
+        displayAmount: "Rs 99",
+      },
+    });
+    createReportPaymentLink.mockResolvedValue({ paymentUrl: "https://rzp.io/i/report-lock" });
+
+    renderStudentReport("/report/report-locked?token=student-report-token");
+
+    expect(await screen.findByRole("heading", { name: /unlock your full career clarity report/i })).toBeInTheDocument();
+    expect(screen.getByText("Rs 99")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /pay rs 99 and unlock/i }));
+
+    await waitFor(() => {
+      expect(createReportPaymentLink).toHaveBeenCalledWith("report-locked", "student-report-token", expect.any(String));
+      expect(redirectToPaymentUrl).toHaveBeenCalledWith("https://rzp.io/i/report-lock");
+    });
   });
 
   it("treats malformed report ids as invalid and offers a restart path", async () => {
