@@ -1,7 +1,10 @@
+export type GradeBand = "9-10" | "11-12";
+
 export interface Question {
   id: string;
   text: string;
   type: "aptitude" | "psychometric";
+  gradeBand?: GradeBand;
   options?: string[];
   visualSlot?: {
     alt: string;
@@ -36,6 +39,7 @@ const aptitudeQuestionsRaw = [
 
 const aptitudeQuestions: Question[] = aptitudeQuestionsRaw.map((q) => ({
   ...q,
+  gradeBand: Number(q.id.slice(1)) <= 10 ? "9-10" : "11-12",
   options: q.options.map((opt, i) => `${aptitudeOptionLabels[i]}. ${opt}`),
 }));
 

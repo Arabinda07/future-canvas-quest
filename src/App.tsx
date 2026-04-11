@@ -7,13 +7,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import Landing from "./pages/Landing";
 import Register from "./pages/Register";
 import Assessment from "./pages/Assessment";
-import Success from "./pages/Success";
-import Report from "./pages/Report";
-import PaymentSuccess from "./pages/PaymentSuccess";
-import NotFound from "./pages/NotFound";
-import Admin from "./pages/Admin";
+import StudentReport from "./pages/StudentReport";
 import CounselorLogin from "./pages/CounselorLogin";
-import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
+import CounselorDashboard from "./pages/CounselorDashboard";
+import CounselorStudentReport from "./pages/CounselorStudentReport";
+import CounselorRouteGuard from "./components/counselor/CounselorRouteGuard";
+import Success from "./pages/Success";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -36,17 +36,18 @@ const AnimatedRoutes = () => {
         exit="exit"
         className="min-h-screen"
       >
-        <Routes location={location}>
-          <Route path="/" element={<Landing />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/assessment" element={<Assessment />} />
-          <Route path="/success" element={<Success />} />
-          <Route path="/report" element={<Report />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/counselor-login" element={<CounselorLogin />} />
-          <Route path="/admin" element={<ProtectedAdminRoute><Admin /></ProtectedAdminRoute>} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+          <Routes location={location}>
+            <Route path="/" element={<Landing />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/assessment" element={<Assessment />} />
+            <Route path="/report/:reportId" element={<StudentReport />} />
+            <Route path="/counselor" element={<CounselorLogin />} />
+            <Route path="/counselor/login" element={<CounselorLogin />} />
+            <Route path="/counselor/dashboard" element={<CounselorRouteGuard><CounselorDashboard /></CounselorRouteGuard>} />
+            <Route path="/counselor/reports/:reportId" element={<CounselorRouteGuard><CounselorStudentReport /></CounselorRouteGuard>} />
+            <Route path="/success" element={<Success />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
       </motion.div>
     </AnimatePresence>
   );

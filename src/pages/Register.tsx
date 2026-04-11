@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -7,52 +7,48 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { StudentClass } from "@/domain/types";
 import { useAssessment } from "@/context/AssessmentContext";
-import { supabase } from "@/integrations/supabase/client";
+import { resolveEntryPath } from "@/features/student/studentEntry";
+import { repositories } from "@/repositories";
+import { createId } from "@/lib/id";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { setStudentData, clearState } = useAssessment();
+  const { setStudentData, setSessionMetadata, clearState } = useAssessment();
   const [name, setName] = useState("");
   const [currentClass, setCurrentClass] = useState("");
   const [email, setEmail] = useState("");
   const [counselorCode, setCounselorCode] = useState("");
   const [consent, setConsent] = useState(false);
-  const [campaignId, setCampaignId] = useState<string | null>(null);
-  const [campaignSchool, setCampaignSchool] = useState<string | null>(null);
-
-  // Detect campaign code from URL
-  useEffect(() => {
-    const code = searchParams.get("campaign");
-    if (!code) return;
-    supabase
-      .from("campaigns")
-      .select("id, school_name, class, section")
-      .eq("campaign_code", code.toUpperCase())
-      .eq("status", "active")
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data) {
-          setCampaignId(data.id);
-          setCampaignSchool(data.school_name);
-          setCurrentClass(data.class);
-          setCounselorCode(code.toUpperCase());
-        }
-      });
-  }, [searchParams]);
 
   const isValid = name.trim() !== "" && currentClass !== "" && consent;
 
   const handleSubmit = () => {
     if (!isValid) return;
+
+    const counselorCodeValue = counselorCode.trim();
+    const entryPath = resolveEntryPath(counselorCodeValue);
+    const session = repositories.assessment.createSession({
+      studentId: createId("student"),
+      studentClass: currentClass as StudentClass,
+      entryPath,
+    });
+
     clearState();
-    const trimmedName = name.trim();
-    const trimmedEmail = email.trim();
-    setStudentData({ name: trimmedName, currentClass, email: trimmedEmail, counselorCode: counselorCode.trim(), consent });
-    localStorage.setItem("fc_student_name", trimmedName);
-    localStorage.setItem("fc_student_email", trimmedEmail);
-    if (campaignId) localStorage.setItem("fc_campaign_id", campaignId);
+    setStudentData({
+      name: name.trim(),
+      currentClass,
+      email: email.trim(),
+      counselorCode: counselorCodeValue,
+      consent,
+    });
+    setSessionMetadata({
+      sessionId: session.id,
+      entryPath: session.entryPath,
+      campaignId: null,
+      submittedReportId: null,
+    });
     navigate("/assessment");
   };
 
@@ -85,11 +81,6 @@ const Register = () => {
           </div>
           <h1 className="text-[clamp(2rem,6vw,3rem)] leading-[0.96]">Let's get started</h1>
           <p className="mt-3 text-[0.95rem] leading-7 text-white/55 mb-8">Minimal info — just enough to personalize your career report.</p>
-          {campaignSchool && (
-            <div className="glass rounded-2xl border border-white/10 px-4 py-3 mb-4 text-sm text-white/70">
-              📍 Registering via <span className="text-white font-medium">{campaignSchool}</span> — Class {currentClass}
-            </div>
-          )}
         </motion.div>
 
         {/* Form */}
@@ -101,8 +92,13 @@ const Register = () => {
         >
           <div className="space-y-2">
             <Label htmlFor="name" className="text-sm font-medium text-white/70">First Name or Nickname *</Label>
-            <Input id="name" placeholder="e.g. Priya" value={name} onChange={(e) => setName(e.target.value)}
-              className="min-h-[50px] rounded-2xl bg-white/[0.04] border-white/10 text-white placeholder:text-white/30 focus:border-[hsl(var(--lavender)/0.5)] focus:ring-1 focus:ring-[hsl(var(--lavender)/0.3)]" />
+            <Input
+              id="name"
+              placeholder="e.g. Priya"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="min-h-[50px] rounded-2xl bg-white/[0.04] border-white/10 text-white placeholder:text-white/30 focus:border-[hsl(var(--lavender)/0.5)] focus:ring-1 focus:ring-[hsl(var(--lavender)/0.3)]"
+            />
           </div>
 
           <div className="space-y-2">
@@ -113,7 +109,9 @@ const Register = () => {
               </SelectTrigger>
               <SelectContent className="bg-[hsl(var(--card))] border-white/10">
                 {["IX", "X", "XI", "XII"].map((c) => (
-                  <SelectItem key={c} value={c} className="text-white/80 focus:bg-white/[0.08] focus:text-white">Class {c}</SelectItem>
+                  <SelectItem key={c} value={c} className="text-white/80 focus:bg-white/[0.08] focus:text-white">
+                    Class {c}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -121,21 +119,36 @@ const Register = () => {
 
           <div className="space-y-2">
             <Label htmlFor="email" className="text-sm font-medium text-white/70">Parent or Student Email</Label>
-            <Input id="email" type="email" placeholder="name@email.com" value={email} onChange={(e) => setEmail(e.target.value)}
-              className="min-h-[50px] rounded-2xl bg-white/[0.04] border-white/10 text-white placeholder:text-white/30 focus:border-[hsl(var(--lavender)/0.5)]" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="min-h-[50px] rounded-2xl bg-white/[0.04] border-white/10 text-white placeholder:text-white/30 focus:border-[hsl(var(--lavender)/0.5)]"
+            />
             <p className="text-xs text-white/40 pl-1">Only used to send a backup of your report.</p>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="code" className="text-sm font-medium text-white/70">School / Counselor Code</Label>
-            <Input id="code" placeholder="e.g. SCH-1234" value={counselorCode} onChange={(e) => setCounselorCode(e.target.value)}
-              className="min-h-[50px] rounded-2xl bg-white/[0.04] border-white/10 text-white placeholder:text-white/30 focus:border-[hsl(var(--lavender)/0.5)]" />
+            <Input
+              id="code"
+              placeholder="e.g. SCH-1234"
+              value={counselorCode}
+              onChange={(e) => setCounselorCode(e.target.value)}
+              className="min-h-[50px] rounded-2xl bg-white/[0.04] border-white/10 text-white placeholder:text-white/30 focus:border-[hsl(var(--lavender)/0.5)]"
+            />
             <p className="text-xs text-white/40 pl-1">Leave blank if you are taking this independently.</p>
           </div>
 
           <div className="glass rounded-2xl border border-white/10 p-4 flex items-start gap-3">
-            <Checkbox id="consent" checked={consent} onCheckedChange={(v) => setConsent(v === true)}
-              className="mt-0.5 min-w-[22px] min-h-[22px] rounded-md border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-black" />
+            <Checkbox
+              id="consent"
+              checked={consent}
+              onCheckedChange={(v) => setConsent(v === true)}
+              className="mt-0.5 min-w-[22px] min-h-[22px] rounded-md border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-black"
+            />
             <label htmlFor="consent" className="text-sm text-white/60 leading-snug cursor-pointer">
               I agree to the privacy policy. My data will only be used to generate this career report and will never be shared with third parties. *
             </label>
