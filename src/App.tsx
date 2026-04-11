@@ -11,6 +11,8 @@ import StudentReport from "./pages/StudentReport";
 import CounselorLogin from "./pages/CounselorLogin";
 import CounselorDashboard from "./pages/CounselorDashboard";
 import CounselorStudentReport from "./pages/CounselorStudentReport";
+import CounselorRegister from "./pages/CounselorRegister";
+import AdminCounselorRequests from "./pages/AdminCounselorRequests";
 import CounselorRouteGuard from "./components/counselor/CounselorRouteGuard";
 import Success from "./pages/Success";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -44,8 +46,10 @@ const AnimatedRoutes = () => {
             <Route path="/report/:reportId" element={<StudentReport />} />
             <Route path="/counselor" element={<CounselorLogin />} />
             <Route path="/counselor/login" element={<CounselorLogin />} />
+            <Route path="/counselor/register" element={<CounselorRegister />} />
             <Route path="/counselor/dashboard" element={<CounselorRouteGuard><CounselorDashboard /></CounselorRouteGuard>} />
             <Route path="/counselor/reports/:reportId" element={<CounselorRouteGuard><CounselorStudentReport /></CounselorRouteGuard>} />
+            <Route path="/admin/counselor-requests" element={<AdminCounselorRequests />} />
             <Route path="/success" element={<Success />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="*" element={<NotFound />} />

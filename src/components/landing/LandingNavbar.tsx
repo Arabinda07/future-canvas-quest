@@ -47,13 +47,21 @@ const LandingNavbar = () => {
             </div>
 
             {/* CTA */}
-            <button
-              onClick={() => navigate("/register")}
-              className="hidden sm:inline-flex items-center gap-2 bg-white text-black text-[0.8rem] font-medium px-5 py-2 rounded-full hover:bg-white/90 hover:-translate-y-0.5 transition-all shrink-0"
-            >
-              Take the test
-              <ArrowRight size={14} />
-            </button>
+            <div className="hidden sm:flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => navigate("/counselor/login")}
+                className="inline-flex items-center gap-2 text-white/65 text-[0.8rem] font-medium px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] hover:text-white hover:bg-white/[0.07] transition-all"
+              >
+                Counselor login
+              </button>
+              <button
+                onClick={() => navigate("/register")}
+                className="inline-flex items-center gap-2 bg-white text-black text-[0.8rem] font-medium px-5 py-2 rounded-full hover:bg-white/90 hover:-translate-y-0.5 transition-all"
+              >
+                Take the test
+                <ArrowRight size={14} />
+              </button>
+            </div>
 
             {/* Mobile hamburger */}
             <button className="md:hidden p-2 text-white/80" onClick={() => setMobileOpen(true)}>
@@ -76,6 +84,9 @@ const LandingNavbar = () => {
           ))}
           <button onClick={() => { setMobileOpen(false); navigate("/register"); }} className="mt-6 bg-white text-black font-medium py-3.5 rounded-full text-center">
             Take the test →
+          </button>
+          <button onClick={() => { setMobileOpen(false); navigate("/counselor/login"); }} className="border border-white/10 bg-white/[0.04] text-white/80 font-medium py-3.5 rounded-full text-center">
+            Counselor login
           </button>
         </div>
       )}

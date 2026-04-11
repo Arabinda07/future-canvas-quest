@@ -172,6 +172,14 @@ const CounselorLogin = () => {
               <p className="text-xs leading-6 text-white/40">
                 Invite-link access is batch-scoped. The dashboard only loads reports owned by the validated school batch.
               </p>
+
+              <Button
+                variant="ghost"
+                className="w-full rounded-full text-white/60 hover:text-white hover:bg-white/[0.05]"
+                onClick={() => navigate("/counselor/register")}
+              >
+                Need school access? Counselor registration
+              </Button>
             </CardContent>
           </Card>
         </div>
