@@ -1,31 +1,104 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Compass, FileWarning } from "lucide-react";
+import { ArrowLeft, Compass, FileWarning, Loader2, Lock } from "lucide-react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 import { repositories } from "@/repositories";
-import { fetchStudentReportFromBackend } from "@/lib/backend/assessmentGateway";
+import { createReportPaymentLink, fetchStudentReportFromBackend, redirectToPaymentUrl, type StudentReportAccessResult } from "@/lib/backend/assessmentGateway";
 
 const StudentReport = () => {
   const { reportId = "" } = useParams();
   const [searchParams] = useSearchParams();
   const normalizedReportId = reportId.trim();
   const reportAccessToken = searchParams.get("token")?.trim() ?? "";
-  const { data: report } = useQuery({
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const { data: reportAccess } = useQuery<StudentReportAccessResult | null>({
     queryKey: ["student-report", normalizedReportId, reportAccessToken],
     queryFn: async () => {
+      if (reportAccessToken) {
+        const backendResult = await fetchStudentReportFromBackend(normalizedReportId, reportAccessToken);
+        if (backendResult?.reportLocked) {
+          return backendResult;
+        }
+        if (backendResult?.report) {
+          repositories.report.saveReport(backendResult.report);
+          return backendResult;
+        }
+      }
+
       const localReport = repositories.report.getReport(normalizedReportId);
       if (localReport) {
-        return localReport;
+        return {
+          reportId: normalizedReportId,
+          reportLocked: false,
+          report: localReport,
+        };
       }
 
-      if (!reportAccessToken) {
-        return null;
-      }
-
-      return fetchStudentReportFromBackend(normalizedReportId, reportAccessToken);
+      return null;
     },
     enabled: normalizedReportId.length > 0,
   });
+
+  const handlePayment = async () => {
+    if (!reportAccessToken) {
+      toast({ title: "Payment link unavailable", description: "This report link is missing its private access token." });
+      return;
+    }
+
+    setPaymentLoading(true);
+    try {
+      const payment = await createReportPaymentLink(normalizedReportId, reportAccessToken, window.location.origin);
+      redirectToPaymentUrl(payment.paymentUrl);
+    } catch (error) {
+      setPaymentLoading(false);
+      toast({
+        title: "Payment link failed",
+        description: error instanceof Error ? error.message : "We couldn't create the Razorpay payment link. Please try again.",
+      });
+    }
+  };
+
+  if (reportAccess?.reportLocked) {
+    const priceLabel = reportAccess.payment.displayAmount;
+    return (
+      <div className="min-h-screen bg-background relative overflow-x-clip px-5 py-8">
+        <div className="mx-auto max-w-3xl">
+          <div className="glass-strong rounded-[28px] border border-white/10 p-8 sm:p-10 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/[0.04] border border-white/10">
+              <Lock size={28} className="text-white/70" />
+            </div>
+            <h1 className="mt-6 text-[clamp(2rem,5vw,3rem)] leading-[0.96]">Unlock your full Career Clarity Report</h1>
+            <p className="mt-4 text-white/55 leading-7">
+              Your assessment is complete. Pay {priceLabel} once to unlock the full personalized report with stream guidance,
+              career clusters, and next-step actions.
+            </p>
+            <div className="mt-7 text-4xl font-semibold text-white">{priceLabel}</div>
+            <Button
+              size="lg"
+              className="mt-7 min-h-[54px] rounded-full gradient-accent px-7 text-base font-semibold text-primary-foreground"
+              onClick={handlePayment}
+              disabled={paymentLoading}
+            >
+              {paymentLoading ? (
+                <>
+                  <Loader2 size={18} className="mr-2 animate-spin" />
+                  Creating Razorpay link...
+                </>
+              ) : (
+                `Pay ${priceLabel} and unlock`
+              )}
+            </Button>
+            <p className="mt-4 text-xs text-white/35">Secure payment via Razorpay. The report unlocks after payment verification.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const report = reportAccess?.report;
 
   if (!report) {
     return (

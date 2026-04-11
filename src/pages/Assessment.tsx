@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { useAssessment } from "@/context/AssessmentContext";
 import { buildAssessmentReport } from "@/domain/reportBuilder";
-import type { AssessmentSession, StudentClass } from "@/domain/types";
+import type { AssessmentSession, Report, StudentClass } from "@/domain/types";
 import { questions, QUESTIONS_PER_PAGE, type Question } from "@/data/questions";
 import { getVisibleQuestions } from "@/features/student/assessmentFlow";
 import { buildStudentReportPath, submitAssessmentToBackend } from "@/lib/backend/assessmentGateway";
@@ -188,8 +188,10 @@ const Assessment = () => {
 
       try {
       let finalReportId = reportId;
-      let finalReport;
+      let finalReport: Report | null = null;
       let reportAccessToken: string | undefined;
+
+      const entryPath = state.session.entryPath ?? "self-serve";
 
       if (isSupabaseConfigured()) {
         const backendResult = await submitAssessmentToBackend({
@@ -202,14 +204,14 @@ const Assessment = () => {
             rollNumber: undefined,
             schoolName: undefined,
           },
-          entryPath: state.session.entryPath ?? "self-serve",
+          entryPath,
           batchCode: state.studentData.counselorCode || undefined,
           consentGiven: state.studentData.consent,
           consentAt: now,
         });
 
         finalReportId = backendResult.reportId;
-        finalReport = backendResult.report;
+        finalReport = entryPath === "school-issued" ? backendResult.report : null;
         reportAccessToken = backendResult.reportAccessToken;
       } else {
         finalReport = buildAssessmentReport({
@@ -235,7 +237,9 @@ const Assessment = () => {
         updatedAt: now,
       });
 
-      repositories.report.saveReport(finalReport);
+      if (finalReport) {
+        repositories.report.saveReport(finalReport);
+      }
       setSessionMetadata({ submittedReportId: finalReportId, reportAccessToken: reportAccessToken ?? null });
       setSubmitting(false);
       navigate(buildStudentReportPath(finalReportId, reportAccessToken));

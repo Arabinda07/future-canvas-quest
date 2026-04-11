@@ -50,14 +50,22 @@ describe("assessment backend gateway", () => {
     expect(payload.entry_path).toBe("self-serve");
   });
 
-  it("rejects locked or incomplete backend responses", () => {
-    expect(() =>
+  it("normalizes a locked backend response without exposing a report", () => {
+    expect(
       normalizeAssessmentBackendResult({
         success: true,
         session_id: "session-1",
         report_locked: true,
+        report_id: "report-1",
+        report_access_token: "student-report-token",
       }),
-    ).toThrow(/full report/i);
+    ).toEqual({
+      sessionId: "session-1",
+      reportId: "report-1",
+      reportAccessToken: "student-report-token",
+      reportLocked: true,
+      report: null,
+    });
   });
 
   it("normalizes a completed backend response into the current frontend report contract", () => {
@@ -89,6 +97,7 @@ describe("assessment backend gateway", () => {
       sessionId: "session-1",
       reportId: "report-1",
       reportAccessToken: "student-report-token",
+      reportLocked: false,
       report,
     });
   });

@@ -13,6 +13,7 @@ import CounselorDashboard from "./pages/CounselorDashboard";
 import CounselorStudentReport from "./pages/CounselorStudentReport";
 import CounselorRouteGuard from "./components/counselor/CounselorRouteGuard";
 import Success from "./pages/Success";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const AnimatedRoutes = () => {
             <Route path="/counselor/dashboard" element={<CounselorRouteGuard><CounselorDashboard /></CounselorRouteGuard>} />
             <Route path="/counselor/reports/:reportId" element={<CounselorRouteGuard><CounselorStudentReport /></CounselorRouteGuard>} />
             <Route path="/success" element={<Success />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
       </motion.div>

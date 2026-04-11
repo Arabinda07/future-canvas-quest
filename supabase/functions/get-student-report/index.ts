@@ -25,7 +25,7 @@ serve(async (request) => {
 
   const { data: score, error: scoreError } = await supabase
     .from("calculated_scores")
-    .select("session_id, report_id, report_json")
+    .select("session_id, report_id, report_json, report_unlocked")
     .eq("report_id", reportId)
     .maybeSingle();
 
@@ -39,7 +39,7 @@ serve(async (request) => {
 
   const { data: session, error: sessionError } = await supabase
     .from("student_sessions")
-    .select("report_access_token_hash")
+    .select("entry_path, report_access_token_hash")
     .eq("id", score.session_id)
     .maybeSingle();
 
@@ -51,8 +51,36 @@ serve(async (request) => {
     return errorResponse("Report not found.", 404);
   }
 
+  const { data: paidPayment, error: paidPaymentError } = await supabase
+    .from("report_payments")
+    .select("id")
+    .eq("session_id", score.session_id)
+    .eq("report_id", score.report_id)
+    .eq("status", "paid")
+    .maybeSingle();
+
+  if (paidPaymentError) {
+    return errorResponse(paidPaymentError.message, 500);
+  }
+
+  const isUnlocked =
+    session.entry_path === "school-issued" || (score.report_unlocked && Boolean(paidPayment));
+
+  if (!isUnlocked) {
+    return jsonResponse({
+      reportId: score.report_id,
+      report_locked: true,
+      payment: {
+        amountInPaise: 9900,
+        currency: "INR",
+        displayAmount: "Rs 99",
+      },
+    });
+  }
+
   return jsonResponse({
     reportId: score.report_id,
+    report_locked: false,
     report: score.report_json,
   });
 });
