@@ -1,7 +1,11 @@
+import { createClient } from "@supabase/supabase-js";
+
 export interface SupabasePublicConfig {
   url: string;
   anonKey: string;
 }
+
+let cachedClient: ReturnType<typeof createClient> | null = null;
 
 export function getSupabasePublicConfig(): SupabasePublicConfig | null {
   const url = (import.meta.env.VITE_SUPABASE_URL ?? "").trim();
@@ -25,6 +29,16 @@ export function assertSupabaseConfigured(): SupabasePublicConfig {
   }
 
   return config;
+}
+
+export function getSupabaseClient() {
+  if (cachedClient) return cachedClient;
+  const config = getSupabasePublicConfig();
+  if (config) {
+    cachedClient = createClient(config.url, config.anonKey);
+    return cachedClient;
+  }
+  return null;
 }
 
 export async function invokeSupabaseFunction<TResponse>(name: string, body: unknown): Promise<TResponse> {
