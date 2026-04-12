@@ -21,16 +21,18 @@ export interface CounselorDashboardReportSummary {
 }
 
 export interface CounselorDashboardData {
-  schoolName: string;
-  batchCode: string;
-  validUntil?: string;
-  metrics: {
-    invited: number;
-    started: number;
-    completed: number;
-    reportReady: number;
-  };
-  reports: CounselorDashboardReportSummary[];
+  batches: {
+    schoolName: string;
+    batchCode: string;
+    validUntil?: string;
+    metrics: {
+      invited: number;
+      started: number;
+      completed: number;
+      reportReady: number;
+    };
+    reports: CounselorDashboardReportSummary[];
+  }[];
 }
 
 export interface CounselorRegistrationInput {
@@ -99,10 +101,14 @@ export async function validateCounselorAccess(batchCode: string, adminToken: str
   });
 }
 
-export async function fetchCounselorDashboardData(session: CounselorAccessSession) {
-  return invokeSupabaseFunction<CounselorDashboardData>("get-counselor-dashboard", {
-    batch_code: session.batchCode,
-    admin_token: session.adminToken,
+export async function fetchCounselorDashboardData() {
+  return invokeSupabaseFunction<CounselorDashboardData>("get-counselor-dashboard", {});
+}
+
+export async function claimCounselorBatch(batchCode: string, adminToken: string) {
+  return invokeSupabaseFunction<{ success: boolean; batchCode: string }>("claim-counselor-batch", {
+    batch_code: batchCode,
+    admin_token: adminToken,
   });
 }
 

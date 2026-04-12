@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AssessmentProvider } from "@/context/AssessmentContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Landing from "./pages/Landing";
@@ -65,11 +66,13 @@ const App = () => (
     <TooltipProvider>
       <ErrorBoundary>
         <Toaster />
-        <AssessmentProvider>
-          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <AnimatedRoutes />
-          </BrowserRouter>
-        </AssessmentProvider>
+        <AuthProvider>
+          <AssessmentProvider>
+            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+              <AnimatedRoutes />
+            </BrowserRouter>
+          </AssessmentProvider>
+        </AuthProvider>
       </ErrorBoundary>
     </TooltipProvider>
   </QueryClientProvider>

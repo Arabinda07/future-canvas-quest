@@ -1,14 +1,24 @@
-import type { PropsWithChildren } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { hasValidCounselorAccessSession } from "@/features/counselor/accessSession";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
-const CounselorRouteGuard = ({ children }: PropsWithChildren) => {
+interface CounselorRouteGuardProps {
+  children: React.ReactNode;
+}
+
+const CounselorRouteGuard = ({ children }: CounselorRouteGuardProps) => {
+  const navigate = useNavigate();
   const location = useLocation();
+  const { session, loading } = useAuth();
 
-  if (!hasValidCounselorAccessSession()) {
-    const next = `${location.pathname}${location.search}`;
-    return <Navigate to={`/counselor/login?next=${encodeURIComponent(next)}`} replace />;
-  }
+  useEffect(() => {
+    if (!loading && !session) {
+      navigate({ pathname: "/counselor/login", search: location.search });
+    }
+  }, [session, loading, navigate, location.search]);
+
+  if (loading) return null;
+  if (!session) return null;
 
   return <>{children}</>;
 };

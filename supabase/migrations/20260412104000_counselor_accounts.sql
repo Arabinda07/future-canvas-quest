@@ -5,11 +5,7 @@ ADD COLUMN counselor_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 -- Enable RLS on school_batches
 ALTER TABLE public.school_batches ENABLE ROW LEVEL SECURITY;
 
--- Admins can read all batches
-CREATE POLICY "Admins can read all batches"
-ON public.school_batches FOR SELECT
-TO authenticated
-USING (public.has_role(auth.uid(), 'admin'));
+
 
 -- Counselors can read their own batches
 CREATE POLICY "Counselors can read own batches"
