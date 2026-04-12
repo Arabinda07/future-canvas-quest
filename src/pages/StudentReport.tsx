@@ -14,10 +14,11 @@ const StudentReport = () => {
   const normalizedReportId = reportId.trim();
   const reportAccessToken = searchParams.get("token")?.trim() ?? "";
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const hasReportAccessToken = reportAccessToken.length > 0;
   const { data: reportAccess } = useQuery<StudentReportAccessResult | null>({
     queryKey: ["student-report", normalizedReportId, reportAccessToken],
     queryFn: async () => {
-      if (reportAccessToken) {
+      if (hasReportAccessToken) {
         const backendResult = await fetchStudentReportFromBackend(normalizedReportId, reportAccessToken);
         if (backendResult?.reportLocked) {
           return backendResult;
@@ -28,13 +29,8 @@ const StudentReport = () => {
         }
       }
 
-      const localReport = repositories.report.getReport(normalizedReportId);
-      if (localReport) {
-        return {
-          reportId: normalizedReportId,
-          reportLocked: false,
-          report: localReport,
-        };
+      if (!hasReportAccessToken) {
+        return null;
       }
 
       return null;
@@ -67,6 +63,15 @@ const StudentReport = () => {
       <div className="min-h-screen bg-background relative overflow-x-clip px-5 py-8">
         <div className="mx-auto max-w-3xl">
           <div className="glass-strong rounded-[28px] border border-white/10 p-8 sm:p-10 text-center">
+            <div className="mb-6 flex justify-start">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/70 transition hover:bg-white/[0.08] hover:text-white"
+              >
+                <ArrowLeft size={16} />
+                Back to home
+              </Link>
+            </div>
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/[0.04] border border-white/10">
               <Lock size={28} className="text-white/70" />
             </div>
@@ -108,9 +113,13 @@ const StudentReport = () => {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/[0.04] border border-white/10">
               <FileWarning size={28} className="text-white/70" />
             </div>
-            <h1 className="mt-6 text-[clamp(2rem,5vw,3rem)] leading-[0.96]">Report not found</h1>
+            <h1 className="mt-6 text-[clamp(2rem,5vw,3rem)] leading-[0.96]">
+              {hasReportAccessToken ? "Report not found" : "Report link incomplete"}
+            </h1>
             <p className="mt-4 text-white/55 leading-7">
-              We couldn&apos;t load this report. It may have been removed, or the link may be incomplete.
+              {hasReportAccessToken
+                ? "We couldn't load this report. It may have been removed, or the link may be incomplete."
+                : "This report needs its private access token before we can check payment status or show report content."}
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -146,6 +155,13 @@ const StudentReport = () => {
           animate={{ opacity: 1, y: 0 }}
           className="glass-strong rounded-[28px] border border-white/10 p-6 sm:p-8"
         >
+          <Link
+            to="/"
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/70 transition hover:bg-white/[0.08] hover:text-white"
+          >
+            <ArrowLeft size={16} />
+            Back to home
+          </Link>
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.68rem] uppercase tracking-[0.18em] text-white/65">
             <Compass size={14} />
             Saved report

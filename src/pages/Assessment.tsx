@@ -6,14 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { useAssessment } from "@/context/AssessmentContext";
-import { buildAssessmentReport } from "@/domain/reportBuilder";
 import type { AssessmentSession, Report, StudentClass } from "@/domain/types";
 import { questions, QUESTIONS_PER_PAGE, type Question } from "@/data/questions";
 import { getVisibleQuestions } from "@/features/student/assessmentFlow";
 import { buildStudentReportPath, submitAssessmentToBackend } from "@/lib/backend/assessmentGateway";
 import { isSupabaseConfigured } from "@/lib/backend/supabase";
 import { cn } from "@/lib/utils";
-import { createId } from "@/lib/id";
 import { repositories } from "@/repositories";
 
 const PSYCHOMETRIC_OPTIONS = [
@@ -171,7 +169,6 @@ const Assessment = () => {
     }
 
     const now = new Date().toISOString();
-    const reportId = createId("report");
     const savedSession = repositories.assessment.getSession(sessionId);
     const sessionToSave: AssessmentSession =
       savedSession ?? {
@@ -186,49 +183,38 @@ const Assessment = () => {
         updatedAt: now,
       };
 
-      try {
-      let finalReportId = reportId;
-      let finalReport: Report | null = null;
-      let reportAccessToken: string | undefined;
-
+    try {
       const entryPath = state.session.entryPath ?? "self-serve";
 
-      if (isSupabaseConfigured()) {
-        const backendResult = await submitAssessmentToBackend({
-          sessionToken: sessionId,
-          answers: state.answers,
-          student: {
-            name: state.studentData.name || "Student",
-            className: (state.studentData.currentClass || "IX") as StudentClass,
-            section: undefined,
-            rollNumber: undefined,
-            schoolName: undefined,
-          },
-          entryPath,
-          batchCode: state.studentData.counselorCode || undefined,
-          consentGiven: state.studentData.consent,
-          consentAt: now,
+      if (!isSupabaseConfigured()) {
+        toast({
+          title: "Submission setup unavailable",
+          description:
+            "Supabase and Razorpay configuration are required before assessments can be submitted and reports can be unlocked.",
         });
-
-        finalReportId = backendResult.reportId;
-        finalReport = entryPath === "school-issued" ? backendResult.report : null;
-        reportAccessToken = backendResult.reportAccessToken;
-      } else {
-        finalReport = buildAssessmentReport({
-          id: reportId,
-          sessionId,
-          studentId: sessionToSave.studentId,
-          generatedAt: now.slice(0, 10),
-          answers: state.answers,
-          student: {
-            name: state.studentData.name || "Student",
-            rollNo: "N/A",
-            class: (state.studentData.currentClass || "IX") as "IX" | "X" | "XI" | "XII",
-            section: "N/A",
-            school: "Future Canvas Public School",
-          },
-        });
+        setSubmitting(false);
+        return;
       }
+
+      const backendResult = await submitAssessmentToBackend({
+        sessionToken: sessionId,
+        answers: state.answers,
+        student: {
+          name: state.studentData.name || "Student",
+          className: (state.studentData.currentClass || "IX") as StudentClass,
+          section: undefined,
+          rollNumber: undefined,
+          schoolName: undefined,
+        },
+        entryPath,
+        batchCode: state.studentData.counselorCode || undefined,
+        consentGiven: state.studentData.consent,
+        consentAt: now,
+      });
+
+      const finalReportId = backendResult.reportId;
+      const finalReport: Report | null = entryPath === "school-issued" ? backendResult.report : null;
+      const reportAccessToken = backendResult.reportAccessToken;
 
       repositories.assessment.saveSession({
         ...sessionToSave,

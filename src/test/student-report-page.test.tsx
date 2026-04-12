@@ -72,22 +72,21 @@ describe("StudentReport", () => {
     redirectToPaymentUrl.mockReset();
   });
 
-  it("renders a saved report from localStorage for the requested report id", async () => {
+  it("does not expose a cached full report when the private access token is missing", async () => {
     const report = seedReport("report-1");
 
     renderStudentReport("/report/report-1");
 
-    expect(await screen.findByRole("heading", { name: report.cover.title })).toBeInTheDocument();
-    expect(screen.getByText(report.cover.studentName)).toBeInTheDocument();
-    expect(screen.getByText(report.snapshot.topRecommendedStream.label)).toBeInTheDocument();
-    expect(screen.getByText(report.quickActions[0])).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: /report link incomplete/i })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: report.cover.title })).not.toBeInTheDocument();
+    expect(screen.queryByText(report.cover.studentName)).not.toBeInTheDocument();
   });
 
   it("shows a friendly not-found state when the report id is missing", async () => {
     renderStudentReport("/report/missing-report");
 
-    expect(await screen.findByRole("heading", { name: /report not found/i })).toBeInTheDocument();
-    expect(screen.getByText(/We couldn't load this report/i)).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: /report link incomplete/i })).toBeInTheDocument();
+    expect(screen.getByText(/private access token/i)).toBeInTheDocument();
   });
 
   it("fetches a server-backed report when a private token is present and local cache is empty", async () => {
@@ -111,6 +110,7 @@ describe("StudentReport", () => {
 
     expect(await screen.findByRole("heading", { name: report.cover.title })).toBeInTheDocument();
     expect(fetchStudentReportFromBackend).toHaveBeenCalledWith("report-remote", "student-report-token");
+    expect(screen.getByRole("link", { name: /back to home/i })).toHaveAttribute("href", "/");
     expect(screen.getByText("Zoya Khan")).toBeInTheDocument();
   });
 
@@ -130,6 +130,7 @@ describe("StudentReport", () => {
 
     expect(await screen.findByRole("heading", { name: /unlock your full career clarity report/i })).toBeInTheDocument();
     expect(screen.getByText("Rs 99")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /back to home/i })).toHaveAttribute("href", "/");
 
     fireEvent.click(screen.getByRole("button", { name: /pay rs 99 and unlock/i }));
 
@@ -142,7 +143,7 @@ describe("StudentReport", () => {
   it("treats malformed report ids as invalid and offers a restart path", async () => {
     renderStudentReport("/report/%20%20");
 
-    expect(await screen.findByRole("heading", { name: /report not found/i })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: /report link incomplete/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /back to registration/i })).toHaveAttribute("href", "/register");
   });
 });
