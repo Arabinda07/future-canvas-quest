@@ -2,23 +2,31 @@
 
 Future Canvas Quest is a Vite + React + TypeScript web app for a student career-orientation assessment flow.
 
-## Current product scope
+## Current Product Scope
 
 - Landing page with value proposition and school-facing sections.
-- Student registration screen.
+- Student registration screen (supports self-serve or school/counselor codes).
 - 70-question assessment experience split across aptitude + psychometric sections.
 - Intro/instruction gate before assessment starts.
-- Completion success screen with demo report action.
-- Local persistence of in-progress assessment state.
+- **Server-backed assessments**: Raw answers are securely stored, encrypted, and scored via Supabase.
+- **Student Reports**: 
+  - Self-serve students receive tokenized secure links, with full reports behind a Rs 99 Razorpay paywall.
+  - School-issued students automatically bypass the student paywall and appear in the matching counselor dashboard.
+- **Counselor Portal**: Registration for public interest, admin approval flow, and secure invite-link based dashboard access for batch-scoped results.
+- **Launch Readiness**: Configured to block assessment submissions if the required backend environments (Supabase) are missing.
 
-## Local development
+## Local Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Quality checks
+Required frontend environment variables for full operation:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+## Quality Checks
 
 ```bash
 npm run lint
@@ -27,20 +35,21 @@ npm run build
 npx tsc --noEmit
 ```
 
-## Architecture notes
+## Architecture Notes
 
 - Routing and page transitions are in `src/App.tsx`.
 - Assessment state is centralized in `src/context/AssessmentContext.tsx`.
 - Question data and pagination constants are in `src/data/questions.ts`.
 - UI primitives are in `src/components/ui`.
+- **Backend**: Relies on Supabase Edge Functions for core logic (`process-assessment`, `get-student-report`, `create-payment-link`, `verify-report-payment`, `validate-counselor-access`, `get-counselor-dashboard`, etc.) and database migrations for data models.
 
-## Known strategic gaps (next roadmap)
+## Future Roadmap & Hardening
 
-1. No backend persistence (results are not stored server-side).
-2. No authenticated admin/counselor dashboard.
-3. No real PDF/report generation pipeline yet.
-4. No timer enforcement despite time guidance in UI copy.
-5. Limited validation for optional registration fields.
-6. No analytics/funnel instrumentation.
-7. No error boundary for runtime failures.
-8. No API contract/schema versioning for future integrations.
+1. Move from invite-link counselor access to named counselor/admin accounts.
+2. Add audit logs for approvals, portal access, report unlocks, and payments.
+3. Strengthen Supabase RLS policies around report ownership and batch access.
+4. Improve admin console functionality (request filtering, invite re-copying, token rotation).
+5. Add analytics and funnel instrumentation (landing-to-registration, assessment completion, payment conversion).
+6. Implement error boundaries for runtime failures.
+7. No timer enforcement despite time guidance in UI copy.
+8. Limited validation for optional registration fields.
