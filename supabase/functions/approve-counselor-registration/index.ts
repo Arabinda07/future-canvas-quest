@@ -121,17 +121,53 @@ serve(async (request) => {
   const supabase = createServiceRoleClient();
 
   if (action === "list") {
-    const { data, error } = await supabase
+    const statusFilter = asTrimmedString(body?.status) || "pending";
+    const query = supabase
       .from("counselor_registration_requests")
       .select("id, counselor_name, email, phone, school_name, school_city, expected_student_count, message, status, batch_code, created_at, reviewed_at")
-      .eq("status", "pending")
       .order("created_at", { ascending: true });
+      
+    if (statusFilter !== "all") {
+      query.eq("status", statusFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       return errorResponse(error.message, 500);
     }
 
     return jsonResponse({ requests: (data ?? []).map((row) => toClientRequest(row as CounselorRegistrationRequestRow)) });
+  }
+
+  if (action === "list_batches") {
+    const { data, error } = await supabase
+      .from("school_batches")
+      .select("code, school_name, seats_purchased, seats_used, valid_from, valid_until, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      return errorResponse(error.message, 500);
+    }
+
+    return jsonResponse({ batches: data ?? [] });
+  }
+
+  if (action === "retire_batch") {
+    const batchCode = asTrimmedString(body?.batch_code);
+    if (!batchCode) return errorResponse("batch_code is required.");
+
+    const { data, error } = await supabase
+      .from("school_batches")
+      .update({ valid_until: new Date().toISOString() })
+      .eq("code", batchCode)
+      .select("code")
+      .single();
+
+    if (error || !data) {
+      return errorResponse(error?.message ?? "Batch not found or could not be retired.", 500);
+    }
+    return jsonResponse({ batchCode: data.code, retired: true });
   }
 
   const requestId = asTrimmedString(body?.request_id);
@@ -169,7 +205,7 @@ serve(async (request) => {
   }
 
   if (action !== "approve") {
-    return errorResponse("Use action list, approve, or reject.");
+    return errorResponse("Use action list, list_batches, retire_batch, approve, or reject.");
   }
 
   if (row.status === "approved" && row.batch_code) {

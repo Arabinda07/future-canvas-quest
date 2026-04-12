@@ -15,6 +15,7 @@ export interface AssessmentSessionMetadata {
   campaignId: string | null;
   submittedReportId: string | null;
   reportAccessToken: string | null;
+  startedAt: number | null;
 }
 
 export interface AssessmentState {
@@ -31,6 +32,7 @@ const DEFAULT_SESSION: AssessmentSessionMetadata = {
   campaignId: null,
   submittedReportId: null,
   reportAccessToken: null,
+  startedAt: null,
 };
 
 const DEFAULT_STATE: AssessmentState = {

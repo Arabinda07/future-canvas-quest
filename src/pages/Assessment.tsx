@@ -114,6 +114,39 @@ const Assessment = () => {
     }
   }, [state.introAccepted]);
 
+  const TIMER_DURATION_MS = 60 * 60 * 1000;
+  const [remainingTime, setRemainingTime] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (state.session.startedAt) {
+      const updateTimer = () => {
+        const elapsed = Date.now() - state.session.startedAt!;
+        const remaining = Math.max(0, TIMER_DURATION_MS - elapsed);
+        setRemainingTime(remaining);
+
+        if (remaining === 0 && !submitting) {
+          toast({
+            title: "Time's up!",
+            description: "Your 60 minutes have expired. Submitting assessment...",
+            variant: "destructive"
+          });
+          handleSubmit();
+        }
+      };
+      updateTimer();
+      const interval = setInterval(updateTimer, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [state.session.startedAt, submitting]);
+
+  const formatTime = (ms: number | null) => {
+    if (ms === null) return "60:00";
+    const totalSeconds = Math.floor(ms / 1000);
+    const m = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+    const s = (totalSeconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
+
   const visibleQuestions = getVisibleQuestions(questions);
   const totalQuestions = visibleQuestions.length;
   const visibleAptitudeQuestions = visibleQuestions.filter((question) => question.type === "aptitude").length;
@@ -139,6 +172,9 @@ const Assessment = () => {
     if (!introConfirmed) return;
     setDirection(1);
     setIntroAccepted(true);
+    if (!state.session.startedAt) {
+      setSessionMetadata({ startedAt: Date.now() });
+    }
     setCurrentPage(0);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -337,9 +373,14 @@ const Assessment = () => {
                     <p className="mt-2 max-w-2xl text-[0.9rem] sm:text-sm leading-6 text-white/50 font-body">{meta.description}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 self-start sm:shrink-0">
-                  <div className="hidden sm:flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/60 font-body">
-                    Q {qStart}–{qEnd} of {totalQuestions}
+                <div className="flex flex-col items-end gap-2 self-start sm:shrink-0">
+                  <div className="flex items-center gap-2">
+                    <div className="hidden sm:flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/60 font-body">
+                      Q {qStart}–{qEnd} of {totalQuestions}
+                    </div>
+                  </div>
+                  <div className={cn("inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-medium font-body", remainingTime !== null && remainingTime < 300000 ? "border-[hsl(var(--destructive)/0.5)] bg-[hsl(var(--destructive)/0.15)] text-[hsl(var(--destructive))]" : "border-white/10 bg-white/[0.04] text-white/80")}>
+                    Time left: {formatTime(remainingTime)}
                   </div>
                 </div>
               </div>

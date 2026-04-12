@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AssessmentProvider } from "@/context/AssessmentContext";
 import { AnimatePresence, motion } from "framer-motion";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Landing from "./pages/Landing";
 import Register from "./pages/Register";
 import Assessment from "./pages/Assessment";
@@ -12,7 +13,7 @@ import CounselorLogin from "./pages/CounselorLogin";
 import CounselorDashboard from "./pages/CounselorDashboard";
 import CounselorStudentReport from "./pages/CounselorStudentReport";
 import CounselorRegister from "./pages/CounselorRegister";
-import AdminCounselorRequests from "./pages/AdminCounselorRequests";
+import AdminDashboard from "./pages/AdminDashboard";
 import CounselorRouteGuard from "./components/counselor/CounselorRouteGuard";
 import Success from "./pages/Success";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -49,7 +50,7 @@ const AnimatedRoutes = () => {
             <Route path="/counselor/register" element={<CounselorRegister />} />
             <Route path="/counselor/dashboard" element={<CounselorRouteGuard><CounselorDashboard /></CounselorRouteGuard>} />
             <Route path="/counselor/reports/:reportId" element={<CounselorRouteGuard><CounselorStudentReport /></CounselorRouteGuard>} />
-            <Route path="/admin/counselor-requests" element={<AdminCounselorRequests />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/success" element={<Success />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="*" element={<NotFound />} />
@@ -62,12 +63,14 @@ const AnimatedRoutes = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <AssessmentProvider>
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <AnimatedRoutes />
-        </BrowserRouter>
-      </AssessmentProvider>
+      <ErrorBoundary>
+        <Toaster />
+        <AssessmentProvider>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <AnimatedRoutes />
+          </BrowserRouter>
+        </AssessmentProvider>
+      </ErrorBoundary>
     </TooltipProvider>
   </QueryClientProvider>
 );

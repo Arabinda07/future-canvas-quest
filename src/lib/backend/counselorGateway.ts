@@ -60,6 +60,25 @@ export interface CounselorRegistrationListResult {
   requests: CounselorRegistrationRequest[];
 }
 
+export interface CounselorBatchRow {
+  code: string;
+  school_name: string;
+  seats_purchased: number;
+  seats_used: number;
+  valid_from: string;
+  valid_until?: string | null;
+  created_at: string;
+}
+
+export interface CounselorBatchListResult {
+  batches: CounselorBatchRow[];
+}
+
+export interface RetireBatchResult {
+  batchCode: string;
+  retired: boolean;
+}
+
 export interface CounselorApprovalInput {
   requestId: string;
   approvalToken: string;
@@ -109,9 +128,25 @@ export async function submitCounselorRegistration(input: CounselorRegistrationIn
   });
 }
 
-export async function listCounselorRegistrationRequests(approvalToken: string) {
+export async function listCounselorRegistrationRequests(approvalToken: string, statusFilter: string = "pending") {
   return invokeSupabaseFunction<CounselorRegistrationListResult>("approve-counselor-registration", {
     action: "list",
+    approval_token: approvalToken,
+    status: statusFilter,
+  });
+}
+
+export async function listCounselorBatches(approvalToken: string) {
+  return invokeSupabaseFunction<CounselorBatchListResult>("approve-counselor-registration", {
+    action: "list_batches",
+    approval_token: approvalToken,
+  });
+}
+
+export async function retireCounselorBatch(batchCode: string, approvalToken: string) {
+  return invokeSupabaseFunction<RetireBatchResult>("approve-counselor-registration", {
+    action: "retire_batch",
+    batch_code: batchCode,
     approval_token: approvalToken,
   });
 }

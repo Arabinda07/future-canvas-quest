@@ -48,8 +48,5 @@ npx tsc --noEmit
 1. Move from invite-link counselor access to named counselor/admin accounts.
 2. Add audit logs for approvals, portal access, report unlocks, and payments.
 3. Strengthen Supabase RLS policies around report ownership and batch access.
-4. Improve admin console functionality (request filtering, invite re-copying, token rotation).
-5. Add analytics and funnel instrumentation (landing-to-registration, assessment completion, payment conversion).
-6. Implement error boundaries for runtime failures.
-7. No timer enforcement despite time guidance in UI copy.
-8. Limited validation for optional registration fields.
+4. Add analytics and funnel instrumentation (landing-to-registration, assessment completion, payment conversion).
+5. Limited validation for optional registration fields.
